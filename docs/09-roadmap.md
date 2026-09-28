@@ -16,13 +16,15 @@ Centang item saat selesai. Urutan disusun agar fondasi dan rumus selesai sebelum
 - **Selesai jika:** aplikasi tampil di HP dengan tab bar, lint menolak impor lintas lapisan yang dilarang
 
 ## Tahap 2 · Domain (otak trainer)
-- [ ] `standards.ts` lengkap dengan sumber
-- [ ] Nutrisi: BMR, TDEE, target kalori, makro, air
-- [ ] Tubuh: BMI, lemak tubuh US Navy, tren berat
-- [ ] Kekuatan: 1RM, deteksi PR, kalkulator pelat, pembulatan beban
-- [ ] Program: template (3/4/5/6 hari), pembuatan program, hitung volume mingguan
-- [ ] Trainer: readiness, progresi, deload, substitusi, aturan saran
-- [ ] Pemanasan & durasi istirahat
+- [x] `standards.ts` lengkap dengan sumber
+- [x] Nutrisi: BMR, TDEE, target kalori, makro, air
+- [x] Tubuh: BMI, lemak tubuh US Navy, tren berat
+- [x] Kekuatan: 1RM, deteksi PR, kalkulator pelat, pembulatan beban
+- [x] Program: template (3/4/5/6 hari), pembuatan program, hitung volume mingguan
+- [x] Trainer: readiness, progresi, deload, substitusi, aturan saran
+- [x] Pemanasan & durasi istirahat
+- [x] Perencanaan sesi (`planSession`): progresi + readiness/deload + pemanasan + tanda nyeri
+- [x] 235 test, cakupan domain 98% baris
 - **Selesai jika:** semua contoh di `docs/sains-latihan` dan `docs/mesin-trainer` menjadi test yang lulus
 
 ## Tahap 3 · Data & Profil

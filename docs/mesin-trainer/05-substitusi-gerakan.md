@@ -17,6 +17,7 @@ Dipakai saat: alat tidak tersedia, kondisi kesehatan, pengguna menekan "Ganti", 
 
 ```
 skor = 3 × (jumlah primaryMuscles yang sama)
+     − 2 × (jumlah primaryMuscles kandidat yang tidak ada di gerakan asal)
      + 1 × (jumlah secondaryMuscles yang sama)
      + 2 jika mechanics sama
      + 1 jika loadType sama
@@ -39,9 +40,9 @@ alat kembali tersedia, aplikasi menawarkan kembali ke gerakan asal.
 
 | Asal | Konteks | Pengganti teratas |
 |---|---|---|
-| Overhead Barbell Press | Bahu kiri ringan, `vertical_push` sakit | Landmine Press |
+| Seated Dumbbell Shoulder Press | Bahu kiri ringan, `vertical_push` sakit | semua pola `vertical_push` ditolak → longgarkan → Landmine Press (Incline Press kalah skor karena melatih dada sebagai otot utama tambahan) |
 | Barbell Bench Press | Tanpa barbell | Dumbbell Bench Press |
 | Barbell Back Squat | Tanpa squat rack | Goblet Squat / Leg Press |
-| Barbell Back Squat | Lutut kanan sedang, `squat` sakit | Pola `squat` ditolak → longgarkan ke otot primer `quads` → Leg Press/Leg Extension (pola lain) diterima dengan `progressionLocked` |
+| Barbell Back Squat | Lutut kanan sedang, `squat` sakit | Pola `squat` (termasuk Leg Press) ditolak → longgarkan ke otot utama yang sama → Bulgarian Split Squat dengan `progressionLocked` |
 | Barbell Back Squat | Lutut kanan berat | Semua gerakan yang membebani lutut ditolak → slot dihapus + saran konsultasi fisioterapis |
-| Lat Pulldown | Tanpa mesin pulldown | Assisted Pull-up / Pull-up |
+| Lat Pulldown | Tanpa mesin pulldown | Assisted Pull-up (Pull-up tingkat kesulitan 3, tidak untuk pemula) |

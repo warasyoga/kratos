@@ -1,16 +1,22 @@
 # 04 · Saran Trainer
 
-Fungsi: `evaluateSuggestions(context): Suggestion[]`
-Setiap aturan = satu file di `domain/trainer/suggestions/` dengan bentuk yang sama:
+Fungsi: `evaluateSuggestions(context, dismissed): SuggestionDraft[]`
+Setiap aturan adalah satu objek `SuggestionRule` di `domain/trainer/suggestions/`, dikelompokkan per tema
+(`volumeRules.ts`, `progressRules.ts`, `scheduleRules.ts`, `lifestyleRules.ts`):
 
 ```ts
 export interface SuggestionRule {
   id: string;
-  evaluate(ctx: SuggestionContext): SuggestionDraft | null;
+  category: 'safety' | 'program' | 'nutrition' | 'other';
+  evaluate(ctx: SuggestionContext): SuggestionDraft[];
 }
 ```
 
-Menambah saran baru cukup menambah satu file aturan + test, lalu mendaftarkannya di `index.ts`.
+Menambah saran baru cukup menambah satu aturan + test, lalu mendaftarkannya di `ALL_RULES` (`index.ts`).
+
+Domain tidak menyimpan kalimat. Aturan mengembalikan `ruleId` + `params` (mis. `{ muscle: 'chest', sets: 8 }`),
+dan UI menyusun kalimat dari `src/shared/i18n/id.ts`. Kolom "Pesan" di bawah adalah contoh hasil akhirnya.
+Program bawaan tidak memicu saran apa pun (dijamin test); saran muncul setelah editan pengguna atau data baru.
 
 ## Kapan dijalankan
 - Setelah program dibuat atau diedit
@@ -21,7 +27,7 @@ Menambah saran baru cukup menambah satu file aturan + test, lalu mendaftarkannya
 
 | ID | Pemicu | Pesan (contoh) | Aksi "Terapkan" | Dasar |
 |---|---|---|---|---|
-| `low_weekly_volume` | Set/minggu otot besar < 10 | "Volume dada 8 set/minggu, di bawah 10–20. Tambah 2 set Incline Dumbbell Press di Upper B?" | Tambah set/gerakan ke hari dengan volume otot itu paling kecil | Schoenfeld 2017 |
+| `low_weekly_volume` | Set/minggu otot besar < 10 | "Volume dada 8 set/minggu, di bawah 10–20. Tambah 2 set Dumbbell Bench Press di Upper B?" | Tambah set/gerakan ke hari dengan volume otot itu paling kecil | Schoenfeld 2017 |
 | `high_weekly_volume` | Set/minggu > 20 | "Volume punggung 24 set. Kurangi 4 set agar pemulihan cukup?" | Kurangi set dari gerakan isolasi dulu | Schoenfeld 2017 |
 | `low_frequency` | Otot besar dilatih < 2×/minggu | "Paha belakang hanya dilatih 1×/minggu. Tambah Leg Curl di Lower B?" | Tambah gerakan | Schoenfeld 2016 |
 | `push_pull_imbalance` | Rasio tarik:dorong < 1 | "Gerakan dorong lebih banyak dari tarik. Tambah 2 set Face Pull?" | Tambah set tarik | Aturan internal |

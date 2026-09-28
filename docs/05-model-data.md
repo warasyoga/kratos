@@ -88,14 +88,14 @@ interface HealthCondition {
 ```ts
 type Equipment = 'barbell' | 'dumbbell' | 'squat_rack' | 'bench' | 'cable' | 'leg_press'
                | 'smith' | 'pullup_bar' | 'kettlebell' | 'hack_squat' | 'leg_curl'
-               | 'leg_extension' | 'chest_press_machine' | 'lat_pulldown' | 'ez_bar' | 'landmine';
+               | 'leg_extension' | 'chest_press_machine' | 'lat_pulldown' | 'ez_bar' | 'landmine' | 'trap_bar';
 
 interface EquipmentItem { equipment: Equipment; available: boolean; }
 ```
 Untuk kalkulator pelat, profil juga menyimpan `PlateInventory`:
 ```ts
-interface PlateInventory { barKg: number; platesKg: number[]; dumbbellsKg: number[]; }
-// default: bar 20, pelat [25,20,15,10,5,2.5,1.25], dumbbell 2–40 kiprah 2 kg
+interface PlateInventory { barKg: number; platesKg: number[]; dumbbellsKg: number[]; machineStepKg: number; }
+// default: bar 20, pelat [25,20,15,10,5,2.5,1.25], dumbbell 2–40 kelipatan 2 kg (per tangan), mesin kelipatan 5 kg
 ```
 
 ### Exercise (perpustakaan, di-seed dari JSON)
@@ -117,6 +117,7 @@ interface Exercise {
   primaryMuscles: Muscle[];
   secondaryMuscles: Muscle[];
   loadType: 'barbell' | 'dumbbell' | 'machine' | 'cable' | 'bodyweight';
+  measure: 'reps' | 'seconds';    // 'seconds' untuk gerakan tahan (plank)
   difficulty: 1 | 2 | 3;          // 1 = ramah pemula
   stressedAreas: BodyArea[];      // area yang terbebani (untuk substitusi)
   instructions: string[];
@@ -253,7 +254,8 @@ interface Suggestion {
   id: string;
   ruleId: string;                 // 'low_weekly_volume'
   programId: string;
-  message: string;
+  targetKey: string;              // sasaran saran, mis. 'chest'; kunci jeda 14 hari setelah diabaikan
+  params: Record<string, string | number>;  // kalimat disusun UI dari ruleId + params (i18n)
   action?: SuggestionAction;      // perubahan program yang diusulkan
   status: 'open' | 'applied' | 'dismissed';
   createdAt: number;
@@ -269,7 +271,7 @@ type SuggestionAction =
   | { kind: 'start_deload' }
   | { kind: 'regenerate_program'; trainingDays: Weekday[] }
   | { kind: 'set_calorie_offset'; deltaKcal: number }
-  | { kind: 'open_screen'; route: string };
+  | { kind: 'open_screen'; screen: 'parq' | 'backup' };
 ```
 Menerapkan saran menyimpan snapshot bagian program yang berubah, sehingga bisa di-undo.
 

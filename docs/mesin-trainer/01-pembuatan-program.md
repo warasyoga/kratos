@@ -56,8 +56,10 @@ Aturan:
 
 | Input | Harapan |
 |---|---|
-| 4 hari, alat lengkap, tanpa kondisi | Upper/Lower, 24 gerakan, Bench Press di Upper A |
-| 4 hari, tanpa `barbell` | Bench Press → Dumbbell Bench Press; Squat → Leg Press/Goblet Squat |
-| 4 hari, bahu kiri ringan (sakit `vertical_push`) | Shoulder Press → Landmine Press |
-| 3 hari | Full Body A/B/C, setiap otot 3×/minggu |
+| 4 hari, alat lengkap, tanpa kondisi | Upper/Lower, 25 gerakan, Bench Press di Upper A, tanpa saran perbaikan |
+| 4 hari, tanpa `barbell` | Bench Press → Dumbbell Bench Press; Squat → Goblet Squat; Hip Thrust → Dumbbell RDL (dicatat sebagai pengganti karena alat); tidak ada gerakan barbell |
+| 4 hari, bahu kiri ringan (sakit `vertical_push`) | Shoulder Press di Upper B → Landmine Press, tanpa gerakan `vertical_push` sama sekali |
+| 4 hari, lutut kanan berat | Tidak ada gerakan yang membebani lutut; slot yang tidak bisa diisi dilaporkan sebagai peringatan |
+| 3 hari | Full Body A/B/C, setiap otot besar ≥ 2×/minggu |
+| 3/4/5/6 hari, alat lengkap | Otot besar 10–20 set/minggu, ≥ 2×/minggu, set tarik ≥ set dorong |
 | Hari Sen, Sel, Rab, Kam | Program dibuat + saran `consecutive_same_split` tidak muncul (Upper/Lower bergantian aman) |

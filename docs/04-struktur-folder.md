@@ -16,19 +16,21 @@ app-gym/
 │   │   └── pwa.ts                Registrasi service worker & prompt update
 │   │
 │   ├── domain/                   LOGIKA MURNI
-│   │   ├── common/               Result, Clock, id, pembulatan
+│   │   ├── common/               result, clock, id, weekday, assert (validasi & pembulatan)
 │   │   ├── standards.ts          Konstanta ilmiah + sumbernya
-│   │   ├── profile/              UserProfile, HealthCondition, Equipment
-│   │   ├── nutrition/            bmr.ts, tdee.ts, calorieTarget.ts, macros.ts, water.ts
-│   │   ├── body/                 bmi.ts, bodyFatNavy.ts, weightTrend.ts
-│   │   ├── strength/             oneRepMax.ts, progression.ts, plateCalculator.ts, personalRecord.ts
-│   │   ├── exercise/             Exercise, muscles.ts, movementPatterns.ts
-│   │   ├── program/              Program, templates/, generateProgram.ts, weeklyVolume.ts
-│   │   ├── trainer/              readiness.ts, suggestions/, substitution.ts, deload.ts
-│   │   ├── workout/              WorkoutSession, SetLog, restDuration.ts, warmup.ts
-│   │   ├── recovery/             muscleRecovery.ts (peta otot)
-│   │   ├── achievements/         rules.ts
-│   │   └── repositories.ts       Semua interface repository
+│   │   ├── profile/              types (UserProfile, HealthCondition, Equipment), inventory (pelat default)
+│   │   ├── nutrition/            energy (BMR, TDEE, target kalori), macros, water, recalibration
+│   │   ├── body/                 bmi, bodyFat (US Navy), weightTrend
+│   │   ├── strength/             loads (pembulatan & langkah beban), plates, oneRepMax, personalRecord,
+│   │   │                         calibration, progression
+│   │   ├── exercise/             types (Exercise, Muscle, MovementPattern)
+│   │   ├── program/              types, templates (3/4/5/6 hari), generateProgram, volume
+│   │   ├── trainer/              health, substitution, readiness, deload, suggestions/
+│   │   ├── workout/              types (SetLog, WorkoutSession), rest, warmup, planSession
+│   │   ├── testing/              data uji bersama (gerakan, kondisi); hanya dipakai test
+│   │   ├── recovery/             muscleRecovery (peta otot) — Tahap 8
+│   │   ├── achievements/         rules — Tahap 8
+│   │   └── repositories.ts       Semua interface repository — Tahap 3
 │   │
 │   ├── application/              USE CASE
 │   │   ├── services.ts           Tipe Services (semua use case untuk UI)

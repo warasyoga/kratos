@@ -41,69 +41,67 @@ WHO 2020 merekomendasikan latihan kekuatan **≥ 2 hari/minggu**; semua opsi mem
 Jadwal default: Sen Upper A · Sel Lower A · Kam Upper B · Jum Lower B.
 Hari gym boleh diubah asal tidak ada tiga hari gym berturut-turut dengan split yang sama.
 
+Kode sumber template: `src/domain/program/templates.ts` (sumber kebenaran; tabel di bawah ringkasannya).
+Setiap slot punya gerakan pilihan berurutan; jika alat/kondisi tidak memungkinkan, mesin memakai
+[substitusi](../mesin-trainer/05-substitusi-gerakan.md). Istirahat mengikuti jenis gerakan
+(barbell compound 120 dtk, compound lain 90 dtk, isolasi 60 dtk).
+
 ### Upper A
-| # | Gerakan | Set × Reps | Istirahat |
-|---|---|---|---|
-| 1 | Barbell Bench Press | 3 × 8–12 | 120 dtk |
-| 2 | Barbell Row | 3 × 8–12 | 120 dtk |
-| 3 | Incline Dumbbell Press | 3 × 10–12 | 90 dtk |
-| 4 | Lat Pulldown | 3 × 10–12 | 90 dtk |
-| 5 | Seated Dumbbell Shoulder Press | 3 × 10–12 | 90 dtk |
-| 6 | Dumbbell Lateral Raise | 2 × 12–15 | 60 dtk |
+| # | Gerakan | Set × Reps |
+|---|---|---|
+| 1 | Barbell Bench Press | 3 × 8–12 |
+| 2 | Barbell Row | 3 × 8–12 |
+| 3 | Incline Dumbbell Press | 3 × 10–12 |
+| 4 | Lat Pulldown | 3 × 10–12 |
+| 5 | Dumbbell Lateral Raise | 2 × 12–15 |
+| 6 | Dumbbell Curl | 2 × 10–12 |
 
 ### Lower A
-| # | Gerakan | Set × Reps | Istirahat |
-|---|---|---|---|
-| 1 | Barbell Back Squat | 3 × 6–10 | 120 dtk |
-| 2 | Romanian Deadlift | 3 × 8–10 | 120 dtk |
-| 3 | Leg Press | 2 × 10–12 | 90 dtk |
-| 4 | Lying/Seated Leg Curl | 3 × 10–12 | 60 dtk |
-| 5 | Standing Calf Raise | 3 × 10–15 | 60 dtk |
-| 6 | Plank | 2 × 30–45 dtk | 60 dtk |
+| # | Gerakan | Set × Reps |
+|---|---|---|
+| 1 | Barbell Back Squat | 3 × 6–10 |
+| 2 | Romanian Deadlift | 3 × 8–10 |
+| 3 | Leg Press | 2 × 10–12 |
+| 4 | Lying Leg Curl | 3 × 10–12 |
+| 5 | Standing Calf Raise | 3 × 10–15 |
+| 6 | Plank | 2 × 30–45 dtk |
 
 ### Upper B
-| # | Gerakan | Set × Reps | Istirahat |
-|---|---|---|---|
-| 1 | Seated Dumbbell Shoulder Press | 3 × 8–12 | 90 dtk |
-| 2 | Seated Cable Row | 3 × 10–12 | 90 dtk |
-| 3 | Machine Chest Press | 2 × 10–12 | 90 dtk |
-| 4 | Assisted/Lat Pull-up | 3 × 6–10 | 120 dtk |
-| 5 | Cable Curl | 2 × 12–15 | 60 dtk |
-| 6 | Triceps Pushdown | 2 × 12–15 | 60 dtk |
+| # | Gerakan | Set × Reps |
+|---|---|---|
+| 1 | Seated Dumbbell Shoulder Press | 3 × 8–12 |
+| 2 | Seated Cable Row | 3 × 10–12 |
+| 3 | Machine Chest Press | 2 × 10–12 |
+| 4 | Assisted Pull-up | 3 × 6–10 |
+| 5 | Cable Fly | 2 × 12–15 |
+| 6 | Face Pull | 2 × 12–15 |
+| 7 | Triceps Pushdown | 2 × 12–15 |
 
 ### Lower B
-| # | Gerakan | Set × Reps | Istirahat |
-|---|---|---|---|
-| 1 | Trap Bar / Barbell Deadlift | 3 × 5–8 | 120 dtk |
-| 2 | Bulgarian Split Squat | 3 × 8–12 / kaki | 90 dtk |
-| 3 | Leg Extension | 2 × 12–15 | 60 dtk |
-| 4 | Barbell Hip Thrust | 3 × 8–12 | 90 dtk |
-| 5 | Seated Calf Raise | 3 × 12–15 | 60 dtk |
-| 6 | Cable Crunch | 2 × 12–15 | 60 dtk |
+| # | Gerakan | Set × Reps |
+|---|---|---|
+| 1 | Trap Bar Deadlift | 3 × 5–8 |
+| 2 | Bulgarian Split Squat | 3 × 8–12 / kaki |
+| 3 | Leg Extension | 2 × 12–15 |
+| 4 | Barbell Hip Thrust | 3 × 8–12 |
+| 5 | Seated Calf Raise | 3 × 12–15 |
+| 6 | Cable Crunch | 2 × 12–15 |
 
-Volume dada per minggu dari template ini = 3 + 3 (Upper A) + 2 (Upper B) = **8 set**
-langsung, sehingga mesin saran akan mengusulkan tambahan 2 set (sesuai contoh di mockup).
-Ini disengaja sebagai contoh kasus uji; template final boleh disesuaikan saat implementasi.
+Hasil per minggu (alat lengkap): dada 10 · punggung (lats) 12 · paha depan 11,5 · paha belakang 14,5 ·
+glute 17 set; setiap otot besar 2×/minggu; dorong 13 : tarik 14.
 
-## 4b. Template lain (slot)
+## 4b. Template lain
 
-Ditulis sebagai slot pola gerakan; gerakan konkret dipilih mesin (lihat [01-pembuatan-program.md](../mesin-trainer/01-pembuatan-program.md)).
+| Hari | Template | Isi per hari |
+|---|---|---|
+| 3 | Full Body A / B / C | Tiap hari: 1 gerakan kaki utama, dorong, tarik, + 2–4 aksesori. Dada 10 · lats 10 · paha depan 10 · paha belakang 10 · glute 11 set |
+| 5 | Upper · Lower · Push · Pull · Legs | Dada 11 · lats 11 · paha depan 10 · paha belakang 10 · glute 10 set |
+| 6 | Push · Pull · Legs × 2 | Hari kedua memakai varian gerakan lain dan repetisi lebih tinggi (10–15). Dada 10 · lats 12 · paha depan 10 · paha belakang 11 set |
 
-**Full Body 3 hari (A/B/C, mis. Sen–Rab–Jum)**, 5 slot per hari:
-
-| Slot | A | B | C |
-|---|---|---|---|
-| 1 | squat 3×6–10 | hinge 3×6–10 | lunge 3×8–12 |
-| 2 | horizontal_push 3×8–12 | vertical_push 3×8–12 | horizontal_push (incline) 3×8–12 |
-| 3 | horizontal_pull 3×8–12 | vertical_pull 3×8–12 | horizontal_pull 3×10–12 |
-| 4 | knee_flexion 2×10–15 | knee_extension 2×12–15 | shoulder_abduction 2×12–15 |
-| 5 | elbow_flexion 2×12–15 | elbow_extension 2×12–15 | core / calf 2×12–15 |
-
-**5 hari: Upper · Lower · Push · Pull · Legs.** Upper/Lower seperti template 4 hari dengan set dikurangi 1 pada gerakan kedua dan ketiga; Push (horizontal_push, vertical_push, shoulder_abduction, elbow_extension), Pull (vertical_pull, horizontal_pull, rear delt, elbow_flexion), Legs (squat, hinge, knee_flexion, calf).
-
-**6 hari: Push · Pull · Legs × 2.** Hari kedua tiap jenis memakai varian gerakan berbeda (mis. barbell → dumbbell) dan rentang repetisi lebih tinggi (10–15).
-
-Setelah template diisi, volume dicek terhadap 10–20 set/otot; kelebihan dikurangi dari isolasi, kekurangan menjadi saran.
+**Jaminan kualitas:** test otomatis (`generateProgram.test.ts`) memastikan setiap template dengan alat
+lengkap memberi 10–20 set/minggu untuk dada, punggung, paha depan, paha belakang, dan glute; setiap otot
+besar dilatih ≥ 2×/minggu; dan set tarik ≥ set dorong. Karena itu program bawaan tidak memicu saran
+perbaikan. Saran baru muncul saat pengguna mengedit program atau alat/kondisi kesehatan membatasi pilihan.
 
 ## 5. Keseimbangan · **Aturan internal**
 

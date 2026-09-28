@@ -25,7 +25,7 @@ Sebuah set adalah PR jika salah satu terpenuhi, dibanding semua riwayat gerakan 
 1. 1RM estimasi tertinggi, atau
 2. repetisi terbanyak pada beban yang sama atau lebih berat.
 
-Set pemanasan tidak dihitung.
+Set pemanasan tidak dihitung. Set pertama kali untuk sebuah gerakan menjadi patokan awal, bukan PR.
 
 ## 3. Intensitas: RIR · **Bukti ilmiah**
 
@@ -80,7 +80,7 @@ Langkah kenaikan (**aturan internal**, tetap dalam rentang 2–10% ACSM):
 | Jenis beban | Langkah |
 |---|---|
 | Barbell tubuh atas | +2,5 kg |
-| Barbell tubuh bawah | +5 kg |
+| Barbell tubuh bawah (squat, hinge, lunge) | +5 kg; jika +5 kg > 10% beban, pakai +2,5 kg |
 | Dumbbell | ke ukuran berikutnya yang tersedia (biasanya +2 kg per tangan) |
 | Mesin/kabel | ke tumpukan berikutnya (default +5 kg) |
 
@@ -103,6 +103,10 @@ Pelat default: 25, 20, 15, 10, 5, 2,5, 1,25 kg. Bar 20 kg. Bisa diubah di Profil
 **Contoh pembulatan:** 66 kg → per sisi 23 → 20 + 2,5 = 22,5, sisa 0,5 → target dibulatkan ke **65 kg**.
 
 ## 7. Beban awal (kalibrasi) · **Aturan internal**
+
+Beban awal sesi pertama: barbell = bar kosong (20 kg), dumbbell compound 6 kg/tangan,
+dumbbell isolasi 4 kg/tangan, mesin 10 kg, kabel 5 kg, bodyweight tanpa beban tambahan.
+Untuk dumbbell, semua angka beban di Kratos adalah **berat per tangan**.
 
 Pemula belum tahu bebannya. Sesi pertama tiap gerakan:
 1. Mulai dengan beban ringan yang disarankan (bar kosong / dumbbell terkecil yang wajar).
@@ -128,7 +132,7 @@ export const E1RM_MAX_REPS = 10;
 export const TARGET_RIR = { min: 1, default: 2, max: 3 } as const;
 export const REST_SEC = { compoundBarbell: 120, compound: 90, isolation: 60 } as const;
 export const PROGRESSION_PCT = { min: 0.02, max: 0.10 } as const;
-export const LOAD_STEP_KG = { barbellUpper: 2.5, barbellLower: 5, machine: 5 } as const;
+export const LOAD_STEPS_KG = { barbellUpper: [2.5], barbellLower: [5, 2.5], machine: [5] } as const;
 export const DEFAULT_PLATES_KG = [25, 20, 15, 10, 5, 2.5, 1.25] as const;
 export const DEFAULT_BAR_KG = 20;
 ```

@@ -40,8 +40,9 @@ Untuk aturan dengan banyak kombinasi (readiness, progresi), gunakan **tabel kasu
 
 ## Fixture
 
-- `tests/fixtures/profile.ts`: profil contoh (pria, 24 th, 175 cm, 68,4 kg).
-- `tests/fixtures/history.ts`: pembuat riwayat latihan N minggu untuk menguji progresi, deload, dan saran.
+- `src/domain/testing/exercises.ts`: perpustakaan gerakan uji (±40 gerakan) dan daftar alat gym lengkap.
+- `src/domain/testing/profiles.ts`: pembuat kondisi kesehatan uji.
+- Data uji domain berada di dalam `src/domain` agar aturan lapisan tetap berlaku; tidak ikut dihitung cakupan.
 - Waktu selalu memakai `FixedClock('2026-09-28T07:00:00')`. Test tidak boleh bergantung pada tanggal hari ini.
 
 ## Alur E2E kritis
