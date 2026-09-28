@@ -9,6 +9,7 @@ export const paths = {
   progress: '/progres',
   profile: '/profil',
   onboarding: '/onboarding',
+  library: '/gerakan',
 } as const;
 
 export const navItems: readonly TabItem[] = [

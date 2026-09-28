@@ -1,20 +1,21 @@
 import { useCallback, useEffect, useState, type ReactNode } from 'react';
-import { ToastContext } from './toastContext';
+import { ToastContext, type ToastAction } from './toastContext';
 
 interface ToastMessage {
   id: number;
   title: string;
   lines?: string[];
+  action?: ToastAction;
 }
 
 const TOAST_MS = 5000;
 
-/** Konfirmasi singkat di atas tab bar ("Tersimpan", ringkasan perubahan program). */
+/** Konfirmasi singkat di atas tab bar ("Tersimpan", ringkasan perubahan, tombol "Urungkan"). */
 export function ToastProvider({ children }: { children: ReactNode }) {
   const [message, setMessage] = useState<ToastMessage | null>(null);
 
-  const show = useCallback((title: string, lines?: string[]) => {
-    setMessage({ id: Date.now(), title, ...(lines && { lines }) });
+  const show = useCallback((title: string, lines?: string[], action?: ToastAction) => {
+    setMessage({ id: Date.now(), title, ...(lines && { lines }), ...(action && { action }) });
   }, []);
 
   useEffect(() => {
@@ -34,14 +35,28 @@ export function ToastProvider({ children }: { children: ReactNode }) {
           <div
             key={message.id}
             role="status"
-            className="pointer-events-auto w-full max-w-[528px] rounded-2xl bg-ink px-4 py-3 text-sm text-ground shadow-float"
+            className="pointer-events-auto flex w-full max-w-[528px] items-start gap-3 rounded-2xl bg-ink px-4 py-3 text-sm text-ground shadow-float"
           >
-            <p className="font-semibold">{message.title}</p>
-            {message.lines?.map((line) => (
-              <p key={line} className="opacity-80">
-                {line}
-              </p>
-            ))}
+            <div className="flex-1">
+              <p className="font-semibold">{message.title}</p>
+              {message.lines?.map((line) => (
+                <p key={line} className="opacity-80">
+                  {line}
+                </p>
+              ))}
+            </div>
+            {message.action && (
+              <button
+                type="button"
+                onClick={() => {
+                  message.action?.onClick();
+                  setMessage(null);
+                }}
+                className="min-h-11 shrink-0 rounded-lg px-2 font-bold text-plate-yellow"
+              >
+                {message.action.label}
+              </button>
+            )}
           </div>
         )}
       </div>

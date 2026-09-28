@@ -11,6 +11,7 @@ import {
   DexieHealthConditionRepository,
   DexieProfileRepository,
   DexieProgramRepository,
+  DexieSuggestionRepository,
   DexieTransactionRunner,
 } from '@/infrastructure/repositories/dexieRepositories';
 
@@ -31,6 +32,7 @@ export async function createAppServices(): Promise<Services> {
     exercises: new DexieExerciseRepository(db),
     programs: new DexieProgramRepository(db),
     bodyMetrics: new DexieBodyMetricRepository(db),
+    suggestions: new DexieSuggestionRepository(db),
     tx: new DexieTransactionRunner(db),
     platform: { requestPersistentStorage },
   };

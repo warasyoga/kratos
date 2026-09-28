@@ -7,7 +7,7 @@ import type {
   UserProfile,
 } from '@/domain/profile/types';
 import type { Program, ProgramDay, ProgramExercise } from '@/domain/program/types';
-import type { BodyMetric } from '@/domain/repositories';
+import type { BodyMetric, ResolvedSuggestion } from '@/domain/repositories';
 
 /** Satu baris per jenis alat. */
 export interface EquipmentRow {
@@ -62,6 +62,7 @@ export class KratosDatabase extends Dexie {
   programDays!: EntityTable<ProgramDay, 'id'>;
   programExercises!: EntityTable<ProgramExercise, 'id'>;
   bodyMetrics!: EntityTable<BodyMetric, 'id'>;
+  suggestions!: EntityTable<ResolvedSuggestion, 'id'>;
   settings!: EntityTable<SettingsRow, 'id'>;
 
   constructor(name = 'kratos') {

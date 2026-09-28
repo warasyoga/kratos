@@ -41,7 +41,7 @@ app-gym/
 │   │   ├── testing/              repository memori untuk test
 │   │   ├── profile/              schemas.ts (Zod), completeOnboarding, getProfileOverview, updateProfile
 │   │   ├── gym/                  gymUseCases.ts (alat, kondisi kesehatan)
-│   │   ├── program/              getActiveProgram, programChanges; Tahap 4: edit & saran
+│   │   ├── program/              getActiveProgram, programEditor (edit + undo), suggestions, catalog, programChanges
 │   │   ├── checkin/              submitCheckIn.ts
 │   │   ├── workout/              startSession.ts, completeSet.ts, finishSession.ts
 │   │   ├── progress/             getProgressSummary.ts, logBodyMetric.ts, addProgressPhoto.ts
@@ -62,9 +62,8 @@ app-gym/
 │   ├── features/                 UI PER LAYAR
 │   │   ├── today/
 │   │   ├── checkin/
-│   │   ├── program/
+│   │   ├── program/              Program, edit hari, perpustakaan & detail gerakan, kartu saran
 │   │   ├── workout/
-│   │   ├── exercise-library/
 │   │   ├── progress/
 │   │   ├── nutrition/
 │   │   ├── profile/              ProfileScreen + onboarding/ (berbagi form alat, kondisi, PAR-Q+, jadwal)

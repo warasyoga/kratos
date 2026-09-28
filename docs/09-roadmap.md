@@ -39,10 +39,13 @@ Centang item saat selesai. Urutan disusun agar fondasi dan rumus selesai sebelum
 - **Selesai jika:** onboarding menghasilkan profil tersimpan dan program pertama
 
 ## Tahap 4 · Program
-- [ ] Layar Program: kalender minggu, daftar gerakan per hari
-- [ ] Edit: ubah urutan (drag), ganti gerakan, ubah set/reps, tambah/hapus gerakan, pindah hari
-- [ ] Kartu saran: terapkan/abaikan
-- [ ] Perpustakaan gerakan + detail panduan
+- [x] Layar Program: kalender minggu, daftar gerakan per hari, volume per otot besar
+- [x] Edit: ubah urutan (tombol naik/turun), ganti gerakan, ubah set/reps/RIR/istirahat, tambah/hapus gerakan, pindah hari
+- [x] Kartu saran: terapkan/abaikan/"Kenapa?", jeda 14 hari setelah diabaikan
+- [x] Urungkan perubahan terakhir dari toast
+- [x] Perpustakaan gerakan: cari (nama/otot/alat), filter kelompok otot, status ketersediaan, detail panduan, alternatif
+- [ ] Geser (drag) untuk ubah urutan → ditunda; tombol naik/turun lebih andal di layar sentuh dan keyboard
+- [ ] Gerakan buatan pengguna → Tahap 8
 
 ## Tahap 5 · Mode Latihan
 - [ ] Check-in hari gym + hasil readiness

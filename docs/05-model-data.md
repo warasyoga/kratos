@@ -250,16 +250,15 @@ interface SavedMeal { id: string; label: string; kcal: number; proteinG: number;
 
 ### Suggestion
 ```ts
-interface Suggestion {
+// Saran dihitung ulang dari data terkini (SuggestionDraft: ruleId, targetKey, category, params, action).
+// Yang disimpan di tabel `suggestions` hanya keputusan pengguna:
+interface ResolvedSuggestion {
   id: string;
-  ruleId: string;                 // 'low_weekly_volume'
   programId: string;
-  targetKey: string;              // sasaran saran, mis. 'chest'; kunci jeda 14 hari setelah diabaikan
-  params: Record<string, string | number>;  // kalimat disusun UI dari ruleId + params (i18n)
-  action?: SuggestionAction;      // perubahan program yang diusulkan
-  status: 'open' | 'applied' | 'dismissed';
-  createdAt: number;
-  resolvedAt?: number;
+  ruleId: string;                 // 'low_weekly_volume'
+  targetKey: string;              // mis. 'chest'; kunci jeda 14 hari setelah diabaikan
+  status: 'applied' | 'dismissed';
+  resolvedAt: number;
 }
 
 type SuggestionAction =

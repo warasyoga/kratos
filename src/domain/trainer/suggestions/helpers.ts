@@ -5,14 +5,7 @@ import { PROGRAM_EDIT_LIMITS } from '../../standards';
 import { findSubstitutes } from '../substitution';
 import type { ProgramExerciseWithDetail, SuggestionContext } from './types';
 
-/** Otot besar yang dipantau volume dan frekuensinya. */
-export const MAJOR_MUSCLES: readonly Muscle[] = [
-  'chest',
-  'back_lats',
-  'quads',
-  'hamstrings',
-  'glutes',
-];
+export { MAJOR_MUSCLES } from '../../program/volume';
 
 const UPPER: readonly Muscle[] = [
   'chest',

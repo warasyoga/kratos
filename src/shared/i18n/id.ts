@@ -16,6 +16,31 @@ import type {
 } from '@/domain/profile/types';
 import type { SubstitutionReason } from '@/domain/program/types';
 
+/** Nilai saran yang sudah diformat untuk ditampilkan (nama otot/gerakan/hari, angka). */
+export type SuggestionArgs = Partial<
+  Record<
+    | 'muscle'
+    | 'sets'
+    | 'addSets'
+    | 'removeSets'
+    | 'dayLabel'
+    | 'exercise'
+    | 'frequency'
+    | 'push'
+    | 'pull'
+    | 'hamstrings'
+    | 'quads'
+    | 'sessions'
+    | 'substitute'
+    | 'completed'
+    | 'scheduled'
+    | 'firstDay'
+    | 'secondDay'
+    | 'weekday',
+    string | undefined
+  >
+>;
+
 export const t = {
   app: {
     name: 'Kratos',
@@ -42,6 +67,8 @@ export const t = {
     loading: 'Memuat…',
     saved: 'Tersimpan',
     stepOf: (step: number, total: number) => `Langkah ${step} dari ${total}`,
+    decrease: (label: string) => `Kurangi ${label}`,
+    increase: (label: string) => `Tambah ${label}`,
   },
   errors: {
     name_required: 'Isi nama panggilan.',
@@ -57,6 +84,17 @@ export const t = {
     answer_required: 'Jawab pertanyaan ini.',
     protein_range: 'Protein harus 1,6–2,2 g/kg.',
     generic: 'Terjadi kesalahan. Coba lagi.',
+    sets_range: 'Set harus 1–6.',
+    reps_range: 'Repetisi harus 1–30.',
+    rep_order: 'Repetisi maksimal harus ≥ minimal.',
+    rest_range: 'Istirahat harus 30–300 detik.',
+    rir_range: 'Target RIR harus 1–3.',
+    duplicate_exercise: 'Gerakan ini sudah ada di hari yang sama.',
+    last_exercise:
+      'Hari latihan minimal punya satu gerakan. Kurangi hari latihan lewat Profil → Ubah jadwal.',
+    suggestion_gone: 'Saran ini sudah tidak berlaku.',
+    not_supported: 'Aksi ini belum tersedia di versi ini.',
+    nothing_to_undo: 'Tidak ada perubahan untuk diurungkan.',
   } as Record<string, string>,
 
   // ── Nilai domain ──────────────────────────────────────────────────────────
@@ -295,8 +333,136 @@ export const t = {
     substituted: (name: string, reason: string) => `pengganti ${name} (${reason})`,
     locked: 'beban tidak naik otomatis',
     recoveryDays: 'Hari pemulihan',
-    editComingSoon: 'Edit program dan saran trainer hadir di Tahap 4.',
     daySets: (sets: number, minutes: number) => `${sets} set · ±${minutes} mnt`,
+    editDay: 'Ubah',
+    library: 'Perpustakaan gerakan',
+    volumeTitle: 'Set per otot · minggu',
+    volumeZone: 'zona 10–20',
+    volumeValue: (sets: string, times: number) => `${sets} set · ${times}×`,
+    moveUp: (name: string) => `Naikkan ${name}`,
+    moveDown: (name: string) => `Turunkan ${name}`,
+    addExercise: 'Tambah gerakan',
+    moveDay: 'Pindah hari',
+    moveDayHint: 'Jika hari tujuan sudah dipakai, kedua hari bertukar.',
+    editExercise: 'Atur gerakan',
+    sets: 'Set',
+    repMin: 'Repetisi minimal',
+    repMax: 'Repetisi maksimal',
+    secondsMin: 'Detik minimal',
+    secondsMax: 'Detik maksimal',
+    targetRir: 'Target RIR (sisa repetisi)',
+    rirHint: 'RIR 2 = masih sanggup 2 repetisi lagi saat berhenti. Pemula: 2.',
+    restLabel: 'Istirahat antar set',
+    restOption: (sec: number) => (sec % 60 === 0 ? `${sec / 60} mnt` : `${sec} dtk`),
+    swap: 'Ganti gerakan',
+    swapTitle: 'Pilih pengganti',
+    swapEmpty: 'Tidak ada pengganti yang cocok dengan alat dan kondisi Anda.',
+    searchLibrary: 'Cari di perpustakaan',
+    remove: 'Hapus dari hari ini',
+    saved: 'Program disimpan.',
+    undo: 'Urungkan',
+    undone: 'Perubahan diurungkan.',
+    added: (name: string, day: string) => `${name} ditambahkan ke ${day}.`,
+    swapped: (name: string) => `Diganti dengan ${name}.`,
+    back: 'Kembali ke program',
+  },
+  suggestion: {
+    label: 'Saran trainer',
+    apply: 'Terapkan',
+    dismiss: 'Abaikan',
+    why: 'Kenapa?',
+    applied: 'Saran diterapkan.',
+    dismissed: 'Saran disembunyikan selama 14 hari.',
+  },
+  /** Kalimat & dasar ilmiah tiap aturan saran (docs/mesin-trainer/04-saran-trainer.md). */
+  suggestionRules: {
+    low_weekly_volume: {
+      message: (a: SuggestionArgs) =>
+        `Volume ${a.muscle} ${a.sets} set/minggu, di bawah zona 10–20.` +
+        (a.exercise
+          ? ` Tambah ${a.addSets} set ${a.exercise} di ${a.dayLabel}?`
+          : ` Tambah ${a.addSets} set?`),
+      why: 'Meta-analisis Schoenfeld dkk. (2017): 10 set atau lebih per otot per minggu menghasilkan pertumbuhan otot lebih besar dibanding volume rendah.',
+    },
+    high_weekly_volume: {
+      message: (a: SuggestionArgs) =>
+        `Volume ${a.muscle} ${a.sets} set/minggu, di atas 20. Kurangi ${a.removeSets} set agar pemulihan cukup?`,
+      why: 'Di atas ±20 set per otot per minggu, tambahan volume jarang menambah hasil bagi pemula dan memperberat pemulihan (Schoenfeld dkk. 2017).',
+    },
+    low_frequency: {
+      message: (a: SuggestionArgs) =>
+        `Otot ${a.muscle} hanya dilatih ${a.frequency}×/minggu.` +
+        (a.exercise ? ` Tambah ${a.exercise} di ${a.dayLabel}?` : ''),
+      why: 'Melatih setiap otot minimal 2× per minggu lebih efektif untuk hipertrofi dibanding 1× (Schoenfeld dkk. 2016).',
+    },
+    push_pull_imbalance: {
+      message: (a: SuggestionArgs) =>
+        `Set dorong (${a.push}) lebih banyak dari set tarik (${a.pull}). Tambah 2 set gerakan tarik?`,
+      why: 'Menjaga set tarik minimal sama dengan set dorong membantu keseimbangan otot bahu dan postur (aturan Kratos).',
+    },
+    quad_ham_imbalance: {
+      message: (a: SuggestionArgs) =>
+        `Paha belakang ${a.hamstrings} set, kurang dari 75% paha depan (${a.quads} set). Tambah 2 set?`,
+      why: 'Paha belakang yang jauh lebih lemah dari paha depan sering dikaitkan dengan risiko cedera; Kratos menjaga rasio ≥ 0,75.',
+    },
+    stagnation: {
+      message: (a: SuggestionArgs) =>
+        `${a.exercise} tidak naik dalam ${a.sessions} sesi.` +
+        (a.substitute ? ` Coba ganti ke ${a.substitute}?` : ''),
+      why: 'Variasi gerakan untuk otot yang sama bisa memecah kebuntuan progres tanpa mengurangi volume (aturan Kratos).',
+    },
+    deload_due: {
+      message: () => 'Tanda kelelahan menumpuk. Jadikan minggu ini minggu ringan (deload)?',
+      why: 'Konsensus pelatih internasional (Bell dkk. 2023): minggu ringan setiap 4–8 minggu membantu pemulihan dan progres jangka panjang.',
+    },
+    low_attendance: {
+      message: (a: SuggestionArgs) =>
+        `${a.completed} dari ${a.scheduled} sesi dalam 2 minggu terakhir. Ubah ke program 3 hari?`,
+      why: 'Program yang bisa dijalani konsisten lebih efektif daripada program ideal yang sering terlewat.',
+    },
+    consecutive_same_split: {
+      message: (a: SuggestionArgs) =>
+        `${a.firstDay} dan ${a.secondDay} berurutan melatih otot yang sama.` +
+        (a.weekday ? ` Pindahkan ${a.secondDay} ke ${a.weekday}?` : ''),
+      why: 'ACSM menganjurkan jeda minimal 48 jam sebelum melatih otot yang sama secara berat.',
+    },
+    parq_expired: {
+      message: () =>
+        'Skrining PAR-Q+ belum diisi atau sudah lebih dari 12 bulan. Isi ulang di Profil.',
+      why: 'PAR-Q+ adalah skrining kesehatan standar internasional sebelum dan selama program latihan.',
+    },
+  } as Record<string, { message: (a: SuggestionArgs) => string; why: string }>,
+  library: {
+    title: 'Gerakan',
+    search: 'Cari gerakan, otot, atau alat',
+    onlyAvailable: 'Hanya yang bisa saya lakukan',
+    count: (n: number) => `${n} gerakan`,
+    pickToAdd: (day: string) => `Pilih gerakan untuk ${day}`,
+    pickToSwap: 'Pilih gerakan pengganti',
+    empty: 'Tidak ada gerakan yang cocok.',
+    groups: {
+      all: 'Semua',
+      chest: 'Dada',
+      back: 'Punggung',
+      shoulders: 'Bahu',
+      arms: 'Lengan',
+      legs: 'Kaki',
+      core: 'Perut',
+    },
+    unavailable: {
+      equipment: 'Alat tidak ada',
+      health: 'Hindari (kesehatan)',
+      difficulty: 'Terlalu sulit untuk pemula',
+    },
+    locked: 'Boleh, beban tidak naik otomatis',
+    primary: 'Otot utama',
+    secondary: 'Otot pendukung',
+    equipmentNeeded: 'Alat',
+    noEquipment: 'Tanpa alat',
+    steps: 'Cara melakukan',
+    mistakes: 'Kesalahan umum',
+    alternatives: 'Alternatif',
+    notFound: 'Gerakan tidak ditemukan.',
   },
   workout: {
     title: 'Latihan',
@@ -381,8 +547,14 @@ export const t = {
   },
 } as const;
 
+const GENERIC_ERROR = 'Terjadi kesalahan. Coba lagi.';
+
 /** Pesan error i18n dari kode; kode tak dikenal → pesan umum. */
+export function errorMessage(code: string): string {
+  return t.errors[code] ?? GENERIC_ERROR;
+}
+
+/** Seperti errorMessage, tetapi kosong jika tidak ada error (untuk kolom form). */
 export function errorText(code: string | undefined): string | undefined {
-  if (!code) return undefined;
-  return t.errors[code] ?? t.errors.generic;
+  return code ? errorMessage(code) : undefined;
 }

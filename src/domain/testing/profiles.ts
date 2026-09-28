@@ -13,3 +13,9 @@ export function condition(
     ...overrides,
   };
 }
+
+/** Pastikan nilai ada (pengganti tanda `!` di test). */
+export function must<T>(value: T | null | undefined, what = 'nilai'): T {
+  if (value === null || value === undefined) throw new Error(`${what} tidak ditemukan`);
+  return value;
+}

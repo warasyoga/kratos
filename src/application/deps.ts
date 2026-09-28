@@ -7,6 +7,7 @@ import type {
   HealthConditionRepository,
   ProfileRepository,
   ProgramRepository,
+  SuggestionRepository,
   TransactionRunner,
 } from '@/domain/repositories';
 
@@ -20,6 +21,7 @@ export interface AppDeps {
   exercises: ExerciseRepository;
   programs: ProgramRepository;
   bodyMetrics: BodyMetricRepository;
+  suggestions: SuggestionRepository;
   tx: TransactionRunner;
   platform: {
     requestPersistentStorage(): Promise<boolean>;

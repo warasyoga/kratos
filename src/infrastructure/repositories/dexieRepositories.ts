@@ -16,6 +16,8 @@ import type {
   ProfileRepository,
   ProgramBundle,
   ProgramRepository,
+  ResolvedSuggestion,
+  SuggestionRepository,
   TransactionRunner,
 } from '@/domain/repositories';
 import type { ExerciseRow, KratosDatabase } from '../db/database';
@@ -123,6 +125,33 @@ export class DexieProgramRepository implements ProgramRepository {
 
   async saveExercises(exercises: readonly ProgramExercise[]): Promise<void> {
     await this.db.programExercises.bulkPut([...exercises]);
+  }
+
+  async update({ program, days, exercises }: ProgramBundle): Promise<void> {
+    const { db } = this;
+    await db.transaction('rw', db.programs, db.programDays, db.programExercises, async () => {
+      const dayIds = (await db.programDays.where('programId').equals(program.id).toArray()).map(
+        (d) => d.id,
+      );
+      const existing = await db.programExercises.where('programDayId').anyOf(dayIds).primaryKeys();
+      const keep = new Set(exercises.map((e) => e.id));
+      await db.programExercises.bulkDelete(existing.filter((id) => !keep.has(id)));
+      await db.programs.put(program);
+      await db.programDays.bulkPut(days);
+      await db.programExercises.bulkPut(exercises);
+    });
+  }
+}
+
+export class DexieSuggestionRepository implements SuggestionRepository {
+  constructor(private readonly db: KratosDatabase) {}
+
+  listResolved(): Promise<ResolvedSuggestion[]> {
+    return this.db.suggestions.toArray();
+  }
+
+  async save(record: ResolvedSuggestion): Promise<void> {
+    await this.db.suggestions.put(record);
   }
 }
 

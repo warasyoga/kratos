@@ -8,13 +8,17 @@ import {
 import { makeCompleteOnboarding } from './profile/completeOnboarding';
 import { makeGetProfileOverview } from './profile/getProfileOverview';
 import { makeChangeTrainingDays, makeSubmitParq, makeUpdateProfile } from './profile/updateProfile';
+import { makeCatalogUseCases } from './program/catalog';
 import { makeGetActiveProgram } from './program/getActiveProgram';
+import { createProgramEditor } from './program/programEditor';
+import { makeSuggestionUseCases } from './program/suggestions';
 
 /**
  * Semua use case dan query yang tersedia untuk UI, dikelompokkan per modul.
  * Dirakit dari port (AppDeps); di aplikasi oleh src/app/container.ts, di test dengan repository memori.
  */
 export function createServices(deps: AppDeps) {
+  const editor = createProgramEditor(deps);
   return {
     clock: deps.clock as Clock,
     profile: {
@@ -31,10 +35,10 @@ export function createServices(deps: AppDeps) {
     },
     program: {
       getActive: makeGetActiveProgram(deps),
+      edit: editor,
+      suggestions: makeSuggestionUseCases(deps, editor),
     },
-    catalog: {
-      exercises: () => deps.exercises.list(),
-    },
+    catalog: makeCatalogUseCases(deps),
     platform: deps.platform,
   };
 }

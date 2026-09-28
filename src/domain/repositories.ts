@@ -5,7 +5,9 @@
  */
 import type { Exercise, ExerciseGuide } from './exercise/types';
 import type { Equipment, HealthCondition, PlateInventory, UserProfile } from './profile/types';
-import type { Program, ProgramDay, ProgramExercise } from './program/types';
+import type { ProgramBundle, ProgramExercise } from './program/types';
+
+export type { ProgramBundle };
 
 export interface ProfileRepository {
   get(): Promise<UserProfile | null>;
@@ -32,17 +34,28 @@ export interface ExerciseRepository {
   getGuide(id: string): Promise<ExerciseGuide | null>;
 }
 
-export interface ProgramBundle {
-  program: Program;
-  days: ProgramDay[];
-  exercises: ProgramExercise[];
-}
-
 export interface ProgramRepository {
   getActive(): Promise<ProgramBundle | null>;
   /** Simpan program baru sebagai program aktif; program lama dinonaktifkan (riwayat tetap). */
   saveAsActive(bundle: ProgramBundle): Promise<void>;
   saveExercises(exercises: readonly ProgramExercise[]): Promise<void>;
+  /** Simpan perubahan hari & gerakan program yang sudah ada; gerakan yang tidak ada lagi dihapus. */
+  update(bundle: ProgramBundle): Promise<void>;
+}
+
+/** Saran yang sudah diterapkan atau diabaikan (untuk jeda 14 hari). */
+export interface ResolvedSuggestion {
+  id: string;
+  programId: string;
+  ruleId: string;
+  targetKey: string;
+  status: 'applied' | 'dismissed';
+  resolvedAt: number;
+}
+
+export interface SuggestionRepository {
+  listResolved(): Promise<ResolvedSuggestion[]>;
+  save(record: ResolvedSuggestion): Promise<void>;
 }
 
 export interface BodyMetric {

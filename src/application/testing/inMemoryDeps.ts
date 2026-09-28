@@ -11,7 +11,7 @@ import type {
   PlateInventory,
   UserProfile,
 } from '@/domain/profile/types';
-import type { BodyMetric, ProgramBundle } from '@/domain/repositories';
+import type { BodyMetric, ProgramBundle, ResolvedSuggestion } from '@/domain/repositories';
 import { TEST_EXERCISES } from '@/domain/testing/exercises';
 import type { AppDeps } from '../deps';
 
@@ -22,6 +22,7 @@ export interface InMemoryState {
   inventory: PlateInventory;
   programs: ProgramBundle[];
   bodyMetrics: BodyMetric[];
+  suggestions: ResolvedSuggestion[];
 }
 
 export function createInMemoryDeps(
@@ -35,6 +36,7 @@ export function createInMemoryDeps(
     inventory: DEFAULT_INVENTORY,
     programs: [],
     bodyMetrics: [],
+    suggestions: [],
   };
   const active = () => state.programs.find((p) => p.program.active) ?? null;
 
@@ -81,6 +83,11 @@ export function createInMemoryDeps(
         const byId = new Map(exercises.map((e) => [e.id, e]));
         current.exercises = current.exercises.map((e) => byId.get(e.id) ?? e);
       },
+      update: async (bundle) => {
+        state.programs = state.programs.map((p) =>
+          p.program.id === bundle.program.id ? structuredClone(bundle) : p,
+        );
+      },
     },
     bodyMetrics: {
       add: async (m) => void state.bodyMetrics.push(m),
@@ -99,6 +106,10 @@ export function createInMemoryDeps(
         }
         return latest?.weightKg ?? null;
       },
+    },
+    suggestions: {
+      listResolved: async () => [...state.suggestions],
+      save: async (r) => void state.suggestions.push(r),
     },
     tx: { run: (work) => work() },
     platform: { requestPersistentStorage: async () => true },

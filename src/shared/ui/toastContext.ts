@@ -1,6 +1,11 @@
 import { createContext, useContext } from 'react';
 
-export type ShowToast = (title: string, lines?: string[]) => void;
+export interface ToastAction {
+  label: string;
+  onClick: () => void;
+}
+
+export type ShowToast = (title: string, lines?: string[], action?: ToastAction) => void;
 
 export const ToastContext = createContext<ShowToast | null>(null);
 

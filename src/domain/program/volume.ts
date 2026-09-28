@@ -10,6 +10,15 @@ export interface VolumeEntry {
 
 export type VolumeStatus = 'low' | 'optimal' | 'high';
 
+/** Otot besar yang dipantau volume dan frekuensinya (docs/sains-latihan/03-desain-program.md). */
+export const MAJOR_MUSCLES: readonly Muscle[] = [
+  'chest',
+  'back_lats',
+  'quads',
+  'hamstrings',
+  'glutes',
+];
+
 /**
  * Set per otot per minggu: otot utama 1 set, otot pendukung 0,5 set.
  * docs/sains-latihan/03-desain-program.md §1

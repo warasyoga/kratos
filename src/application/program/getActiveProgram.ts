@@ -1,5 +1,12 @@
-import type { Exercise } from '@/domain/exercise/types';
+import type { Exercise, Muscle } from '@/domain/exercise/types';
 import type { Program, ProgramDay, ProgramExercise } from '@/domain/program/types';
+import {
+  classifyVolume,
+  MAJOR_MUSCLES,
+  weeklyFrequencyPerMuscle,
+  weeklySetsPerMuscle,
+  type VolumeStatus,
+} from '@/domain/program/volume';
 import { estimateSessionMinutes } from '@/domain/workout/rest';
 import type { AppDeps } from '../deps';
 
@@ -10,9 +17,18 @@ export interface ProgramDayView {
   exercises: { programExercise: ProgramExercise; exercise: Exercise }[];
 }
 
+export interface MuscleVolume {
+  muscle: Muscle;
+  sets: number;
+  frequency: number;
+  status: VolumeStatus;
+}
+
 export interface ActiveProgramView {
   program: Program;
   days: ProgramDayView[];
+  /** Set per minggu untuk otot besar (zona 10–20, docs/sains-latihan/03-desain-program.md). */
+  weeklyVolume: MuscleVolume[];
 }
 
 /** Program aktif beserta detail gerakan, siap ditampilkan. */
@@ -38,6 +54,24 @@ export function makeGetActiveProgram(deps: AppDeps) {
         estimatedMinutes: estimateSessionMinutes(prescriptions),
       };
     });
-    return { program: bundle.program, days };
+    const entries = days.flatMap((d) =>
+      d.exercises.map((e) => ({
+        exercise: e.exercise,
+        sets: e.programExercise.sets,
+        dayKey: d.day.id,
+      })),
+    );
+    const sets = weeklySetsPerMuscle(entries);
+    const frequency = weeklyFrequencyPerMuscle(entries);
+    const weeklyVolume = MAJOR_MUSCLES.map((muscle) => {
+      const total = sets.get(muscle) ?? 0;
+      return {
+        muscle,
+        sets: total,
+        frequency: frequency.get(muscle) ?? 0,
+        status: classifyVolume(total),
+      };
+    });
+    return { program: bundle.program, days, weeklyVolume };
   };
 }

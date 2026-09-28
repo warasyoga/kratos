@@ -5,6 +5,9 @@ import { AppLayout } from './AppLayout';
 import { paths } from './navigation';
 import { RequireProfile } from './RequireProfile';
 import {
+  DayEditScreen,
+  ExerciseDetailScreen,
+  ExerciseLibraryScreen,
   OnboardingScreen,
   ProfileScreen,
   ProgramScreen,
@@ -25,6 +28,9 @@ export const routes: RouteObject[] = [
     children: [
       { path: paths.today, element: <TodayScreen /> },
       { path: paths.program, element: page(<ProgramScreen />) },
+      { path: `${paths.program}/hari/:dayId`, element: page(<DayEditScreen />) },
+      { path: paths.library, element: page(<ExerciseLibraryScreen />) },
+      { path: `${paths.library}/:id`, element: page(<ExerciseDetailScreen />) },
       { path: paths.workout, element: page(<WorkoutScreen />) },
       { path: paths.progress, element: page(<ProgressScreen />) },
       { path: paths.profile, element: page(<ProfileScreen />) },

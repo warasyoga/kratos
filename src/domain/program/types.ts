@@ -38,6 +38,13 @@ export interface ProgramExercise {
   progressionLocked: boolean;
 }
 
+/** Program lengkap: header, hari, dan gerakan. */
+export interface ProgramBundle {
+  program: Program;
+  days: ProgramDay[];
+  exercises: ProgramExercise[];
+}
+
 /** Target set & repetisi satu gerakan. */
 export interface Prescription {
   sets: number;

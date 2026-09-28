@@ -30,6 +30,18 @@ Lihat [01-pembuatan-program.md](../mesin-trainer/01-pembuatan-program.md) dan [0
 - Perubahan program tidak mengubah sesi yang sudah selesai.
 - Mengedit saat ada sesi aktif: perubahan berlaku mulai sesi berikutnya.
 
+## Implementasi (Tahap 4)
+- Urutan diubah dengan tombol naik/turun (aksesibel untuk sentuhan dan keyboard); drag ditunda.
+- Gerakan terakhir di satu hari tidak bisa dihapus (pesan mengarahkan ke Profil → Ubah jadwal),
+  agar jumlah hari latihan tetap sesuai jadwal.
+- Pindah ke hari yang sudah terpakai menukar kedua hari; jadwal di Profil ikut diperbarui.
+- Undo satu langkah disimpan di memori selama aplikasi terbuka (`createProgramEditor`), tampil sebagai tombol "Urungkan" di toast.
+- Mengganti gerakan selalu mengosongkan beban (`currentWeightKg = null`) agar dikalibrasi ulang.
+- Saran dihitung ulang setiap kali Program dibuka; hanya catatan "diterapkan/diabaikan" yang disimpan
+  (tabel `suggestions`). Aturan yang butuh data riwayat latihan, nutrisi, atau tidur aktif mulai Tahap 5–8.
+- Perpustakaan gerakan berada di fitur program (`/gerakan`, `/gerakan/:id`); mode pilih lewat
+  `?tambah=<hari>` dan `?ganti=<gerakan program>`.
+
 ## Data
 `Program`, `ProgramDay`, `ProgramExercise`, `Suggestion`.
 Use case: `editProgramExercise`, `reorderProgramExercises`, `addProgramExercise`, `removeProgramExercise`, `moveProgramDay`, `applySuggestion`, `dismissSuggestion`, `regenerateProgram`.

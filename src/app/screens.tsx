@@ -10,6 +10,15 @@ export const ProfileScreen = lazy(() =>
 export const ProgramScreen = lazy(() =>
   import('@/features/program').then((m) => ({ default: m.ProgramScreen })),
 );
+export const DayEditScreen = lazy(() =>
+  import('@/features/program').then((m) => ({ default: m.DayEditScreen })),
+);
+export const ExerciseLibraryScreen = lazy(() =>
+  import('@/features/program').then((m) => ({ default: m.ExerciseLibraryScreen })),
+);
+export const ExerciseDetailScreen = lazy(() =>
+  import('@/features/program').then((m) => ({ default: m.ExerciseDetailScreen })),
+);
 export const WorkoutScreen = lazy(() =>
   import('@/features/workout').then((m) => ({ default: m.WorkoutScreen })),
 );

@@ -12,6 +12,7 @@ import {
   DexieGymRepository,
   DexieProfileRepository,
   DexieProgramRepository,
+  DexieSuggestionRepository,
   DexieTransactionRunner,
 } from './dexieRepositories';
 
@@ -130,5 +131,35 @@ describe('repository Dexie', () => {
       }),
     ).rejects.toThrow('gagal');
     expect(await profiles.get()).toBeNull();
+  });
+});
+
+describe('program update & saran', () => {
+  it('update menyimpan perubahan dan menghapus gerakan yang dibuang', async () => {
+    const repo = new DexieProgramRepository(db);
+    const bundle = makeProgram('u');
+    await repo.saveAsActive(bundle);
+    const [first, ...rest] = bundle.exercises;
+    await repo.update({
+      ...bundle,
+      exercises: rest.map((e) => (e.id === rest[0]?.id ? { ...e, sets: 5 } : e)),
+    });
+    const active = await repo.getActive();
+    expect(active?.exercises).toHaveLength(bundle.exercises.length - 1);
+    expect(active?.exercises.some((e) => e.id === first?.id)).toBe(false);
+    expect(active?.exercises.find((e) => e.id === rest[0]?.id)?.sets).toBe(5);
+  });
+
+  it('saran yang diabaikan tersimpan', async () => {
+    const repo = new DexieSuggestionRepository(db);
+    await repo.save({
+      id: 's1',
+      programId: 'p',
+      ruleId: 'low_weekly_volume',
+      targetKey: 'chest',
+      status: 'dismissed',
+      resolvedAt: 1,
+    });
+    expect(await repo.listResolved()).toHaveLength(1);
   });
 });
