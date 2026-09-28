@@ -33,11 +33,15 @@ app-gym/
 │   │   └── repositories.ts       Semua interface repository — Tahap 3
 │   │
 │   ├── application/              USE CASE
-│   │   ├── services.ts           Tipe Services (semua use case untuk UI)
+│   │   ├── deps.ts               AppDeps: semua port yang dibutuhkan use case
+│   │   ├── services.ts           createServices(deps) → Services (semua use case untuk UI)
 │   │   ├── ServicesContext.ts    useServices(): jembatan ke UI
-│   │   ├── onboarding/           completeOnboarding.ts
-│   │   ├── profile/              updateProfile.ts, toggleEquipment.ts, addHealthCondition.ts
-│   │   ├── program/              generateProgram.ts, editProgramExercise.ts, applySuggestion.ts
+│   │   ├── queryKeys.ts          Kunci cache TanStack Query
+│   │   ├── validation.ts         validate(schema, input) → Result dengan kode error per kolom
+│   │   ├── testing/              repository memori untuk test
+│   │   ├── profile/              schemas.ts (Zod), completeOnboarding, getProfileOverview, updateProfile
+│   │   ├── gym/                  gymUseCases.ts (alat, kondisi kesehatan)
+│   │   ├── program/              getActiveProgram, programChanges; Tahap 4: edit & saran
 │   │   ├── checkin/              submitCheckIn.ts
 │   │   ├── workout/              startSession.ts, completeSet.ts, finishSession.ts
 │   │   ├── progress/             getProgressSummary.ts, logBodyMetric.ts, addProgressPhoto.ts
@@ -48,14 +52,14 @@ app-gym/
 │   ├── infrastructure/           DETAIL TEKNIS
 │   │   ├── db/                   database.ts (Dexie), schema.ts, migrations/
 │   │   ├── repositories/         Dexie*Repository.ts + mappers
-│   │   ├── seed/                 exercises.json (perpustakaan gerakan)
+│   │   ├── seed/                 exerciseCatalog.ts (61 gerakan + panduan), catalogVersion.ts
+│   │   ├── platform.ts           requestPersistentStorage
 │   │   ├── notifications/        webNotifications.ts, icsCalendar.ts
 │   │   ├── backup/               zipArchive.ts
 │   │   ├── media/                imageCompressor.ts
 │   │   └── clock.ts              SystemClock
 │   │
 │   ├── features/                 UI PER LAYAR
-│   │   ├── onboarding/
 │   │   ├── today/
 │   │   ├── checkin/
 │   │   ├── program/
@@ -63,11 +67,12 @@ app-gym/
 │   │   ├── exercise-library/
 │   │   ├── progress/
 │   │   ├── nutrition/
-│   │   ├── profile/
+│   │   ├── profile/              ProfileScreen + onboarding/ (berbagi form alat, kondisi, PAR-Q+, jadwal)
 │   │   └── achievements/
 │   │
 │   └── shared/                   GENERIK, TANPA PENGETAHUAN GYM
-│       ├── ui/                   Button, Card, Chip, Meter, Sheet, Stepper, TabBar
+│       ├── ui/                   Button, Card, Chip, Meter, Stat, TextField, OptionGroup, ToggleChip,
+│       │                         SegmentedControl, Sheet, Toast, StepProgress, ScreenHeader, TabBar
 │       ├── lib/                  format.ts (angka/tanggal id-ID), cn.ts, haptics.ts
 │       ├── i18n/                 id.ts (semua teks yang tampil ke pengguna)
 │       └── styles/               tokens.css, global.css

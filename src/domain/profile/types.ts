@@ -1,46 +1,54 @@
 import type { Weekday } from '../common/weekday';
 import type { MovementPattern } from '../exercise/types';
 
-export type Sex = 'male' | 'female';
-export type ActivityLevel = 'sedentary' | 'light' | 'moderate' | 'very' | 'extra';
+export const SEXES = ['male', 'female'] as const;
+export type Sex = (typeof SEXES)[number];
+export const ACTIVITY_LEVELS = ['sedentary', 'light', 'moderate', 'very', 'extra'] as const;
+export type ActivityLevel = (typeof ACTIVITY_LEVELS)[number];
 /** beginner = pengalaman 0–6 bulan. */
-export type Experience = 'beginner' | 'intermediate';
+export const EXPERIENCES = ['beginner', 'intermediate'] as const;
+export type Experience = (typeof EXPERIENCES)[number];
 export type Goal = 'hypertrophy';
 
-export type BodyArea =
-  | 'shoulder_left'
-  | 'shoulder_right'
-  | 'elbow'
-  | 'wrist'
-  | 'lower_back'
-  | 'upper_back'
-  | 'neck'
-  | 'hip'
-  | 'knee_left'
-  | 'knee_right'
-  | 'ankle'
-  | 'other';
+export const BODY_AREAS = [
+  'shoulder_left',
+  'shoulder_right',
+  'elbow',
+  'wrist',
+  'lower_back',
+  'upper_back',
+  'neck',
+  'hip',
+  'knee_left',
+  'knee_right',
+  'ankle',
+  'other',
+] as const;
+export type BodyArea = (typeof BODY_AREAS)[number];
 
-export type Severity = 'mild' | 'moderate' | 'severe';
+export const SEVERITIES = ['mild', 'moderate', 'severe'] as const;
+export type Severity = (typeof SEVERITIES)[number];
 
-export type Equipment =
-  | 'barbell'
-  | 'dumbbell'
-  | 'squat_rack'
-  | 'bench'
-  | 'cable'
-  | 'leg_press'
-  | 'smith'
-  | 'pullup_bar'
-  | 'kettlebell'
-  | 'hack_squat'
-  | 'leg_curl'
-  | 'leg_extension'
-  | 'chest_press_machine'
-  | 'lat_pulldown'
-  | 'ez_bar'
-  | 'landmine'
-  | 'trap_bar';
+export const EQUIPMENT = [
+  'barbell',
+  'dumbbell',
+  'squat_rack',
+  'bench',
+  'cable',
+  'leg_press',
+  'smith',
+  'pullup_bar',
+  'kettlebell',
+  'hack_squat',
+  'leg_curl',
+  'leg_extension',
+  'chest_press_machine',
+  'lat_pulldown',
+  'ez_bar',
+  'landmine',
+  'trap_bar',
+] as const;
+export type Equipment = (typeof EQUIPMENT)[number];
 
 export interface UserProfile {
   id: 'me';

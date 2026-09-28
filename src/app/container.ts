@@ -1,12 +1,38 @@
-import type { Services } from '@/application/services';
+import type { AppDeps } from '@/application/deps';
+import { createServices, type Services } from '@/application/services';
 import { systemClock } from '@/infrastructure/clock';
+import { KratosDatabase } from '@/infrastructure/db/database';
+import { ensureCatalog } from '@/infrastructure/db/seed';
+import { requestPersistentStorage } from '@/infrastructure/platform';
+import {
+  DexieBodyMetricRepository,
+  DexieExerciseRepository,
+  DexieGymRepository,
+  DexieHealthConditionRepository,
+  DexieProfileRepository,
+  DexieProgramRepository,
+  DexieTransactionRunner,
+} from '@/infrastructure/repositories/dexieRepositories';
 
 /**
  * Composition root: satu-satunya tempat yang merakit infrastructure + application.
- * Repository Dexie dan use case ditambahkan di sini mulai Tahap 3.
+ * Membuka database dan memastikan perpustakaan gerakan terpasang sebelum UI tampil.
  */
-export function createServices(): Services {
-  return {
+export async function createAppServices(): Promise<Services> {
+  const db = new KratosDatabase();
+  await ensureCatalog(db);
+
+  const deps: AppDeps = {
     clock: systemClock,
+    newId: () => crypto.randomUUID(),
+    profiles: new DexieProfileRepository(db),
+    conditions: new DexieHealthConditionRepository(db),
+    gym: new DexieGymRepository(db),
+    exercises: new DexieExerciseRepository(db),
+    programs: new DexieProgramRepository(db),
+    bodyMetrics: new DexieBodyMetricRepository(db),
+    tx: new DexieTransactionRunner(db),
+    platform: { requestPersistentStorage },
   };
+  return createServices(deps);
 }

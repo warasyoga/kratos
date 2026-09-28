@@ -1,4 +1,4 @@
-import { addDays, daysBetween, nextWeekday, sortWeekdays, weekdayOf } from './weekday';
+import { addDays, daysBetween, nextWeekday, sortWeekdays, startOfWeek, weekdayOf } from './weekday';
 
 describe('weekday', () => {
   it('28 September 2026 adalah Senin', () => {
@@ -17,5 +17,11 @@ describe('weekday', () => {
   it('menghitung dan menambah hari melewati akhir bulan', () => {
     expect(daysBetween('2026-09-28', '2026-10-12')).toBe(14);
     expect(addDays('2026-09-28', 7)).toBe('2026-10-05');
+  });
+
+  it('awal minggu adalah Senin', () => {
+    expect(startOfWeek('2026-10-01')).toBe('2026-09-28'); // Kamis
+    expect(startOfWeek('2026-10-04')).toBe('2026-09-28'); // Minggu
+    expect(startOfWeek('2026-09-28')).toBe('2026-09-28');
   });
 });

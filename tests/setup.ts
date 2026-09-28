@@ -1,6 +1,10 @@
+import 'fake-indexeddb/auto';
 import '@testing-library/jest-dom/vitest';
-import { cleanup } from '@testing-library/react';
+import { cleanup, configure } from '@testing-library/react';
 import { afterEach } from 'vitest';
+
+// Layar dimuat belakangan (lazy); impor pertama di jsdom bisa > 1 detik.
+configure({ asyncUtilTimeout: 5000 });
 
 afterEach(() => {
   cleanup();

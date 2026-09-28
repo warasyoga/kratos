@@ -8,7 +8,7 @@ export interface SegmentOption<T extends string> {
 export interface SegmentedControlProps<T extends string> {
   label: string;
   options: readonly SegmentOption<T>[];
-  value: T;
+  value: T | undefined;
   onChange: (value: T) => void;
 }
 

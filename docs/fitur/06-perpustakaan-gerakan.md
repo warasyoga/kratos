@@ -42,7 +42,10 @@ Gambar: ilustrasi sederhana buatan sendiri atau aset berlisensi bebas; dicatat s
 - Gerakan buatan pengguna wajib: nama, pola, otot utama, alat, jenis beban.
 
 ## Data
-`Exercise`. Seed dari `infrastructure/seed/exercises.json`, divalidasi Zod saat build test.
+`Exercise` + `ExerciseGuide`. Katalog bawaan di `src/infrastructure/seed/exerciseCatalog.ts` (TypeScript, dicek
+tipe saat build) berisi 61 gerakan. Test memastikan ID unik, panduan lengkap, data latihan identik dengan data uji
+domain, dan setiap slot template punya pengganti. Katalog dimuat terpisah (lazy) hanya saat dipasang/diperbarui
+(`CATALOG_VERSION`).
 
 ## Kriteria selesai
 - [ ] Setiap gerakan bawaan punya pola, otot, alat, langkah, kesalahan umum, `stressedAreas`

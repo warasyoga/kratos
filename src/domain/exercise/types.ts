@@ -1,20 +1,22 @@
 import type { BodyArea, Equipment } from '../profile/types';
 
-export type MovementPattern =
-  | 'horizontal_push'
-  | 'vertical_push'
-  | 'horizontal_pull'
-  | 'vertical_pull'
-  | 'squat'
-  | 'hinge'
-  | 'lunge'
-  | 'knee_flexion'
-  | 'knee_extension'
-  | 'elbow_flexion'
-  | 'elbow_extension'
-  | 'shoulder_abduction'
-  | 'calf'
-  | 'core';
+export const MOVEMENT_PATTERNS = [
+  'horizontal_push',
+  'vertical_push',
+  'horizontal_pull',
+  'vertical_pull',
+  'squat',
+  'hinge',
+  'lunge',
+  'knee_flexion',
+  'knee_extension',
+  'elbow_flexion',
+  'elbow_extension',
+  'shoulder_abduction',
+  'calf',
+  'core',
+] as const;
+export type MovementPattern = (typeof MOVEMENT_PATTERNS)[number];
 
 export type Muscle =
   | 'chest'
@@ -52,6 +54,14 @@ export interface Exercise {
   /** Area tubuh yang terbebani, untuk menyesuaikan dengan kondisi kesehatan. */
   stressedAreas: BodyArea[];
   isCustom: boolean;
+}
+
+/** Panduan gerakan untuk pengguna (bahasa Indonesia). Disimpan terpisah dari data latihan. */
+export interface ExerciseGuide {
+  exerciseId: string;
+  /** Langkah melakukan gerakan, berurutan. */
+  instructions: string[];
+  commonMistakes: string[];
 }
 
 const LOWER_BODY_PATTERNS: readonly MovementPattern[] = ['squat', 'hinge', 'lunge'];

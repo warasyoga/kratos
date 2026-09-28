@@ -1,4 +1,4 @@
-import { formatDayDate, formatKg, formatNumber, parseLocalDate } from './format';
+import { formatDayDate, formatFixed, formatKg, formatNumber, parseLocalDate } from './format';
 
 describe('formatNumber', () => {
   it('memakai koma desimal dan titik ribuan', () => {
@@ -8,6 +8,13 @@ describe('formatNumber', () => {
 
   it('membatasi digit desimal', () => {
     expect(formatNumber(82.333)).toBe('82,3');
+  });
+});
+
+describe('formatFixed', () => {
+  it('selalu menampilkan jumlah desimal yang diminta', () => {
+    expect(formatFixed(2, 1)).toBe('2,0');
+    expect(formatFixed(1.75, 1)).toBe('1,8');
   });
 });
 

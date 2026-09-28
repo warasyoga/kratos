@@ -26,6 +26,10 @@ Mengumpulkan data minimum agar trainer bisa menyusun program pertama, dalam ≤ 
 - Setelah selesai: panggil `navigator.storage.persist()`.
 - Tombol "Kembali" di setiap langkah; jawaban tersimpan sementara jika aplikasi ditutup.
 
+## Implementasi
+Onboarding berada di `src/features/profile/onboarding/` (berbagi form dengan layar Profil). Jawaban sementara
+disimpan di `localStorage` (`kratos:onboarding-draft`) dan dihapus setelah selesai. Program mulai dari Senin minggu berjalan.
+
 ## Data
 `UserProfile`, `HealthCondition[]`, `EquipmentItem[]`, `Program` pertama.
 Use case: `completeOnboarding`.

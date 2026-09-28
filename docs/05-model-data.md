@@ -293,15 +293,15 @@ karena harus terbaca sinkron sebelum halaman digambar agar tidak berkedip (lihat
 ## Skema Dexie
 
 ```ts
-// src/infrastructure/db/schema.ts
+// src/infrastructure/db/database.ts (SCHEMA_V1)
 db.version(1).stores({
   profile:          'id',
-  healthConditions: 'id, active',
-  equipment:        'equipment',
-  exercises:        'id, pattern, *primaryMuscles, isCustom',
-  programs:         'id, active',
-  programDays:      'id, programId, [programId+order]',
-  programExercises: 'id, programDayId, exerciseId, [programDayId+order]',
+  healthConditions: 'id',
+  equipment:        'equipment',        // hanya alat yang tersedia yang disimpan
+  exercises:        'id, pattern',      // baris berisi juga panduan (guide)
+  programs:         'id',
+  programDays:      'id, programId',
+  programExercises: 'id, programDayId, exerciseId',
   checkIns:         'id, &logDate',
   sessions:         'id, logDate, status, programDayId',
   setLogs:          'id, sessionId, exerciseId, completedAt, [exerciseId+completedAt]',
@@ -317,6 +317,8 @@ db.version(1).stores({
 ```
 
 Hanya kolom yang dicari/diurutkan yang diindeks. Kolom lain tetap tersimpan.
+**IndexedDB tidak bisa mengindeks nilai boolean**, jadi `active`/`isCustom` disaring di memori (jumlah barisnya kecil).
+Baris `settings` (`id: 'settings'`) menyimpan `catalogVersion`, `inventory` (pelat/dumbbell), dan `lastBackupAt`.
 
 ## Migrasi
 

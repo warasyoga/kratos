@@ -28,10 +28,14 @@ Centang item saat selesai. Urutan disusun agar fondasi dan rumus selesai sebelum
 - **Selesai jika:** semua contoh di `docs/sains-latihan` dan `docs/mesin-trainer` menjadi test yang lulus
 
 ## Tahap 3 · Data & Profil
-- [ ] Skema Dexie v1, repository, mapper, test dengan fake-indexeddb
-- [ ] Seed perpustakaan gerakan (±70 gerakan)
-- [ ] Onboarding: data tubuh, tujuan, jadwal, alat, kondisi kesehatan, PAR-Q+
-- [ ] Layar Profil: edit semua data, toggle alat, kelola kondisi kesehatan
+- [x] Skema Dexie v1, repository, test dengan fake-indexeddb
+- [x] Perpustakaan 61 gerakan dengan panduan bahasa Indonesia
+- [x] Onboarding: data tubuh, tujuan, jadwal, alat, kondisi kesehatan, PAR-Q+ (draft tersimpan jika aplikasi tertutup)
+- [x] Layar Profil: edit data diri, ubah jadwal (program baru), toggle alat, kelola kondisi kesehatan, PAR-Q+
+- [x] Program disesuaikan otomatis saat alat/kondisi berubah, dengan ringkasan perubahan
+- [x] Layar Program (baca saja) dan Hari Ini membaca program sungguhan
+- [x] Layar dimuat terpisah (lazy); JavaScript awal 179 KB gzip
+- [ ] Edit inventaris pelat & dumbbell → dipindah ke Tahap 5 (dipakai kalkulator pelat)
 - **Selesai jika:** onboarding menghasilkan profil tersimpan dan program pertama
 
 ## Tahap 4 · Program
@@ -47,6 +51,7 @@ Centang item saat selesai. Urutan disusun agar fondasi dan rumus selesai sebelum
 - [ ] Tabel set dengan acuan minggu lalu, input stepper, centang
 - [ ] Timer istirahat (berbasis `restEndsAt`), getaran, wake lock
 - [ ] Pilihan RIR, kalkulator pelat, catatan trainer
+- [ ] Edit inventaris pelat & dumbbell di Profil (dari Tahap 3)
 - [ ] Ringkasan akhir sesi: volume, PR, beban minggu depan
 
 ## Tahap 6 · Hari Ini

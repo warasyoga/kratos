@@ -35,14 +35,15 @@ Kratos memakai **arsitektur berlapis** (Clean Architecture versi ringan). Tujuan
 
 ## Aturan ketergantungan
 
-| Dari ↓ boleh impor → | domain | application | infrastructure | features | shared |
-|---|:-:|:-:|:-:|:-:|:-:|
-| **domain** | ✅ | ❌ | ❌ | ❌ | ❌ |
-| **application** | ✅ | ✅ | ❌ | ❌ | ❌ |
-| **infrastructure** | ✅ | ❌ | ✅ | ❌ | ❌ |
-| **features** | ✅ (tipe & fungsi format) | ✅ | ❌ | ❌ (antar fitur) | ✅ |
-| **shared** | ❌ | ❌ | ❌ | ❌ | ✅ |
-| **app** | ✅ | ✅ | ✅ | ✅ | ✅ |
+| Dari ↓ boleh impor → | domain | application | infrastructure | features | shared | i18n |
+|---|:-:|:-:|:-:|:-:|:-:|:-:|
+| **domain** | ✅ | ❌ | ❌ | ❌ | ❌ | ❌ |
+| **application** | ✅ | ✅ | ❌ | ❌ | ❌ | ❌ |
+| **infrastructure** | ✅ | ❌ | ✅ | ❌ | ❌ | ❌ |
+| **features** | ✅ | ✅ | ❌ | ❌ (antar fitur) | ✅ | ✅ |
+| **shared** | ❌ | ❌ | ❌ | ❌ | ✅ | ✅ |
+| **i18n** (`src/shared/i18n`) | ✅ (tipe, agar label lengkap) | ❌ | ❌ | ❌ | ❌ | ✅ |
+| **app** | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
 
 Aturan ini **ditegakkan otomatis** oleh `eslint-plugin-boundaries`. Pelanggaran membuat `npm run lint` gagal.
 

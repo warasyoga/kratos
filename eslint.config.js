@@ -50,6 +50,8 @@ export default tseslint.config(
         { type: 'application', pattern: 'src/application' },
         { type: 'domain', pattern: 'src/domain' },
         { type: 'infrastructure', pattern: 'src/infrastructure' },
+        // Teks aplikasi: boleh membaca tipe domain agar label lengkap untuk setiap nilai.
+        { type: 'i18n', pattern: 'src/shared/i18n' },
         { type: 'shared', pattern: 'src/shared' },
       ],
     },
@@ -62,14 +64,26 @@ export default tseslint.config(
             {
               from: layer('app'),
               allow: {
-                to: layers('app', 'features', 'application', 'domain', 'infrastructure', 'shared'),
+                to: layers(
+                  'app',
+                  'features',
+                  'application',
+                  'domain',
+                  'infrastructure',
+                  'shared',
+                  'i18n',
+                ),
               },
             },
-            { from: layer('features'), allow: { to: layers('application', 'domain', 'shared') } },
+            {
+              from: layer('features'),
+              allow: { to: layers('application', 'domain', 'shared', 'i18n') },
+            },
             { from: layer('application'), allow: { to: layers('application', 'domain') } },
             { from: layer('infrastructure'), allow: { to: layers('infrastructure', 'domain') } },
             { from: layer('domain'), allow: { to: layer('domain') } },
-            { from: layer('shared'), allow: { to: layer('shared') } },
+            { from: layer('shared'), allow: { to: layers('shared', 'i18n') } },
+            { from: layer('i18n'), allow: { to: layers('i18n', 'domain') } },
           ],
         },
       ],

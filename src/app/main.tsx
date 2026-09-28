@@ -9,20 +9,33 @@ import '@/shared/styles/global.css';
 import { StrictMode } from 'react';
 import { createRoot } from 'react-dom/client';
 import { RouterProvider } from 'react-router';
-import { createServices } from './container';
+import { createAppServices } from './container';
 import { AppProviders } from './providers';
 import { createAppRouter } from './router';
 
 const rootElement = document.getElementById('root');
 if (!rootElement) throw new Error('Elemen #root tidak ditemukan di index.html');
 
-const services = createServices();
-const router = createAppRouter();
+const root = createRoot(rootElement);
 
-createRoot(rootElement).render(
-  <StrictMode>
-    <AppProviders services={services}>
-      <RouterProvider router={router} />
-    </AppProviders>
-  </StrictMode>,
-);
+createAppServices()
+  .then((services) => {
+    const router = createAppRouter();
+    root.render(
+      <StrictMode>
+        <AppProviders services={services}>
+          <RouterProvider router={router} />
+        </AppProviders>
+      </StrictMode>,
+    );
+  })
+  .catch((error: unknown) => {
+    console.error(error);
+    // Tanpa IndexedDB (mis. mode privat tertentu) aplikasi tidak bisa menyimpan data.
+    root.render(
+      <p style={{ padding: 24 }}>
+        Kratos tidak bisa membuka penyimpanan di browser ini. Nonaktifkan mode privat atau coba
+        browser lain.
+      </p>,
+    );
+  });

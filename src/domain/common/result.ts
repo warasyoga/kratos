@@ -9,6 +9,8 @@ export interface AppError {
   code: string;
   /** Penjelasan untuk pengembang; teks untuk pengguna diambil dari i18n berdasarkan `code`. */
   message: string;
+  /** Kesalahan per kolom input: path → kode pesan i18n, mis. { heightCm: 'height_range' }. */
+  fields?: Record<string, string>;
 }
 
 export function ok<T>(value: T): Result<T, never> {

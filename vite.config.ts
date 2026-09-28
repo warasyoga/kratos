@@ -21,6 +21,8 @@ export default defineConfig({
     globals: true,
     environment: 'jsdom',
     setupFiles: ['./tests/setup.ts'],
+    // Test alur UI (mengetik di banyak langkah) bisa lambat saat semua test berjalan paralel.
+    testTimeout: 15_000,
     include: ['src/**/*.test.{ts,tsx}'],
     coverage: {
       provider: 'v8',

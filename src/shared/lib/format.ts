@@ -8,6 +8,14 @@ export function formatNumber(value: number, maxFractionDigits = 1): string {
   return new Intl.NumberFormat(LOCALE, { maximumFractionDigits: maxFractionDigits }).format(value);
 }
 
+/** Jumlah desimal tetap: formatFixed(2, 1) → "2,0". */
+export function formatFixed(value: number, digits: number): string {
+  return new Intl.NumberFormat(LOCALE, {
+    minimumFractionDigits: digits,
+    maximumFractionDigits: digits,
+  }).format(value);
+}
+
 export function formatKg(value: number): string {
   return `${formatNumber(value, 2)} kg`;
 }

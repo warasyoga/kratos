@@ -2,6 +2,7 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { useState, type ReactNode } from 'react';
 import type { Services } from '@/application/services';
 import { ServicesContext } from '@/application/ServicesContext';
+import { ToastProvider } from '@/shared/ui/Toast';
 
 function createQueryClient(): QueryClient {
   return new QueryClient({
@@ -18,7 +19,9 @@ export function AppProviders({ services, children }: { services: Services; child
   const [queryClient] = useState(createQueryClient);
   return (
     <QueryClientProvider client={queryClient}>
-      <ServicesContext.Provider value={services}>{children}</ServicesContext.Provider>
+      <ServicesContext.Provider value={services}>
+        <ToastProvider>{children}</ToastProvider>
+      </ServicesContext.Provider>
     </QueryClientProvider>
   );
 }

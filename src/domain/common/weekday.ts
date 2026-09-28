@@ -18,6 +18,11 @@ export function weekdayOf(isoDate: string): Weekday {
   return WEEKDAYS[(jsDay + 6) % 7] as Weekday;
 }
 
+/** Senin di minggu yang sama dengan tanggal `YYYY-MM-DD`. */
+export function startOfWeek(isoDate: string): string {
+  return addDays(isoDate, -WEEKDAYS.indexOf(weekdayOf(isoDate)));
+}
+
 /** Selisih hari kalender antara dua tanggal `YYYY-MM-DD` (b − a). */
 export function daysBetween(a: string, b: string): number {
   const toUtc = (iso: string) => {

@@ -30,7 +30,7 @@ Setiap penambahan library baru harus dicatat di tabel ini beserta alasannya.
 | Database lokal | **Dexie.js** (IndexedDB) | API rapi, mendukung migrasi skema berversi, bisa menyimpan foto (Blob) |
 | Pengambilan data di UI | **TanStack Query** | Cache, status loading/error, dan invalidasi setelah perubahan data tanpa kode manual |
 | State UI sementara | **Zustand** | Hanya untuk state layar yang tidak perlu disimpan (mis. panel terbuka) |
-| Form | **React Hook Form** + **Zod** | Validasi input dengan skema yang sama dengan validasi impor data |
+| Form | State React + **Zod** | Skema Zod yang sama dipakai di UI (per langkah) dan di use case. Form Kratos pendek, jadi React Hook Form belum diperlukan; ditambahkan bila ada form kompleks |
 | Tanggal | **date-fns** + locale `id` | Fungsi murni, mudah diuji, format Indonesia |
 | Backup | **JSZip** | Ekspor data JSON + foto dalam satu file `.zip` |
 
