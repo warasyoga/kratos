@@ -4,14 +4,15 @@ Setiap tahap berakhir dengan aplikasi yang **bisa dijalankan dan lulus semua tes
 Centang item saat selesai. Urutan disusun agar fondasi dan rumus selesai sebelum tampilan.
 
 ## Tahap 1 · Fondasi
-- [ ] Inisialisasi Git dan proyek Vite + React + TypeScript (strict)
-- [ ] ESLint (boundaries, a11y), Prettier, Husky, lint-staged
-- [ ] Vitest, Testing Library, Playwright terpasang dengan satu contoh test
-- [ ] Alias `@/`, struktur folder sesuai [04-struktur-folder.md](04-struktur-folder.md)
-- [ ] Token warna & font, tema terang/gelap/ikuti HP
-- [ ] Komponen `shared/ui` dasar: Button, Card, Chip, Meter, Stat, TabBar
-- [ ] Layout 5 tab dengan layar kosong
-- [ ] `Result`, `Clock`, `container.ts`, `ServicesProvider`
+- [x] Inisialisasi Git dan proyek Vite + React + TypeScript (strict)
+- [x] ESLint (boundaries, a11y), Prettier, Husky, lint-staged
+- [x] Vitest, Testing Library, Playwright terpasang dengan satu contoh test
+- [x] Alias `@/`, struktur folder sesuai [04-struktur-folder.md](04-struktur-folder.md)
+- [x] Token warna & font, tema terang/gelap/ikuti HP
+- [x] Komponen `shared/ui` dasar: Button, Card, Chip, Meter, Stat, TabBar
+- [x] Layout 5 tab dengan layar kosong
+- [x] `Result`, `Clock`, `container.ts`, `AppProviders` + `useServices`
+- [x] Test E2E navigasi di viewport Android & iPhone
 - **Selesai jika:** aplikasi tampil di HP dengan tab bar, lint menolak impor lintas lapisan yang dilarang
 
 ## Tahap 2 · Domain (otak trainer)

@@ -279,12 +279,14 @@ interface UnlockedAchievement { id: string; achievementId: string; unlockedAt: n
 
 interface Settings {
   id: 'settings';
-  theme: 'system' | 'light' | 'dark';
   reminderTime?: string;          // '17:30'
   hapticsEnabled: boolean;
   lastBackupAt?: number;
 }
 ```
+
+Preferensi **tema** tidak disimpan di Settings, melainkan di `localStorage` (`kratos:theme`),
+karena harus terbaca sinkron sebelum halaman digambar agar tidak berkedip (lihat `src/shared/lib/theme.ts`).
 
 ## Skema Dexie
 

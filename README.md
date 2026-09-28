@@ -16,35 +16,43 @@ serta nutrisi dipantau setiap hari. Semua perhitungan mengikuti pedoman internas
 
 Semua rancangan ada di folder [`docs/`](docs/README.md). Mulai dari sana.
 
-| Topik | Dokumen |
-|---|---|
-| Visi & ruang lingkup | [docs/01-visi-produk.md](docs/01-visi-produk.md) |
-| Teknologi | [docs/02-tech-stack.md](docs/02-tech-stack.md) |
-| Arsitektur berlapis | [docs/03-arsitektur.md](docs/03-arsitektur.md) |
-| Struktur folder | [docs/04-struktur-folder.md](docs/04-struktur-folder.md) |
-| Model data | [docs/05-model-data.md](docs/05-model-data.md) |
-| Design system | [docs/06-design-system.md](docs/06-design-system.md) |
-| Standar kode | [docs/07-standar-kode.md](docs/07-standar-kode.md) |
-| Pengujian | [docs/08-pengujian.md](docs/08-pengujian.md) |
-| Roadmap | [docs/09-roadmap.md](docs/09-roadmap.md) |
-| Deploy & PWA | [docs/10-deploy-pwa.md](docs/10-deploy-pwa.md) |
-| Glosarium istilah | [docs/11-glosarium.md](docs/11-glosarium.md) |
-| Sains latihan (rumus & sumber) | [docs/sains-latihan/](docs/sains-latihan/README.md) |
-| Mesin trainer (algoritma) | [docs/mesin-trainer/](docs/mesin-trainer/README.md) |
-| Spesifikasi per fitur | [docs/fitur/](docs/fitur/README.md) |
-| Catatan keputusan (ADR) | [docs/keputusan/](docs/keputusan/README.md) |
+| Topik                          | Dokumen                                                  |
+| ------------------------------ | -------------------------------------------------------- |
+| Visi & ruang lingkup           | [docs/01-visi-produk.md](docs/01-visi-produk.md)         |
+| Teknologi                      | [docs/02-tech-stack.md](docs/02-tech-stack.md)           |
+| Arsitektur berlapis            | [docs/03-arsitektur.md](docs/03-arsitektur.md)           |
+| Struktur folder                | [docs/04-struktur-folder.md](docs/04-struktur-folder.md) |
+| Model data                     | [docs/05-model-data.md](docs/05-model-data.md)           |
+| Design system                  | [docs/06-design-system.md](docs/06-design-system.md)     |
+| Standar kode                   | [docs/07-standar-kode.md](docs/07-standar-kode.md)       |
+| Pengujian                      | [docs/08-pengujian.md](docs/08-pengujian.md)             |
+| Roadmap                        | [docs/09-roadmap.md](docs/09-roadmap.md)                 |
+| Deploy & PWA                   | [docs/10-deploy-pwa.md](docs/10-deploy-pwa.md)           |
+| Glosarium istilah              | [docs/11-glosarium.md](docs/11-glosarium.md)             |
+| Sains latihan (rumus & sumber) | [docs/sains-latihan/](docs/sains-latihan/README.md)      |
+| Mesin trainer (algoritma)      | [docs/mesin-trainer/](docs/mesin-trainer/README.md)      |
+| Spesifikasi per fitur          | [docs/fitur/](docs/fitur/README.md)                      |
+| Catatan keputusan (ADR)        | [docs/keputusan/](docs/keputusan/README.md)              |
 
 ## Menjalankan proyek
 
-Bagian ini diisi setelah Tahap 1 (fondasi) selesai. Rencananya:
+Butuh Node.js ≥ 22 dan **npm ≥ 11**. npm 10.9 punya bug saat memasang dependensi proyek ini
+(`Cannot read properties of null (reading 'edgesOut')`); perbarui dengan `npm install -g npm@latest`
+atau jalankan `npx npm@11 install`.
 
 ```bash
 npm install
-npm run dev        # server pengembangan
-npm run test       # unit test
-npm run lint       # cek kualitas kode & aturan lapisan
-npm run build      # build produksi PWA
+npx playwright install chromium   # sekali saja, untuk test E2E
+
+npm run dev          # server pengembangan (buka alamat Network dari HP di Wi-Fi yang sama)
+npm run test         # unit & komponen test
+npm run e2e          # test end-to-end di viewport Android & iPhone
+npm run lint         # kualitas kode + aturan lapisan
+npm run typecheck    # cek tipe TypeScript
+npm run build        # build produksi
 ```
+
+Setiap commit otomatis menjalankan lint, format, test terkait, dan typecheck (Husky + lint-staged).
 
 ## Peringatan kesehatan
 

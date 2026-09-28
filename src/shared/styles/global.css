@@ -1,0 +1,76 @@
+@import 'tailwindcss';
+@import './tokens.css';
+
+/* Petakan token ke utilitas Tailwind: bg-surface, text-muted, border-line, dst. */
+@theme inline {
+  --color-ground: var(--ground);
+  --color-surface: var(--surface);
+  --color-surface-2: var(--surface-2);
+  --color-ink: var(--ink);
+  --color-muted: var(--muted);
+  --color-line: var(--line);
+  --color-accent: var(--accent);
+  --color-accent-ink: var(--accent-ink);
+  --color-accent-soft: var(--accent-soft);
+  --color-gold: var(--gold);
+  --color-gold-bg: var(--gold-bg);
+  --color-gold-line: var(--gold-line);
+  --color-good: var(--good);
+  --color-good-bg: var(--good-bg);
+  --color-warn: var(--warn);
+  --color-warn-bg: var(--warn-bg);
+  --color-bad: var(--bad);
+  --color-plate-red: var(--plate-red);
+  --color-plate-blue: var(--plate-blue);
+  --color-plate-yellow: var(--plate-yellow);
+  --color-plate-green: var(--plate-green);
+  --shadow-float: var(--shadow-float);
+
+  --font-sans: 'Figtree', system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --font-display: 'Barlow Condensed', 'Arial Narrow', Arial, sans-serif;
+}
+
+@layer base {
+  html,
+  body,
+  #root {
+    height: 100%;
+  }
+
+  body {
+    @apply bg-ground font-sans text-[15px] leading-normal text-ink antialiased;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  h1,
+  h2,
+  h3 {
+    @apply font-display font-bold tracking-[0.01em] text-balance;
+  }
+
+  :focus-visible {
+    @apply outline-2 outline-offset-2 outline-accent;
+  }
+}
+
+/* Jarak aman untuk bar di bawah layar iPhone (home indicator). */
+@utility pb-safe {
+  padding-bottom: calc(env(safe-area-inset-bottom, 0px) + 0.75rem);
+}
+
+@utility pt-safe {
+  padding-top: calc(env(safe-area-inset-top, 0px) + 1rem);
+}
+
+@utility label-caps {
+  @apply text-[11px] font-bold tracking-[0.11em] text-muted uppercase;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
+}

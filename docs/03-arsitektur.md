@@ -47,31 +47,30 @@ Kratos memakai **arsitektur berlapis** (Clean Architecture versi ringan). Tujuan
 Aturan ini **ditegakkan otomatis** oleh `eslint-plugin-boundaries`. Pelanggaran membuat `npm run lint` gagal.
 
 ```js
-// eslint.config.js (cuplikan)
-settings: {
-  'boundaries/elements': [
-    { type: 'app',            pattern: 'src/app/*' },
-    { type: 'features',       pattern: 'src/features/*' },
-    { type: 'application',    pattern: 'src/application/*' },
-    { type: 'domain',         pattern: 'src/domain/*' },
-    { type: 'infrastructure', pattern: 'src/infrastructure/*' },
-    { type: 'shared',         pattern: 'src/shared/*' },
+// eslint.config.js (cuplikan, eslint-plugin-boundaries v7)
+'boundaries/elements': [
+  { type: 'app',            pattern: 'src/app' },
+  { type: 'features',       pattern: 'src/features/*', capture: ['feature'] },
+  { type: 'application',    pattern: 'src/application' },
+  { type: 'domain',         pattern: 'src/domain' },
+  { type: 'infrastructure', pattern: 'src/infrastructure' },
+  { type: 'shared',         pattern: 'src/shared' },
+],
+'boundaries/dependencies': ['error', {
+  default: 'disallow',
+  policies: [
+    { from: layer('features'),       allow: { to: layers('application', 'domain', 'shared') } },
+    { from: layer('application'),    allow: { to: layers('application', 'domain') } },
+    { from: layer('infrastructure'), allow: { to: layers('infrastructure', 'domain') } },
+    { from: layer('domain'),         allow: { to: layer('domain') } },
+    // ... app boleh ke semua, shared hanya ke shared
   ],
-},
-rules: {
-  'boundaries/element-types': ['error', {
-    default: 'disallow',
-    rules: [
-      { from: 'app',            allow: ['features', 'application', 'infrastructure', 'domain', 'shared'] },
-      { from: 'features',       allow: ['application', 'domain', 'shared'] },
-      { from: 'application',    allow: ['application', 'domain'] },
-      { from: 'infrastructure', allow: ['infrastructure', 'domain'] },
-      { from: 'domain',         allow: ['domain'] },
-      { from: 'shared',         allow: ['shared'] },
-    ],
-  }],
-},
+}],
 ```
+
+Selain itu, `src/domain` dilarang memakai `Date.now()`, `localStorage`, dan `fetch`.
+Setiap fitur adalah elemen tersendiri, sehingga impor antar fitur (`features/today` → `features/program`) ditolak,
+sementara impor di dalam satu fitur tetap boleh.
 
 ## Tanggung jawab tiap lapisan
 
@@ -119,8 +118,14 @@ export const services = {
 export type Services = typeof services;
 
 // src/features/workout/hooks/useWorkoutSession.ts
+import { useServices } from '@/application/ServicesContext';
 const { completeSet } = useServices();
 ```
+
+`Services` (tipe) ada di `src/application/services.ts`, dan `ServicesContext`/`useServices` ada di
+`src/application/ServicesContext.ts`. Itu satu-satunya file di application yang memakai React,
+sehingga fitur bisa mengakses use case tanpa mengimpor `src/app`. `AppProviders` di `src/app/providers.tsx`
+memasang context ini bersama QueryClient (`networkMode: 'always'` karena data lokal, bukan server).
 
 Di test, `workoutRepo` diganti `InMemoryWorkoutRepository` dan `clock` diganti `FixedClock`.
 

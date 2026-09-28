@@ -1,0 +1,76 @@
+/*
+ * Token warna Kratos (docs/06-design-system.md).
+ * Komponen hanya memakai token ini, tidak pernah warna literal.
+ * Aksen mengikuti warna pelat standar IWF.
+ */
+:root {
+  color-scheme: light;
+  --ground: #edf0f4;
+  --surface: #ffffff;
+  --surface-2: #f3f5f8;
+  --ink: #121821;
+  --muted: #5a6574;
+  --line: #dce1e8;
+  --accent: #2455d6;
+  --accent-ink: #ffffff;
+  --accent-soft: #e3eafb;
+  --gold: #8f6300;
+  --gold-bg: #fff4d6;
+  --gold-line: #ebcb73;
+  --good: #1b7f48;
+  --good-bg: #e1f4e9;
+  --warn: #a5560a;
+  --warn-bg: #fcebd9;
+  --bad: #b8362a;
+  --plate-red: #d63a2f;
+  --plate-blue: #2455d6;
+  --plate-yellow: #e9b620;
+  --plate-green: #2e9e57;
+  --shadow-float: 0 10px 24px -12px rgb(18 24 33 / 0.45);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme='light']) {
+    color-scheme: dark;
+    --ground: #0a0e14;
+    --surface: #141a23;
+    --surface-2: #1b222d;
+    --ink: #e8edf4;
+    --muted: #94a1b3;
+    --line: #273142;
+    --accent: #7098ff;
+    --accent-ink: #0a0e14;
+    --accent-soft: #1a2644;
+    --gold: #f2c14e;
+    --gold-bg: #2a220e;
+    --gold-line: #5c4816;
+    --good: #4cc685;
+    --good-bg: #12291d;
+    --warn: #f0a04b;
+    --warn-bg: #2e1e0c;
+    --bad: #f0786a;
+    --shadow-float: 0 10px 24px -12px rgb(0 0 0 / 0.8);
+  }
+}
+
+:root[data-theme='dark'] {
+  color-scheme: dark;
+  --ground: #0a0e14;
+  --surface: #141a23;
+  --surface-2: #1b222d;
+  --ink: #e8edf4;
+  --muted: #94a1b3;
+  --line: #273142;
+  --accent: #7098ff;
+  --accent-ink: #0a0e14;
+  --accent-soft: #1a2644;
+  --gold: #f2c14e;
+  --gold-bg: #2a220e;
+  --gold-line: #5c4816;
+  --good: #4cc685;
+  --good-bg: #12291d;
+  --warn: #f0a04b;
+  --warn-bg: #2e1e0c;
+  --bad: #f0786a;
+  --shadow-float: 0 10px 24px -12px rgb(0 0 0 / 0.8);
+}

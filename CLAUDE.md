@@ -7,6 +7,7 @@ Panduan untuk asisten AI yang bekerja di repo ini.
 - Komunikasi dengan pemilik proyek dalam bahasa Indonesia. Nama kode dalam bahasa Inggris.
 
 ## Aturan wajib
+
 1. Ikuti aturan lapisan di `docs/03-arsitektur.md`. Jangan mengimpor Dexie/React di `src/domain`.
 2. Semua angka ilmiah berada di `src/domain/standards.ts` dengan sumber; rumus mengikuti `docs/sains-latihan/`.
 3. Setiap contoh hitung di `docs/sains-latihan/` dan tabel uji di `docs/mesin-trainer/` harus menjadi unit test.
@@ -16,6 +17,7 @@ Panduan untuk asisten AI yang bekerja di repo ini.
 7. Satuan beban hanya kg.
 
 ## Perintah
+
 ```bash
 npm run dev | test | lint | typecheck | build | e2e
 ```

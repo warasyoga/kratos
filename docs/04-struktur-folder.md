@@ -31,6 +31,8 @@ app-gym/
 │   │   └── repositories.ts       Semua interface repository
 │   │
 │   ├── application/              USE CASE
+│   │   ├── services.ts           Tipe Services (semua use case untuk UI)
+│   │   ├── ServicesContext.ts    useServices(): jembatan ke UI
 │   │   ├── onboarding/           completeOnboarding.ts
 │   │   ├── profile/              updateProfile.ts, toggleEquipment.ts, addHealthCondition.ts
 │   │   ├── program/              generateProgram.ts, editProgramExercise.ts, applySuggestion.ts

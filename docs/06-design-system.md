@@ -6,7 +6,7 @@ Komponen **tidak boleh** memakai warna literal (`#2455D6`), hanya token.
 
 ## Tema
 
-Tiga mode: **Ikuti HP** (default), Terang, Gelap. Disimpan di `Settings.theme`.
+Tiga mode: **Ikuti HP** (default), Terang, Gelap. Disimpan di `localStorage` (`kratos:theme`) dan dipasang oleh skrip kecil di `index.html` sebelum halaman digambar.
 
 ```css
 :root { /* terang */ }
