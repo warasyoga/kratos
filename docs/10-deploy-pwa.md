@@ -53,6 +53,13 @@ Deploy pertama menanyakan nama situs; pilih nama permanen (mis. `kratos-aris` â†
 **Alamat tidak boleh diganti setelah dipakai**, karena data di HP terikat ke alamat itu.
 Build dilakukan di laptop, bukan di server Netlify, sehingga bug npm 10 (lihat README) tidak berpengaruh.
 
+**Situs aktif:** https://kratos-aris.netlify.app (tim Netlify "Kratos").
+Dua pengaturan situs yang wajib dimatikan (sudah dilakukan):
+- **Team login / visitor access** (`sso_login`): jika aktif, manifest dan ikon ditolak (401) sehingga PWA tidak bisa dipasang.
+- **Badge "Powered by Netlify"** (`built_with_badge_enabled`): iframe-nya menutupi tombol utama di bagian bawah layar HP.
+
+Uji situs produksi: `E2E_BASE_URL=https://kratos-aris.netlify.app npm run e2e`.
+
 Setelah kode ada di GitHub (saat aplikasi selesai), Netlify bisa dihubungkan ke repository agar setiap push ke
 `main` otomatis deploy. Karena tidak ada server/data di cloud, hosting hanya menyajikan file statis.
 

@@ -17,6 +17,13 @@
   [headers.values]
     Cache-Control = "no-cache"
 
+# Tipe manifest yang benar (wajib karena header nosniff), agar Kratos bisa dipasang.
+[[headers]]
+  for = "/manifest.webmanifest"
+  [headers.values]
+    Content-Type = "application/manifest+json"
+    Cache-Control = "no-cache"
+
 # File hasil build punya hash di namanya, aman disimpan lama.
 [[headers]]
   for = "/assets/*"

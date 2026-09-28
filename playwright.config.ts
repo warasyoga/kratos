@@ -1,6 +1,8 @@
 import { defineConfig, devices } from '@playwright/test';
 
 const PORT = 4173;
+/** Uji situs produksi: E2E_BASE_URL=https://kratos-aris.netlify.app npm run e2e */
+const remote = process.env.E2E_BASE_URL;
 
 export default defineConfig({
   testDir: './tests/e2e',
@@ -9,7 +11,7 @@ export default defineConfig({
   retries: process.env.CI ? 2 : 0,
   reporter: 'list',
   use: {
-    baseURL: `http://localhost:${PORT}`,
+    baseURL: remote ?? `http://localhost:${PORT}`,
     trace: 'on-first-retry',
   },
   projects: [
@@ -17,10 +19,12 @@ export default defineConfig({
     // Ukuran layar iPhone di Chromium. Uji WebKit sungguhan ditambahkan sebelum rilis (Tahap 9).
     { name: 'iphone', use: { ...devices['iPhone 14'], browserName: 'chromium' } },
   ],
-  webServer: {
-    command: `npm run build && npm run preview -- --port ${PORT} --strictPort`,
-    url: `http://localhost:${PORT}`,
-    reuseExistingServer: !process.env.CI,
-    timeout: 180_000,
-  },
+  webServer: remote
+    ? undefined
+    : {
+        command: `npm run build && npm run preview -- --port ${PORT} --strictPort`,
+        url: `http://localhost:${PORT}`,
+        reuseExistingServer: !process.env.CI,
+        timeout: 180_000,
+      },
 });
