@@ -50,6 +50,7 @@ npm run e2e          # test end-to-end di viewport Android & iPhone
 npm run lint         # kualitas kode + aturan lapisan
 npm run typecheck    # cek tipe TypeScript
 npm run build        # build produksi
+npm run deploy       # build + unggah ke Netlify (butuh `npx netlify-cli login` sekali)
 ```
 
 Setiap commit otomatis menjalankan lint, format, test terkait, dan typecheck (Husky + lint-staged).

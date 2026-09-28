@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+  <!-- Latar penuh (aman untuk ikon maskable Android); biru = warna pelat 20 kg IWF. -->
+  <rect width="512" height="512" fill="#2455D6"/>
+  <!-- Cincin pelat samar -->
+  <circle cx="256" cy="256" r="168" fill="none" stroke="#FFFFFF" stroke-opacity="0.14" stroke-width="28"/>
+  <circle cx="256" cy="256" r="30" fill="#FFFFFF" fill-opacity="0.14"/>
+  <!-- Huruf K, di dalam zona aman 80% -->
+  <rect x="170" y="140" width="52" height="232" rx="4" fill="#FFFFFF"/>
+  <polygon points="222,236 312,140 374,140 222,304" fill="#FFFFFF"/>
+  <polygon points="244,276 286,236 380,372 316,372" fill="#FFFFFF"/>
+  <!-- Aksen kuning (pelat 15 kg) -->
+  <rect x="170" y="392" width="206" height="14" rx="7" fill="#E9B620"/>
+</svg>

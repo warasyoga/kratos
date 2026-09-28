@@ -364,6 +364,15 @@ export const t = {
     unavailable: (name: string) => `${name} tidak punya pengganti`,
     newProgram: (name: string) => `Program baru dibuat: ${name}`,
   },
+  pwa: {
+    offlineReady: 'Kratos siap dipakai tanpa internet.',
+    updateAvailable: 'Versi baru Kratos tersedia.',
+    reload: 'Muat ulang',
+    later: 'Nanti',
+    install: 'Pasang aplikasi',
+    installed: 'Kratos sudah terpasang di HP ini.',
+    installHint: 'Pasang ke layar utama agar data aman dan bisa dibuka tanpa internet.',
+  },
   theme: {
     label: 'Tema',
     system: 'Ikuti HP',

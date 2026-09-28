@@ -15,6 +15,7 @@ import { describeChanges } from './changeMessages';
 import { EditBodySheet } from './components/EditBodySheet';
 import { EquipmentPicker } from './components/EquipmentPicker';
 import { HealthCard } from './components/HealthCard';
+import { InstallCard } from './components/InstallCard';
 import { ParqCard } from './components/ParqCard';
 import { ScheduleSheet } from './components/ScheduleSheet';
 import { useProfileOverview } from './hooks/useProfile';
@@ -161,6 +162,8 @@ export function ProfileScreen() {
           onChange={setTheme}
         />
       </Card>
+
+      <InstallCard title={t.pwa.install} />
 
       <Card>
         <h2 className="font-sans label-caps">{t.profile.about}</h2>

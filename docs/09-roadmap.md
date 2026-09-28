@@ -73,7 +73,7 @@ Centang item saat selesai. Urutan disusun agar fondasi dan rumus selesai sebelum
 
 ## Tahap 9 · Backup & Rilis
 - [ ] Ekspor/impor `.zip` (JSON + foto) dengan validasi Zod
-- [ ] PWA: manifest, ikon, offline, prompt update
+- [x] PWA: manifest, ikon, offline, prompt update, tombol pasang Android (dikerjakan lebih awal, setelah Tahap 3)
 - [ ] Audit Lighthouse (PWA, performa ≥ 90, aksesibilitas ≥ 95)
 - [ ] Deploy ke Vercel/Netlify, pasang di HP
 - **Selesai jika:** semua alur E2E di [08-pengujian.md](08-pengujian.md) lulus di HP sungguhan

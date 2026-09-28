@@ -4,9 +4,9 @@ import { useServices } from '@/application/ServicesContext';
 import { toLocalDate } from '@/domain/common/clock';
 import { errorText, t } from '@/shared/i18n/id';
 import { Button } from '@/shared/ui/Button';
-import { Card } from '@/shared/ui/Card';
 import { OptionGroup } from '@/shared/ui/OptionGroup';
 import { DayPicker } from '../components/DayPicker';
+import { InstallCard } from '../components/InstallCard';
 import { EquipmentPicker } from '../components/EquipmentPicker';
 import { ParqForm } from '../components/ParqForm';
 import { useProfileOverview, useRefreshProfile } from '../hooks/useProfile';
@@ -180,10 +180,7 @@ export function OnboardingScreen() {
             </Button>
           }
         >
-          <Card>
-            <p>{text.install.android}</p>
-            <p>{text.install.ios}</p>
-          </Card>
+          <InstallCard />
         </StepLayout>
       );
   }

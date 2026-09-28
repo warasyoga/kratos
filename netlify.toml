@@ -1,0 +1,31 @@
+# Hosting Kratos di Netlify (docs/10-deploy-pwa.md).
+# Deploy dari laptop: `npm run deploy` (build lokal, lalu unggah folder dist).
+
+[build]
+  command = "npm run build"
+  publish = "dist"
+
+# Aplikasi satu halaman: semua alamat (/program, /profil, ...) dilayani index.html.
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200
+
+# Service worker harus selalu dicek ulang agar versi baru terdeteksi.
+[[headers]]
+  for = "/sw.js"
+  [headers.values]
+    Cache-Control = "no-cache"
+
+# File hasil build punya hash di namanya, aman disimpan lama.
+[[headers]]
+  for = "/assets/*"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000, immutable"
+
+[[headers]]
+  for = "/*"
+  [headers.values]
+    X-Content-Type-Options = "nosniff"
+    Referrer-Policy = "strict-origin-when-cross-origin"
+    Permissions-Policy = "camera=(), microphone=(), geolocation=()"

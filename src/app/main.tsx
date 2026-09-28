@@ -1,21 +1,24 @@
-import '@fontsource/barlow-condensed/600.css';
-import '@fontsource/barlow-condensed/700.css';
-import '@fontsource/figtree/400.css';
-import '@fontsource/figtree/500.css';
-import '@fontsource/figtree/600.css';
-import '@fontsource/figtree/700.css';
+import '@fontsource/barlow-condensed/latin-600.css';
+import '@fontsource/barlow-condensed/latin-700.css';
+import '@fontsource/figtree/latin-400.css';
+import '@fontsource/figtree/latin-500.css';
+import '@fontsource/figtree/latin-600.css';
+import '@fontsource/figtree/latin-700.css';
 import '@/shared/styles/global.css';
 
 import { StrictMode } from 'react';
 import { createRoot } from 'react-dom/client';
 import { RouterProvider } from 'react-router';
+import { captureInstallPrompt } from '@/shared/lib/installPrompt';
 import { createAppServices } from './container';
 import { AppProviders } from './providers';
 import { createAppRouter } from './router';
+import { UpdatePrompt } from './UpdatePrompt';
 
 const rootElement = document.getElementById('root');
 if (!rootElement) throw new Error('Elemen #root tidak ditemukan di index.html');
 
+captureInstallPrompt();
 const root = createRoot(rootElement);
 
 createAppServices()
@@ -25,6 +28,7 @@ createAppServices()
       <StrictMode>
         <AppProviders services={services}>
           <RouterProvider router={router} />
+          <UpdatePrompt />
         </AppProviders>
       </StrictMode>,
     );

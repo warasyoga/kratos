@@ -37,12 +37,33 @@ iOS tidak punya prompt otomatis, jadi onboarding menampilkan panduan bergambar.
 Karena notifikasi terjadwal tanpa server tidak andal, pengingat utama memakai **ekspor jadwal
 ke kalender HP (.ics)**. Lihat [ADR-005](keputusan/ADR-005-pengingat.md).
 
-## Hosting
+## Hosting (Netlify, tanpa GitHub)
 
-1. Push repository ke GitHub.
-2. Hubungkan ke Vercel/Netlify: build command `npm run build`, output `dist`.
-3. Setiap push ke `main` otomatis deploy; branch lain mendapat URL pratinjau.
-4. Karena tidak ada server/data di cloud, hosting hanya menyajikan file statis.
+Konfigurasi ada di `netlify.toml`: aturan aplikasi satu halaman (`/* → /index.html`), `sw.js` tidak di-cache
+agar versi baru terdeteksi, dan file `/assets/*` di-cache permanen (namanya berisi hash).
+
+Deploy dari laptop (build lokal, lalu unggah `dist`), sehingga GitHub belum diperlukan:
+
+```bash
+npx netlify-cli login     # sekali saja, membuka browser untuk login akun Netlify
+npm run deploy            # build + unggah ke alamat produksi
+```
+
+Deploy pertama menanyakan nama situs; pilih nama permanen (mis. `kratos-aris` → `https://kratos-aris.netlify.app`).
+**Alamat tidak boleh diganti setelah dipakai**, karena data di HP terikat ke alamat itu.
+Build dilakukan di laptop, bukan di server Netlify, sehingga bug npm 10 (lihat README) tidak berpengaruh.
+
+Setelah kode ada di GitHub (saat aplikasi selesai), Netlify bisa dihubungkan ke repository agar setiap push ke
+`main` otomatis deploy. Karena tidak ada server/data di cloud, hosting hanya menyajikan file statis.
+
+## Detail implementasi PWA
+
+- Plugin: `vite-plugin-pwa` (Workbox), konfigurasi di `vite.config.ts`; ikon di `public/icons/` (sumber: `kratos.svg`).
+- Seluruh aplikasi di-precache (±780 KB, 29 file), termasuk layar yang dimuat terpisah dan katalog gerakan.
+- Font hanya subset Latin agar unduhan pertama kecil.
+- `src/app/UpdatePrompt.tsx`: mendaftarkan service worker, memberi tahu "siap offline", menawarkan versi baru.
+- `src/shared/lib/installPrompt.ts`: menangkap tawaran pemasangan Chrome/Android untuk tombol "Pasang aplikasi".
+- Test E2E `tests/e2e/pwa.spec.ts`: manifest dan ikon valid, aplikasi terbuka dan data tampil saat offline.
 
 ## Checklist sebelum rilis
 
