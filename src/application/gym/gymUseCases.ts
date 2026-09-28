@@ -1,5 +1,6 @@
+import { z } from 'zod';
 import { err, ok, type Result } from '@/domain/common/result';
-import type { HealthCondition } from '@/domain/profile/types';
+import type { HealthCondition, PlateInventory } from '@/domain/profile/types';
 import type { AppDeps } from '../deps';
 import { conditionSchema, equipmentSchema } from '../profile/schemas';
 import { reconcileActiveProgram, type ProgramChange } from '../program/programChanges';
@@ -55,5 +56,91 @@ export function makeRemoveHealthCondition(deps: AppDeps) {
       await deps.conditions.remove(id);
       return ok({ changes: await reconcileActiveProgram(deps) });
     });
+  };
+}
+
+/** Pelat yang bisa dipilih pengguna (kg). */
+export const PLATE_OPTIONS_KG = [25, 20, 15, 10, 5, 2.5, 1.25, 0.5] as const;
+export const MACHINE_STEP_OPTIONS_KG = [2.5, 5, 10] as const;
+
+const inventorySchema = z
+  .object({
+    barKg: z
+      .number({ error: 'number_required' })
+      .min(5, { error: 'bar_range' })
+      .max(30, { error: 'bar_range' }),
+    platesKg: z
+      .array(
+        z.union(
+          PLATE_OPTIONS_KG.map((p) => z.literal(p)) as [
+            z.ZodLiteral<number>,
+            ...z.ZodLiteral<number>[],
+          ],
+        ),
+      )
+      .min(1, { error: 'plates_required' }),
+    dumbbellMinKg: z
+      .number({ error: 'number_required' })
+      .min(1, { error: 'dumbbell_range' })
+      .max(60, { error: 'dumbbell_range' }),
+    dumbbellMaxKg: z
+      .number({ error: 'number_required' })
+      .min(1, { error: 'dumbbell_range' })
+      .max(80, { error: 'dumbbell_range' }),
+    dumbbellStepKg: z.union([z.literal(1), z.literal(2), z.literal(2.5)], { error: 'choose_one' }),
+    machineStepKg: z.union(
+      MACHINE_STEP_OPTIONS_KG.map((p) => z.literal(p)) as [
+        z.ZodLiteral<number>,
+        ...z.ZodLiteral<number>[],
+      ],
+      { error: 'choose_one' },
+    ),
+  })
+  .refine((v) => v.dumbbellMaxKg >= v.dumbbellMinKg, {
+    path: ['dumbbellMaxKg'],
+    error: 'dumbbell_order',
+  });
+
+export type InventoryForm = z.infer<typeof inventorySchema>;
+
+/** Deret ukuran dumbbell dari min sampai max dengan kelipatan tertentu. */
+export function dumbbellRange(minKg: number, maxKg: number, stepKg: number): number[] {
+  const sizes: number[] = [];
+  for (let kg = minKg; kg <= maxKg + 1e-9; kg += stepKg) sizes.push(Math.round(kg * 100) / 100);
+  return sizes;
+}
+
+/** Ringkasan inventaris untuk form. */
+export function toInventoryForm(inv: PlateInventory): InventoryForm {
+  const sizes = [...inv.dumbbellsKg].sort((a, b) => a - b);
+  const min = sizes[0] ?? 2;
+  const max = sizes[sizes.length - 1] ?? 40;
+  const step = sizes.length > 1 ? Math.round(((sizes[1] ?? min) - min) * 100) / 100 : 2;
+  return {
+    barKg: inv.barKg,
+    platesKg: [...inv.platesKg],
+    dumbbellMinKg: min,
+    dumbbellMaxKg: max,
+    dumbbellStepKg: step === 1 || step === 2.5 ? step : 2,
+    machineStepKg: inv.machineStepKg,
+  };
+}
+
+/** Bar, pelat, dan dumbbell yang ada di gym (dipakai pembulatan beban & kalkulator pelat). */
+export function makeInventoryUseCases(deps: AppDeps) {
+  return {
+    get: () => deps.gym.getInventory(),
+    async save(raw: unknown): Promise<Result<void>> {
+      const parsed = validate(inventorySchema, raw);
+      if (!parsed.ok) return parsed;
+      const v = parsed.value;
+      await deps.gym.setInventory({
+        barKg: v.barKg,
+        platesKg: [...v.platesKg].sort((a, b) => b - a),
+        dumbbellsKg: dumbbellRange(v.dumbbellMinKg, v.dumbbellMaxKg, v.dumbbellStepKg),
+        machineStepKg: v.machineStepKg,
+      });
+      return ok(undefined);
+    },
   };
 }

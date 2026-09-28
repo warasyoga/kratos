@@ -76,8 +76,8 @@ export const E1RM_MAX_REPS = 10;
 
 /** [Bukti] Zourdos et al. 2016; Helms et al. 2016. */
 export const TARGET_RIR = { min: 1, default: 2, max: 3 } as const;
-/** [Internal] Nilai RIR tertinggi yang dicatat (tombol "4+"). */
-export const RIR_CAP = 4;
+/** [Internal] Nilai RIR tertinggi yang dicatat (tombol "5+"), agar kalibrasi bisa membedakan set yang jauh terlalu ringan. */
+export const RIR_CAP = 5;
 
 /** [Standar] ACSM 2009: istirahat 1–2 menit, 2–3 menit untuk gerakan inti berat. */
 export const REST_SEC = { compoundBarbell: 120, compound: 90, isolation: 60 } as const;

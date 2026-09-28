@@ -1,18 +1,10 @@
-import { t } from '@/shared/i18n/id';
-import { Card } from '@/shared/ui/Card';
-import { Chip } from '@/shared/ui/Chip';
-import { ScreenHeader } from '@/shared/ui/ScreenHeader';
+import { ActiveWorkout } from './ActiveWorkout';
+import { useActiveSession } from './hooks/useWorkout';
+import { StartWorkout } from './StartWorkout';
 
+/** Tab Latihan: sesi aktif jika ada, selain itu persiapan (check-in & mulai). */
 export function WorkoutScreen() {
-  return (
-    <div className="flex flex-col gap-3.5">
-      <ScreenHeader
-        title={t.workout.title}
-        aside={<Chip tone="accent">{t.common.builtInStage(5)}</Chip>}
-      />
-      <Card>
-        <p className="text-muted">{t.workout.emptyBody}</p>
-      </Card>
-    </div>
-  );
+  const { data, isPending } = useActiveSession();
+  if (isPending) return null;
+  return data ? <ActiveWorkout view={data} /> : <StartWorkout />;
 }

@@ -2,11 +2,13 @@ import type { Clock } from '@/domain/common/clock';
 import type { IdGenerator } from '@/domain/common/id';
 import type {
   BodyMetricRepository,
+  CheckInRepository,
   ExerciseRepository,
   GymRepository,
   HealthConditionRepository,
   ProfileRepository,
   ProgramRepository,
+  SessionRepository,
   SuggestionRepository,
   TransactionRunner,
 } from '@/domain/repositories';
@@ -22,6 +24,8 @@ export interface AppDeps {
   programs: ProgramRepository;
   bodyMetrics: BodyMetricRepository;
   suggestions: SuggestionRepository;
+  checkIns: CheckInRepository;
+  sessions: SessionRepository;
   tx: TransactionRunner;
   platform: {
     requestPersistentStorage(): Promise<boolean>;

@@ -37,7 +37,8 @@ RIR (Repetitions in Reserve) = sisa repetisi sebelum gagal. Skala Zourdos et al.
 | 1 | Masih bisa 1 lagi | 9 |
 | 2 | Masih bisa 2 lagi | 8 |
 | 3 | Masih bisa 3 lagi | 7 |
-| 4+ | Terlalu ringan untuk hipertrofi | ≤ 6 |
+| 4 | Masih bisa 4 lagi (ringan) | 6 |
+| 5+ | Terlalu ringan untuk hipertrofi; dipakai kalibrasi beban (+20%) | ≤ 5 |
 
 Target default pemula: **RIR 2** (rentang 1–3). Set RIR 0 tidak dianjurkan untuk gerakan
 barbell besar (squat, deadlift, bench) demi keamanan.

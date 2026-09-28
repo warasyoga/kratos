@@ -6,11 +6,13 @@ import { ensureCatalog } from '@/infrastructure/db/seed';
 import { requestPersistentStorage } from '@/infrastructure/platform';
 import {
   DexieBodyMetricRepository,
+  DexieCheckInRepository,
   DexieExerciseRepository,
   DexieGymRepository,
   DexieHealthConditionRepository,
   DexieProfileRepository,
   DexieProgramRepository,
+  DexieSessionRepository,
   DexieSuggestionRepository,
   DexieTransactionRunner,
 } from '@/infrastructure/repositories/dexieRepositories';
@@ -33,6 +35,8 @@ export async function createAppServices(): Promise<Services> {
     programs: new DexieProgramRepository(db),
     bodyMetrics: new DexieBodyMetricRepository(db),
     suggestions: new DexieSuggestionRepository(db),
+    checkIns: new DexieCheckInRepository(db),
+    sessions: new DexieSessionRepository(db),
     tx: new DexieTransactionRunner(db),
     platform: { requestPersistentStorage },
   };

@@ -6,6 +6,7 @@
 import type { Exercise, ExerciseGuide } from './exercise/types';
 import type { Equipment, HealthCondition, PlateInventory, UserProfile } from './profile/types';
 import type { ProgramBundle, ProgramExercise } from './program/types';
+import type { CheckIn, Readiness, SetLog, SetResult, WorkoutSession } from './workout/types';
 
 export type { ProgramBundle };
 
@@ -74,6 +75,33 @@ export interface BodyMetric {
 export interface BodyMetricRepository {
   add(metric: BodyMetric): Promise<void>;
   latestWeightKg(): Promise<number | null>;
+}
+
+export interface CheckInRepository {
+  getByDate(logDate: string): Promise<CheckIn | null>;
+  /** Satu check-in per tanggal: menyimpan ulang menimpa. */
+  save(checkIn: CheckIn): Promise<void>;
+}
+
+/** Set kerja yang selesai dari satu sesi selesai, untuk progresi dan kolom "Sebelumnya". */
+export interface ExerciseHistoryEntry {
+  sessionId: string;
+  logDate: string;
+  readiness: Readiness;
+  sets: SetResult[];
+}
+
+export interface SessionRepository {
+  getActive(): Promise<WorkoutSession | null>;
+  get(id: string): Promise<WorkoutSession | null>;
+  save(session: WorkoutSession): Promise<void>;
+  /** Hapus sesi beserta semua setnya. */
+  delete(id: string): Promise<void>;
+  listSets(sessionId: string): Promise<SetLog[]>;
+  saveSets(sets: readonly SetLog[]): Promise<void>;
+  deleteSets(ids: readonly string[]): Promise<void>;
+  /** Riwayat gerakan dari sesi yang selesai, terbaru lebih dulu. */
+  exerciseHistory(exerciseId: string, limit: number): Promise<ExerciseHistoryEntry[]>;
 }
 
 /** Jalankan beberapa operasi repository sebagai satu transaksi (semua berhasil atau semua batal). */

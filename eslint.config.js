@@ -23,7 +23,10 @@ export default tseslint.config(
     languageOptions: { ecmaVersion: 2023, globals: globals.browser },
     rules: {
       '@typescript-eslint/consistent-type-imports': 'error',
-      '@typescript-eslint/no-unused-vars': ['error', { argsIgnorePattern: '^_' }],
+      '@typescript-eslint/no-unused-vars': [
+        'error',
+        { argsIgnorePattern: '^_', ignoreRestSiblings: true },
+      ],
       eqeqeq: 'error',
       'no-console': ['warn', { allow: ['warn', 'error'] }],
     },

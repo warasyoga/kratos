@@ -10,6 +10,8 @@ import type { ProgramExercise } from '@/domain/program/types';
 import type {
   BodyMetric,
   BodyMetricRepository,
+  CheckInRepository,
+  ExerciseHistoryEntry,
   ExerciseRepository,
   GymRepository,
   HealthConditionRepository,
@@ -17,9 +19,11 @@ import type {
   ProgramBundle,
   ProgramRepository,
   ResolvedSuggestion,
+  SessionRepository,
   SuggestionRepository,
   TransactionRunner,
 } from '@/domain/repositories';
+import type { CheckIn, SetLog, WorkoutSession } from '@/domain/workout/types';
 import type { ExerciseRow, KratosDatabase } from '../db/database';
 
 export class DexieProfileRepository implements ProfileRepository {
@@ -168,6 +172,84 @@ export class DexieBodyMetricRepository implements BodyMetricRepository {
     );
     withWeight.sort((a, b) => b.logDate.localeCompare(a.logDate) || b.createdAt - a.createdAt);
     return withWeight[0]?.weightKg ?? null;
+  }
+}
+
+export class DexieCheckInRepository implements CheckInRepository {
+  constructor(private readonly db: KratosDatabase) {}
+
+  async getByDate(logDate: string): Promise<CheckIn | null> {
+    return (await this.db.checkIns.where('logDate').equals(logDate).first()) ?? null;
+  }
+
+  async save(checkIn: CheckIn): Promise<void> {
+    const { db } = this;
+    await db.transaction('rw', db.checkIns, async () => {
+      await db.checkIns.where('logDate').equals(checkIn.logDate).delete();
+      await db.checkIns.put(checkIn);
+    });
+  }
+}
+
+export class DexieSessionRepository implements SessionRepository {
+  constructor(private readonly db: KratosDatabase) {}
+
+  async getActive(): Promise<WorkoutSession | null> {
+    return (await this.db.sessions.where('status').equals('active').first()) ?? null;
+  }
+
+  async get(id: string): Promise<WorkoutSession | null> {
+    return (await this.db.sessions.get(id)) ?? null;
+  }
+
+  async save(session: WorkoutSession): Promise<void> {
+    await this.db.sessions.put(session);
+  }
+
+  async delete(id: string): Promise<void> {
+    const { db } = this;
+    await db.transaction('rw', db.sessions, db.setLogs, async () => {
+      await db.setLogs.where('sessionId').equals(id).delete();
+      await db.sessions.delete(id);
+    });
+  }
+
+  listSets(sessionId: string): Promise<SetLog[]> {
+    return this.db.setLogs.where('sessionId').equals(sessionId).toArray();
+  }
+
+  async saveSets(sets: readonly SetLog[]): Promise<void> {
+    await this.db.setLogs.bulkPut([...sets]);
+  }
+
+  async deleteSets(ids: readonly string[]): Promise<void> {
+    await this.db.setLogs.bulkDelete([...ids]);
+  }
+
+  async exerciseHistory(exerciseId: string, limit: number): Promise<ExerciseHistoryEntry[]> {
+    const logs = (await this.db.setLogs.where('exerciseId').equals(exerciseId).toArray()).filter(
+      (s) => s.kind === 'working' && s.completedAt !== undefined,
+    );
+    const sessionIds = [...new Set(logs.map((s) => s.sessionId))];
+    const sessions = (await this.db.sessions.bulkGet(sessionIds)).filter(
+      (s): s is WorkoutSession => s !== undefined && s.status === 'finished',
+    );
+    return sessions
+      .sort((a, b) => b.startedAt - a.startedAt)
+      .slice(0, limit)
+      .map((session) => ({
+        sessionId: session.id,
+        logDate: session.logDate,
+        readiness: session.readiness,
+        sets: logs
+          .filter((s) => s.sessionId === session.id)
+          .sort((a, b) => a.setNumber - b.setNumber)
+          .map(({ weightKg, reps, rir }) => ({
+            weightKg,
+            reps,
+            ...(rir !== undefined && { rir }),
+          })),
+      }));
   }
 }
 

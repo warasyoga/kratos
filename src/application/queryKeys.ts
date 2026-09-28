@@ -10,4 +10,8 @@ export const queryKeys = {
   substitutes: (programExerciseId: string) =>
     ['program', 'substitutes', programExerciseId] as const,
   suggestions: ['program', 'suggestions'] as const,
+  checkInToday: ['checkin', 'today'] as const,
+  inventory: ['gym', 'inventory'] as const,
+  activeSession: ['workout', 'active'] as const,
+  session: (id: string) => ['workout', 'session', id] as const,
 };

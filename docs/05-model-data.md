@@ -184,14 +184,17 @@ interface CheckIn {
 interface WorkoutSession {
   id: string;
   programDayId: string;
+  dayLabel: string;
   checkInId?: string;
+  readiness: 'green' | 'yellow' | 'red';       // dipakai progresi: sesi merah diabaikan
   logDate: string;
   startedAt: number;
   finishedAt?: number;
   status: 'active' | 'finished' | 'abandoned';
-  adjustment: 'none' | 'reduced' | 'light';   // dari readiness
+  adjustment: 'none' | 'reduced' | 'light' | 'deload';
   isDeloadWeek: boolean;
-  notes?: string;
+  plan: SessionExercisePlan[];                // salinan resep saat sesi dimulai
+  summary?: SessionSummary;                   // durasi, set, tonase, PR, beban berikutnya
 }
 
 interface SetLog {
@@ -203,7 +206,7 @@ interface SetLog {
   kind: 'warmup' | 'working';
   weightKg: number;
   reps: number;
-  rir?: number;                   // 0–5 (5 = 5 atau lebih)
+  rir?: number;                   // 0–5 (5 = "5+")
   completedAt?: number;           // undefined = belum dicentang
   restEndsAt?: number;            // timer dihitung dari sini, tahan terhadap aplikasi ditutup
 }

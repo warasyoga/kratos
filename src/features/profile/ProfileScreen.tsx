@@ -16,6 +16,7 @@ import { EditBodySheet } from './components/EditBodySheet';
 import { EquipmentPicker } from './components/EquipmentPicker';
 import { HealthCard } from './components/HealthCard';
 import { InstallCard } from './components/InstallCard';
+import { InventoryCard } from './components/InventoryCard';
 import { ParqCard } from './components/ParqCard';
 import { ScheduleSheet } from './components/ScheduleSheet';
 import { useProfileOverview } from './hooks/useProfile';
@@ -150,6 +151,7 @@ export function ProfileScreen() {
       </Card>
 
       <EquipmentCard equipment={overview.equipment} />
+      <InventoryCard />
       <HealthCard conditions={overview.conditions} />
       <ParqCard status={overview.parq} />
 

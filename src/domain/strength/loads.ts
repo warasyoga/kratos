@@ -144,6 +144,23 @@ export function nextHeavierLoad(
   return { weightKg: chosen, stepPct: pct(chosen) };
 }
 
+/**
+ * Beban terdekat yang bisa dipasang di atas/bawah beban sekarang (untuk tombol ± di mode latihan).
+ * Batas bawah/atas alat → beban tetap.
+ */
+export function adjacentLoad(
+  loadType: LoadType,
+  currentKg: number,
+  direction: 1 | -1,
+  inventory: PlateInventory,
+): number {
+  if (loadType === 'bodyweight') return 0;
+  const nudge = 0.001;
+  return direction === 1
+    ? roundLoad(currentKg + nudge, loadType, inventory, 'up')
+    : roundLoad(currentKg - nudge, loadType, inventory, 'down');
+}
+
 /** Beban dikali faktor lalu dibulatkan, mis. deload 0,9 → ke bawah. */
 export function scaleLoad(
   exercise: Exercise,

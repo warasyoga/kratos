@@ -29,7 +29,8 @@ export function ToastProvider({ children }: { children: ReactNode }) {
       {children}
       <div
         aria-live="polite"
-        className="pointer-events-none fixed inset-x-0 bottom-24 z-40 flex justify-center px-4"
+        // Di atas layar: tidak menutupi timer istirahat, tab bar, atau tombol panel.
+        className="pointer-events-none fixed inset-x-0 top-0 z-40 flex justify-center px-4 pt-safe"
       >
         {message && (
           <div

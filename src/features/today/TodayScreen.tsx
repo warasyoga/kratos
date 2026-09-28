@@ -1,11 +1,11 @@
 import { useQuery } from '@tanstack/react-query';
+import { Link } from 'react-router';
 import { queryKeys } from '@/application/queryKeys';
 import { useServices } from '@/application/ServicesContext';
 import { toLocalDate } from '@/domain/common/clock';
 import { WEEKDAYS, weekdayOf } from '@/domain/common/weekday';
 import { t } from '@/shared/i18n/id';
 import { formatDayDate } from '@/shared/lib/format';
-import { Button } from '@/shared/ui/Button';
 import { Card } from '@/shared/ui/Card';
 import { Chip } from '@/shared/ui/Chip';
 import { ScreenHeader } from '@/shared/ui/ScreenHeader';
@@ -18,6 +18,10 @@ export function TodayScreen() {
   const { data: program } = useQuery({
     queryKey: queryKeys.activeProgram,
     queryFn: services.program.getActive,
+  });
+  const { data: activeSession } = useQuery({
+    queryKey: queryKeys.activeSession,
+    queryFn: services.workout.getActive,
   });
   const today = toLocalDate(services.clock.now());
   const weekday = weekdayOf(today);
@@ -70,10 +74,12 @@ export function TodayScreen() {
               </li>
             )}
           </ul>
-          <Button fullWidth disabled>
-            {t.nav.workout}
-          </Button>
-          <p className="text-center text-xs text-muted">{t.today.workoutComingSoon}</p>
+          <Link
+            to="/latihan"
+            className="grid min-h-12 place-items-center rounded-[14px] bg-accent font-bold text-accent-ink"
+          >
+            {activeSession ? t.workout.resume : t.workout.start}
+          </Link>
         </Card>
       ) : (
         <Card>

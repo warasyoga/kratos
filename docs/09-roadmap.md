@@ -48,14 +48,18 @@ Centang item saat selesai. Urutan disusun agar fondasi dan rumus selesai sebelum
 - [ ] Gerakan buatan pengguna → Tahap 8
 
 ## Tahap 5 · Mode Latihan
-- [ ] Check-in hari gym + hasil readiness
-- [ ] Sesi aktif tersimpan (tahan terhadap aplikasi ditutup)
-- [ ] Set pemanasan otomatis
-- [ ] Tabel set dengan acuan minggu lalu, input stepper, centang
-- [ ] Timer istirahat (berbasis `restEndsAt`), getaran, wake lock
-- [ ] Pilihan RIR, kalkulator pelat, catatan trainer
-- [ ] Edit inventaris pelat & dumbbell di Profil (dari Tahap 3)
-- [ ] Ringkasan akhir sesi: volume, PR, beban minggu depan
+- [x] Check-in hari gym + hasil readiness
+- [x] Sesi aktif tersimpan (tahan terhadap aplikasi ditutup)
+- [x] Set pemanasan otomatis
+- [x] Tabel set dengan acuan minggu lalu, input stepper, centang
+- [x] Timer istirahat (berbasis `restEndsAt`), getaran, wake lock
+- [x] Pilihan RIR, kalkulator pelat, catatan trainer
+- [x] Edit inventaris pelat & dumbbell di Profil (dari Tahap 3)
+- [x] Ringkasan akhir sesi: volume, PR, beban minggu depan
+- [x] Pilih latihan hari lain; "Tetap latihan penuh" mengabaikan readiness
+- [x] Sesi > 4 jam tanpa aktivitas ditutup otomatis (set tercatat tetap disimpan)
+- [ ] Tombol "Terasa sakit" + ganti gerakan di tengah sesi → ditunda (sementara: tanda nyeri dari check-in + lewati gerakan)
+- [ ] Suara saat timer habis → ditunda (getaran Android + tampilan "Istirahat selesai" sudah ada)
 
 ## Tahap 6 · Hari Ini
 - [ ] Mode hari gym vs hari pemulihan

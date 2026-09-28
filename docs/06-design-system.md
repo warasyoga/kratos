@@ -91,7 +91,8 @@ Label huruf kapital memakai `letter-spacing: .11em`.
 | `Sheet` | bottom | Panel dari bawah untuk form singkat |
 | `TabBar` | – | 5 tab; tombol Latihan menonjol di tengah |
 | `EmptyState` | – | Ilustrasi + kalimat + aksi |
-| `Toast` | – | Konfirmasi singkat ("Set disimpan") |
+| `Toast` | – | Konfirmasi singkat di **atas** layar (tidak menutupi timer, tab bar, atau tombol panel); bisa membawa tombol aksi ("Urungkan") |
+| `Stepper` | – | Tombol −/+ 44 px; langkah khusus (mis. ke beban yang bisa dipasang) dan format koma |
 
 ## Aksesibilitas
 

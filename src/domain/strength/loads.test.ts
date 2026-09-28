@@ -1,6 +1,6 @@
 import { DEFAULT_INVENTORY } from '../profile/inventory';
 import { testExercise } from '../testing/exercises';
-import { barbellLoads, nextHeavierLoad, roundLoad } from './loads';
+import { adjacentLoad, barbellLoads, nextHeavierLoad, roundLoad } from './loads';
 
 const inv = DEFAULT_INVENTORY;
 
@@ -69,5 +69,19 @@ describe('nextHeavierLoad', () => {
 
   it('bodyweight: tidak ada langkah beban', () => {
     expect(nextHeavierLoad(testExercise('push-up'), 0, inv)).toBeNull();
+  });
+});
+
+describe('adjacentLoad', () => {
+  it.each([
+    ['barbell', 65, 1, 67.5],
+    ['barbell', 65, -1, 62.5],
+    ['barbell', 20, -1, 20],
+    ['dumbbell', 18, 1, 20],
+    ['dumbbell', 2, -1, 2],
+    ['machine', 45, 1, 50],
+    ['bodyweight', 0, 1, 0],
+  ] as const)('%s %s kg arah %s → %s kg', (type, kg, dir, expected) => {
+    expect(adjacentLoad(type, kg, dir, inv)).toBe(expected);
   });
 });

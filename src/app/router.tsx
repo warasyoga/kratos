@@ -12,6 +12,7 @@ import {
   ProfileScreen,
   ProgramScreen,
   ProgressScreen,
+  SummaryScreen,
   WorkoutScreen,
 } from './screens';
 
@@ -32,6 +33,7 @@ export const routes: RouteObject[] = [
       { path: paths.library, element: page(<ExerciseLibraryScreen />) },
       { path: `${paths.library}/:id`, element: page(<ExerciseDetailScreen />) },
       { path: paths.workout, element: page(<WorkoutScreen />) },
+      { path: `${paths.workout}/ringkasan/:sessionId`, element: page(<SummaryScreen />) },
       { path: paths.progress, element: page(<ProgressScreen />) },
       { path: paths.profile, element: page(<ProfileScreen />) },
       { path: '*', element: <Navigate to={paths.today} replace /> },

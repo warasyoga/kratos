@@ -21,6 +21,7 @@ export function useRefreshProfile() {
       Promise.all([
         client.invalidateQueries({ queryKey: queryKeys.profileOverview }),
         client.invalidateQueries({ queryKey: queryKeys.activeProgram }),
+        client.invalidateQueries({ queryKey: queryKeys.inventory }),
       ]),
     [client],
   );

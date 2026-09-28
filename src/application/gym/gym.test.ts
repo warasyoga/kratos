@@ -99,3 +99,37 @@ describe('getActiveProgram', () => {
     expect(upperA?.estimatedMinutes).toBeGreaterThan(30);
   });
 });
+
+describe('inventaris pelat & dumbbell', () => {
+  const form = {
+    barKg: 15,
+    platesKg: [20, 10, 5, 2.5],
+    dumbbellMinKg: 2.5,
+    dumbbellMaxKg: 25,
+    dumbbellStepKg: 2.5,
+    machineStepKg: 5,
+  };
+
+  it('menyimpan dan membangun deret dumbbell', async () => {
+    const { services } = await onboarded();
+    expect((await services.gym.inventory.save(form)).ok).toBe(true);
+    const inv = await services.gym.inventory.get();
+    expect(inv).toMatchObject({ barKg: 15, platesKg: [20, 10, 5, 2.5], machineStepKg: 5 });
+    expect(inv.dumbbellsKg.slice(0, 3)).toEqual([2.5, 5, 7.5]);
+    expect(inv.dumbbellsKg.at(-1)).toBe(25);
+  });
+
+  it('dumbbell maksimal < minimal ditolak', async () => {
+    const { services } = await onboarded();
+    const result = await services.gym.inventory.save({ ...form, dumbbellMaxKg: 2 });
+    expect(result).toMatchObject({
+      ok: false,
+      error: { fields: { dumbbellMaxKg: 'dumbbell_order' } },
+    });
+  });
+
+  it('pelat yang tidak dikenal ditolak', async () => {
+    const { services } = await onboarded();
+    expect((await services.gym.inventory.save({ ...form, platesKg: [7] })).ok).toBe(false);
+  });
+});

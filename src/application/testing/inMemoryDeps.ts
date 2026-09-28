@@ -12,6 +12,7 @@ import type {
   UserProfile,
 } from '@/domain/profile/types';
 import type { BodyMetric, ProgramBundle, ResolvedSuggestion } from '@/domain/repositories';
+import type { CheckIn, SetLog, WorkoutSession } from '@/domain/workout/types';
 import { TEST_EXERCISES } from '@/domain/testing/exercises';
 import type { AppDeps } from '../deps';
 
@@ -23,6 +24,9 @@ export interface InMemoryState {
   programs: ProgramBundle[];
   bodyMetrics: BodyMetric[];
   suggestions: ResolvedSuggestion[];
+  checkIns: CheckIn[];
+  sessions: WorkoutSession[];
+  setLogs: SetLog[];
 }
 
 export function createInMemoryDeps(
@@ -37,6 +41,9 @@ export function createInMemoryDeps(
     programs: [],
     bodyMetrics: [],
     suggestions: [],
+    checkIns: [],
+    sessions: [],
+    setLogs: [],
   };
   const active = () => state.programs.find((p) => p.program.active) ?? null;
 
@@ -110,6 +117,59 @@ export function createInMemoryDeps(
     suggestions: {
       listResolved: async () => [...state.suggestions],
       save: async (r) => void state.suggestions.push(r),
+    },
+    checkIns: {
+      getByDate: async (d) => state.checkIns.find((c) => c.logDate === d) ?? null,
+      save: async (c) => {
+        state.checkIns = [...state.checkIns.filter((x) => x.logDate !== c.logDate), c];
+      },
+    },
+    sessions: {
+      getActive: async () => state.sessions.find((s) => s.status === 'active') ?? null,
+      get: async (id) => state.sessions.find((s) => s.id === id) ?? null,
+      save: async (s) => {
+        state.sessions = [...state.sessions.filter((x) => x.id !== s.id), structuredClone(s)];
+      },
+      delete: async (id) => {
+        state.sessions = state.sessions.filter((s) => s.id !== id);
+        state.setLogs = state.setLogs.filter((s) => s.sessionId !== id);
+      },
+      listSets: async (id) => structuredClone(state.setLogs.filter((s) => s.sessionId === id)),
+      saveSets: async (sets) => {
+        const ids = new Set(sets.map((s) => s.id));
+        state.setLogs = [
+          ...state.setLogs.filter((s) => !ids.has(s.id)),
+          ...structuredClone([...sets]),
+        ];
+      },
+      deleteSets: async (ids) => {
+        state.setLogs = state.setLogs.filter((s) => !ids.includes(s.id));
+      },
+      exerciseHistory: async (exerciseId, limit) =>
+        state.sessions
+          .filter((s) => s.status === 'finished')
+          .sort((a, b) => b.startedAt - a.startedAt)
+          .map((session) => ({
+            sessionId: session.id,
+            logDate: session.logDate,
+            readiness: session.readiness,
+            sets: state.setLogs
+              .filter(
+                (l) =>
+                  l.sessionId === session.id &&
+                  l.exerciseId === exerciseId &&
+                  l.kind === 'working' &&
+                  l.completedAt !== undefined,
+              )
+              .sort((a, b) => a.setNumber - b.setNumber)
+              .map(({ weightKg, reps, rir }) => ({
+                weightKg,
+                reps,
+                ...(rir !== undefined && { rir }),
+              })),
+          }))
+          .filter((h) => h.sets.length > 0)
+          .slice(0, limit),
     },
     tx: { run: (work) => work() },
     platform: { requestPersistentStorage: async () => true },

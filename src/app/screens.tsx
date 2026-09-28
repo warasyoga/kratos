@@ -19,6 +19,9 @@ export const ExerciseLibraryScreen = lazy(() =>
 export const ExerciseDetailScreen = lazy(() =>
   import('@/features/program').then((m) => ({ default: m.ExerciseDetailScreen })),
 );
+export const SummaryScreen = lazy(() =>
+  import('@/features/workout').then((m) => ({ default: m.SummaryScreen })),
+);
 export const WorkoutScreen = lazy(() =>
   import('@/features/workout').then((m) => ({ default: m.WorkoutScreen })),
 );

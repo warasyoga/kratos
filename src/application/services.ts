@@ -1,6 +1,7 @@
 import type { Clock } from '@/domain/common/clock';
 import type { AppDeps } from './deps';
 import {
+  makeInventoryUseCases,
   makeRemoveHealthCondition,
   makeSaveHealthCondition,
   makeSetEquipment,
@@ -12,6 +13,9 @@ import { makeCatalogUseCases } from './program/catalog';
 import { makeGetActiveProgram } from './program/getActiveProgram';
 import { createProgramEditor } from './program/programEditor';
 import { makeSuggestionUseCases } from './program/suggestions';
+import { makeCheckInUseCases } from './workout/checkIn';
+import { makeSessionLifecycle } from './workout/sessionLifecycle';
+import { makeSetActions } from './workout/setActions';
 
 /**
  * Semua use case dan query yang tersedia untuk UI, dikelompokkan per modul.
@@ -32,6 +36,7 @@ export function createServices(deps: AppDeps) {
       setEquipment: makeSetEquipment(deps),
       saveHealthCondition: makeSaveHealthCondition(deps),
       removeHealthCondition: makeRemoveHealthCondition(deps),
+      inventory: makeInventoryUseCases(deps),
     },
     program: {
       getActive: makeGetActiveProgram(deps),
@@ -39,6 +44,11 @@ export function createServices(deps: AppDeps) {
       suggestions: makeSuggestionUseCases(deps, editor),
     },
     catalog: makeCatalogUseCases(deps),
+    checkIn: makeCheckInUseCases(deps),
+    workout: {
+      ...makeSessionLifecycle(deps),
+      sets: makeSetActions(deps),
+    },
     platform: deps.platform,
   };
 }
