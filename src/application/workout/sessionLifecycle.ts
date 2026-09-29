@@ -6,8 +6,7 @@ import { isLoaded } from '@/domain/exercise/types';
 import type { PlateInventory } from '@/domain/profile/types';
 import type { ProgramDay, ProgramExercise } from '@/domain/program/types';
 import type { ExerciseHistoryEntry } from '@/domain/repositories';
-import { estimateOneRepMax } from '@/domain/strength/oneRepMax';
-import { detectPersonalRecord } from '@/domain/strength/personalRecord';
+import { bestSet, detectPersonalRecord } from '@/domain/strength/personalRecord';
 import { decideNextLoad, type LoadDecision } from '@/domain/strength/progression';
 import { isScheduledDeloadWeek } from '@/domain/trainer/deload';
 import { buildSession } from '@/domain/workout/buildSession';
@@ -197,11 +196,7 @@ export function makeSessionLifecycle(deps: AppDeps) {
       const exercise = byId.get(exerciseId);
       if (!exercise || !isLoaded(exercise)) continue;
       const mine = completed.filter((s) => s.exerciseId === exerciseId);
-      const best = [...mine].sort(
-        (a, b) =>
-          (estimateOneRepMax(b.weightKg, b.reps) ?? 0) -
-            (estimateOneRepMax(a.weightKg, a.reps) ?? 0) || b.reps - a.reps,
-      )[0];
+      const best = bestSet(mine);
       if (!best || best.weightKg <= 0) continue;
       const history = (await deps.sessions.exerciseHistory(exerciseId, PR_HISTORY))
         .filter((h) => h.sessionId !== sessionId)

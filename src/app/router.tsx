@@ -6,6 +6,7 @@ import { paths } from './navigation';
 import { RequireProfile } from './RequireProfile';
 import {
   DayEditScreen,
+  ExerciseProgressScreen,
   ExerciseDetailScreen,
   ExerciseLibraryScreen,
   OnboardingScreen,
@@ -35,6 +36,7 @@ export const routes: RouteObject[] = [
       { path: paths.workout, element: page(<WorkoutScreen />) },
       { path: `${paths.workout}/ringkasan/:sessionId`, element: page(<SummaryScreen />) },
       { path: paths.progress, element: page(<ProgressScreen />) },
+      { path: `${paths.progress}/gerakan/:id`, element: page(<ExerciseProgressScreen />) },
       { path: paths.profile, element: page(<ProfileScreen />) },
       { path: '*', element: <Navigate to={paths.today} replace /> },
     ],

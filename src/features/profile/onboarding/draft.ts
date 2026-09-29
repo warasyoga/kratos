@@ -17,6 +17,7 @@ import {
   type Sex,
 } from '@/domain/profile/types';
 import type { ParqDraft } from '../components/ParqForm';
+import { parseDecimal } from '@/shared/lib/format';
 
 /** Jawaban onboarding selama diisi. Angka disimpan sebagai teks agar input bisa kosong. */
 export interface OnboardingDraft {
@@ -62,13 +63,6 @@ export type Step = (typeof STEPS)[number];
 export const QUESTION_STEPS: readonly Step[] = STEPS.slice(1, 8);
 
 /** "68,4" dan "68.4" sama-sama diterima; kosong → undefined. */
-export function parseDecimal(text: string): number | undefined {
-  const normalized = text.trim().replace(',', '.');
-  if (normalized === '') return undefined;
-  const value = Number(normalized);
-  return Number.isFinite(value) ? value : Number.NaN;
-}
-
 export function toOnboardingInput(draft: OnboardingDraft) {
   return {
     ...draft,

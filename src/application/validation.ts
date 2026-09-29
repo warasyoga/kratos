@@ -1,11 +1,11 @@
-import type { z } from 'zod';
+import type { z } from 'zod/mini';
 import { err, ok, type Result } from '@/domain/common/result';
 
 /**
  * Validasi input dari luar (form, file impor) dengan Zod.
  * Pesan error berupa kode i18n per kolom, mis. { heightCm: 'height_range' }.
  */
-export function validate<S extends z.ZodType>(schema: S, input: unknown): Result<z.infer<S>> {
+export function validate<S extends z.ZodMiniType>(schema: S, input: unknown): Result<z.infer<S>> {
   const parsed = schema.safeParse(input);
   if (parsed.success) return ok(parsed.data);
 

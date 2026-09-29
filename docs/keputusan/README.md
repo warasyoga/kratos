@@ -11,6 +11,7 @@ menjadi "Digantikan oleh ADR-xxx".
 | [ADR-003](ADR-003-arsitektur-berlapis.md) | Arsitektur berlapis dengan aturan yang ditegakkan lint | Diterima |
 | [ADR-004](ADR-004-standar-ilmiah.md) | Semua perhitungan berbasis sumber ilmiah yang tercatat | Diterima |
 | [ADR-005](ADR-005-pengingat.md) | Pengingat utama lewat kalender HP (.ics) | Diterima |
+| [ADR-006](ADR-006-grafik-svg.md) | Grafik SVG sendiri, bukan Recharts | Diterima |
 
 ## Templat
 

@@ -7,7 +7,9 @@ import type {
   UserProfile,
 } from '@/domain/profile/types';
 import type { Program, ProgramDay, ProgramExercise } from '@/domain/program/types';
-import type { BodyMetric, ResolvedSuggestion } from '@/domain/repositories';
+import type { BodyMetric } from '@/domain/body/types';
+import type { ProgressPhoto } from '@/domain/progress/photo';
+import type { ResolvedSuggestion } from '@/domain/repositories';
 import type { ActivityLog } from '@/domain/today/activity';
 import type { CheckIn, SetLog, WorkoutSession } from '@/domain/workout/types';
 
@@ -74,6 +76,7 @@ export class KratosDatabase extends Dexie {
   sessions!: EntityTable<WorkoutSession, 'id'>;
   setLogs!: EntityTable<SetLog, 'id'>;
   activityLogs!: EntityTable<ActivityLog, 'id'>;
+  photos!: EntityTable<ProgressPhoto, 'id'>;
   settings!: EntityTable<SettingsRow, 'id'>;
 
   constructor(name = 'kratos') {

@@ -66,6 +66,10 @@ export const NAVY_OFFSET = 450;
 
 /** [Internal] Bobot rata-rata bergerak eksponensial untuk tren berat. */
 export const WEIGHT_TREND_ALPHA = 0.1;
+/** [Internal] Pengingat mengukur lingkar tubuh setiap 14 hari. */
+export const MEASUREMENT_INTERVAL_DAYS = 14;
+/** [Internal] Foto progres dikompres sebelum disimpan (docs/fitur/07-progres.md). */
+export const PHOTO = { maxSidePx: 1080, thumbSidePx: 360, jpegQuality: 0.8 } as const;
 
 // ── Kekuatan & progresi (docs/sains-latihan/02-kekuatan-dan-progresi.md) ────
 

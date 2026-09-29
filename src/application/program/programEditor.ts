@@ -1,4 +1,4 @@
-import { z } from 'zod';
+import { z } from 'zod/mini';
 import { err, ok, type Result } from '@/domain/common/result';
 import { WEEKDAYS, type Weekday } from '@/domain/common/weekday';
 import type { Exercise } from '@/domain/exercise/types';
@@ -7,15 +7,15 @@ import type { ProgramBundle, SubstitutionReason } from '@/domain/program/types';
 import type { AppDeps } from '../deps';
 import { validate } from '../validation';
 
-const prescriptionPatchSchema = z
-  .object({
+const prescriptionPatchSchema = z.partial(
+  z.object({
     sets: z.number({ error: 'number_required' }),
     repMin: z.number({ error: 'number_required' }),
     repMax: z.number({ error: 'number_required' }),
     targetRir: z.number({ error: 'number_required' }),
     restSec: z.number({ error: 'number_required' }),
-  })
-  .partial();
+  }),
+);
 
 const weekdaySchema = z.enum(WEEKDAYS);
 

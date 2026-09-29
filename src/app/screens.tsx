@@ -28,3 +28,6 @@ export const WorkoutScreen = lazy(() =>
 export const ProgressScreen = lazy(() =>
   import('@/features/progress').then((m) => ({ default: m.ProgressScreen })),
 );
+export const ExerciseProgressScreen = lazy(() =>
+  import('@/features/progress').then((m) => ({ default: m.ExerciseProgressScreen })),
+);

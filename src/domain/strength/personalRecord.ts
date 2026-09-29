@@ -3,6 +3,14 @@ import { bestEstimatedOneRepMax, estimateOneRepMax } from './oneRepMax';
 
 export type PrKind = 'estimated_1rm' | 'reps_at_weight';
 
+const e1rmOrZero = (s: SetResult) =>
+  s.weightKg > 0 && s.reps >= 1 ? (estimateOneRepMax(s.weightKg, s.reps) ?? 0) : 0;
+
+/** Set terbaik: 1RM estimasi tertinggi, lalu repetisi terbanyak. Kandidat PR sebuah sesi. */
+export function bestSet<T extends SetResult>(sets: readonly T[]): T | undefined {
+  return [...sets].sort((a, b) => e1rmOrZero(b) - e1rmOrZero(a) || b.reps - a.reps)[0];
+}
+
 /**
  * Jenis rekor pribadi yang dipecahkan sebuah set kerja, dibanding seluruh riwayat gerakan yang sama.
  * Set pertama kali tidak dihitung PR (menjadi patokan awal).

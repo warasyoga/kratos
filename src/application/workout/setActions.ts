@@ -1,4 +1,4 @@
-import { z } from 'zod';
+import { z } from 'zod/mini';
 import { err, ok, type Result } from '@/domain/common/result';
 import { isLoaded } from '@/domain/exercise/types';
 import { nextCalibrationLoad } from '@/domain/strength/calibration';
@@ -7,26 +7,23 @@ import { RIR_CAP } from '@/domain/standards';
 import { WARMUP_REST_SEC } from '@/domain/workout/buildSession';
 import type { SessionExercisePlan, SetLog, WorkoutSession } from '@/domain/workout/types';
 import type { AppDeps } from '../deps';
+import { numberInRange } from '../profile/schemas';
 import { validate } from '../validation';
 import { sortSets } from './sessionLifecycle';
 
 const setValuesSchema = z.object({
-  weightKg: z
-    .number({ error: 'number_required' })
-    .min(0, { error: 'set_weight_range' })
-    .max(500, { error: 'set_weight_range' }),
+  weightKg: numberInRange(0, 500, 'set_weight_range'),
   reps: z
-    .number({ error: 'number_required' })
-    .int()
-    .min(0, { error: 'set_reps_range' })
-    .max(300, { error: 'set_reps_range' }),
+    .int({ error: 'number_required' })
+    .check(z.minimum(0, { error: 'set_reps_range' }), z.maximum(300, { error: 'set_reps_range' })),
 });
 
 const rirSchema = z
-  .number({ error: 'number_required' })
-  .int()
-  .min(0, { error: 'rir_value_range' })
-  .max(RIR_CAP, { error: 'rir_value_range' });
+  .int({ error: 'number_required' })
+  .check(
+    z.minimum(0, { error: 'rir_value_range' }),
+    z.maximum(RIR_CAP, { error: 'rir_value_range' }),
+  );
 
 interface Loaded {
   session: WorkoutSession;

@@ -36,6 +36,19 @@ Segmen atas: **Kekuatan · Tubuh · Volume · Foto**, dengan pilihan rentang 4 m
 - Foto dikompres ke sisi terpanjang 1080 px JPEG kualitas 0,8 sebelum disimpan.
 - Semua angka memakai rumus di [sains-latihan](../sains-latihan/README.md).
 
+## Implementasi (Tahap 7)
+- Domain `src/domain/progress/`: `strength.ts` (set terbaik per sesi, deret 1RM Epley, linimasa PR dengan aturan
+  yang sama dengan ringkasan sesi), `body.ts` (laju naik vs 0,25–0,5%/minggu, pita target, perubahan ukuran,
+  US Navy per catatan, pengingat ukur 14 hari), `volume.ts` (set per otot dari set yang dikerjakan, tonase, kehadiran),
+  `range.ts` (4 mgg / 12 mgg / semua, dihitung dari Senin).
+- Use case `services.progress`: `strength`, `exercise`, `body`, `volume`, `logMetric`, `removeMetric`, `photos.{list,add,remove}`.
+  Catatan berat terakhir tidak bisa dihapus (profil dan target butuh berat).
+- Foto: dikompres di perangkat (`infrastructure/image.ts`, orientasi EXIF diterapkan) menjadi 1080 px + thumbnail 360 px,
+  disimpan sebagai Blob di tabel `photos` (sudah ada sejak skema v1).
+- Grafik SVG sendiri ([ADR-006](../keputusan/ADR-006-grafik-svg.md)). Bagian & rentang disimpan di URL
+  (`/progres?bagian=tubuh&rentang=4`), detail gerakan di `/progres/gerakan/:id`.
+- Query progres berawalan `['progress']` dan dimuat ulang setelah latihan, check-in, dan ubah profil.
+
 ## Data
 Query `getProgressSummary(range)`, `getExerciseHistory(id)`. Use case `logBodyMetric`, `addProgressPhoto`, `deleteProgressPhoto`.
 

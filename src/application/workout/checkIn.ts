@@ -1,27 +1,23 @@
-import { z } from 'zod';
+import { z } from 'zod/mini';
 import { toLocalDate } from '@/domain/common/clock';
 import { ok, type Result } from '@/domain/common/result';
 import { BODY_AREAS } from '@/domain/profile/types';
 import { assessReadiness } from '@/domain/trainer/readiness';
 import type { CheckIn, Readiness } from '@/domain/workout/types';
 import type { AppDeps } from '../deps';
+import { numberInRange } from '../profile/schemas';
 import { validate } from '../validation';
 
-const scale = z.number().int().min(1, { error: 'scale_range' }).max(5, { error: 'scale_range' });
+const scale = z
+  .int()
+  .check(z.minimum(1, { error: 'scale_range' }), z.maximum(5, { error: 'scale_range' }));
 
 export const checkInSchema = z.object({
-  sleepHours: z
-    .number({ error: 'number_required' })
-    .min(0, { error: 'sleep_range' })
-    .max(14, { error: 'sleep_range' }),
+  sleepHours: numberInRange(0, 14, 'sleep_range'),
   soreness: scale,
   energy: scale,
   painAreas: z.array(z.enum(BODY_AREAS)),
-  bodyWeightKg: z
-    .number()
-    .min(30, { error: 'weight_range' })
-    .max(250, { error: 'weight_range' })
-    .optional(),
+  bodyWeightKg: z.optional(numberInRange(30, 250, 'weight_range')),
 });
 
 /** Check-in hari gym: menilai kesiapan dan mencatat berat (opsional). docs/fitur/03-check-in.md */

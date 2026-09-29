@@ -231,6 +231,7 @@ interface ProgressPhoto {
   logDate: string;
   pose: 'front' | 'side' | 'back';
   blob: Blob;                     // JPEG, sisi terpanjang 1080 px
+  thumb: Blob;                    // JPEG 360 px untuk grid (Tahap 7; tabel photos sudah ada sejak v1, tanpa migrasi)
   createdAt: number;
 }
 ```

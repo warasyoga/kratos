@@ -11,6 +11,13 @@ export interface SetResult {
   rir?: number | undefined;
 }
 
+/** Set kerja yang selesai dari sesi selesai, untuk grafik progres. */
+export interface WorkingSetRecord extends SetResult {
+  sessionId: string;
+  logDate: string;
+  exerciseId: string;
+}
+
 export type Readiness = 'green' | 'yellow' | 'red';
 
 /** Set kerja satu gerakan dalam satu sesi. */

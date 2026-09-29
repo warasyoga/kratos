@@ -71,10 +71,10 @@ Centang item saat selesai. Urutan disusun agar fondasi dan rumus selesai sebelum
 - [ ] Ringkasan nutrisi harian (konsumsi vs target) → Tahap 8; sementara tampil target saja
 
 ## Tahap 7 · Progres
-- [ ] Grafik 1RM per gerakan, daftar PR
-- [ ] Berat badan (tren rata-rata 7 hari) dan ukuran tubuh + estimasi lemak
-- [ ] Volume per otot vs zona 10–20 set
-- [ ] Foto progres (kompresi, perbandingan sebelum/sesudah)
+- [x] Grafik 1RM per gerakan, daftar PR, detail riwayat gerakan
+- [x] Berat badan (tren EMA + pita laju naik 0,25–0,5%/minggu) dan ukuran tubuh + estimasi lemak
+- [x] Volume per otot vs zona 10–20 set, tonase mingguan, kehadiran
+- [x] Foto progres (kompresi 1080 px + thumbnail, perbandingan geser/berdampingan)
 
 ## Tahap 8 · Nutrisi, Peta Otot, Pencapaian, Pengingat
 - [ ] Catat makanan cepat, menu tersimpan, air minum

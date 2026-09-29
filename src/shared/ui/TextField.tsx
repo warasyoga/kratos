@@ -7,7 +7,7 @@ export interface TextFieldProps extends Omit<InputHTMLAttributes<HTMLInputElemen
   /** Satuan di sisi kanan, mis. "kg". */
   suffix?: string;
   error?: string | undefined;
-  hint?: string;
+  hint?: string | undefined;
 }
 
 export function TextField({ id, label, suffix, error, hint, className, ...input }: TextFieldProps) {

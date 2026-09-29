@@ -13,6 +13,10 @@ import { makeCatalogUseCases } from './program/catalog';
 import { makeGetActiveProgram } from './program/getActiveProgram';
 import { createProgramEditor } from './program/programEditor';
 import { makeSuggestionUseCases } from './program/suggestions';
+import { makeBodyProgress } from './progress/bodyProgress';
+import { makePhotoUseCases } from './progress/photos';
+import { makeStrengthProgress } from './progress/strengthProgress';
+import { makeVolumeProgress } from './progress/volumeProgress';
 import { makeTodayUseCases } from './today/todayUseCases';
 import { makeCheckInUseCases } from './workout/checkIn';
 import { makeSessionLifecycle } from './workout/sessionLifecycle';
@@ -50,6 +54,12 @@ export function createServices(deps: AppDeps) {
     workout: {
       ...makeSessionLifecycle(deps),
       sets: makeSetActions(deps),
+    },
+    progress: {
+      ...makeStrengthProgress(deps),
+      ...makeBodyProgress(deps),
+      volume: makeVolumeProgress(deps),
+      photos: makePhotoUseCases(deps),
     },
     platform: deps.platform,
   };

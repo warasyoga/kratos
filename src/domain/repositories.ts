@@ -3,13 +3,22 @@
  * implementasinya (Dexie/IndexedDB) ada di src/infrastructure/repositories.
  * Lihat docs/03-arsitektur.md dan ADR-002.
  */
+import type { BodyMetric } from './body/types';
 import type { Exercise, ExerciseGuide } from './exercise/types';
 import type { Equipment, HealthCondition, PlateInventory, UserProfile } from './profile/types';
 import type { ProgramBundle, ProgramExercise } from './program/types';
+import type { ProgressPhoto } from './progress/photo';
 import type { ActivityLog } from './today/activity';
-import type { CheckIn, Readiness, SetLog, SetResult, WorkoutSession } from './workout/types';
+import type {
+  CheckIn,
+  Readiness,
+  SetLog,
+  SetResult,
+  WorkingSetRecord,
+  WorkoutSession,
+} from './workout/types';
 
-export type { ProgramBundle };
+export type { BodyMetric, ProgramBundle };
 
 export interface ProfileRepository {
   get(): Promise<UserProfile | null>;
@@ -60,21 +69,11 @@ export interface SuggestionRepository {
   save(record: ResolvedSuggestion): Promise<void>;
 }
 
-export interface BodyMetric {
-  id: string;
-  logDate: string;
-  weightKg?: number;
-  neckCm?: number;
-  chestCm?: number;
-  waistCm?: number;
-  hipCm?: number;
-  armCm?: number;
-  thighCm?: number;
-  createdAt: number;
-}
-
 export interface BodyMetricRepository {
   add(metric: BodyMetric): Promise<void>;
+  remove(id: string): Promise<void>;
+  /** Semua catatan, urut tanggal lalu waktu dicatat. */
+  list(): Promise<BodyMetric[]>;
   latestWeightKg(): Promise<number | null>;
 }
 
@@ -105,11 +104,20 @@ export interface SessionRepository {
   listFinishedSince(fromDate: string): Promise<WorkoutSession[]>;
   /** Riwayat gerakan dari sesi yang selesai, terbaru lebih dulu. */
   exerciseHistory(exerciseId: string, limit: number): Promise<ExerciseHistoryEntry[]>;
+  /** Semua set kerja yang selesai dari sesi selesai sejak tanggal tertentu (grafik progres). */
+  workingSetsSince(fromDate: string): Promise<WorkingSetRecord[]>;
 }
 
 export interface ActivityRepository {
   listSince(fromDate: string): Promise<ActivityLog[]>;
   add(log: ActivityLog): Promise<void>;
+  remove(id: string): Promise<void>;
+}
+
+export interface PhotoRepository {
+  /** Semua foto, terbaru lebih dulu. */
+  list(): Promise<ProgressPhoto[]>;
+  add(photo: ProgressPhoto): Promise<void>;
   remove(id: string): Promise<void>;
 }
 

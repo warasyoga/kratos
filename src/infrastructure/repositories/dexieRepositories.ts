@@ -16,6 +16,7 @@ import type {
   ExerciseRepository,
   GymRepository,
   HealthConditionRepository,
+  PhotoRepository,
   ProfileRepository,
   ProgramBundle,
   ProgramRepository,
@@ -24,8 +25,9 @@ import type {
   SuggestionRepository,
   TransactionRunner,
 } from '@/domain/repositories';
+import type { ProgressPhoto } from '@/domain/progress/photo';
 import type { ActivityLog } from '@/domain/today/activity';
-import type { CheckIn, SetLog, WorkoutSession } from '@/domain/workout/types';
+import type { CheckIn, SetLog, WorkingSetRecord, WorkoutSession } from '@/domain/workout/types';
 import type { ExerciseRow, KratosDatabase } from '../db/database';
 
 export class DexieProfileRepository implements ProfileRepository {
@@ -161,6 +163,9 @@ export class DexieSuggestionRepository implements SuggestionRepository {
   }
 }
 
+const chronological = (a: BodyMetric, b: BodyMetric) =>
+  a.logDate.localeCompare(b.logDate) || a.createdAt - b.createdAt;
+
 export class DexieBodyMetricRepository implements BodyMetricRepository {
   constructor(private readonly db: KratosDatabase) {}
 
@@ -168,12 +173,17 @@ export class DexieBodyMetricRepository implements BodyMetricRepository {
     await this.db.bodyMetrics.put(metric);
   }
 
+  async remove(id: string): Promise<void> {
+    await this.db.bodyMetrics.delete(id);
+  }
+
+  async list(): Promise<BodyMetric[]> {
+    return (await this.db.bodyMetrics.toArray()).sort(chronological);
+  }
+
   async latestWeightKg(): Promise<number | null> {
-    const withWeight = (await this.db.bodyMetrics.toArray()).filter(
-      (m) => m.weightKg !== undefined,
-    );
-    withWeight.sort((a, b) => b.logDate.localeCompare(a.logDate) || b.createdAt - a.createdAt);
-    return withWeight[0]?.weightKg ?? null;
+    const withWeight = (await this.list()).filter((m) => m.weightKg !== undefined);
+    return withWeight.at(-1)?.weightKg ?? null;
   }
 }
 
@@ -259,6 +269,22 @@ export class DexieSessionRepository implements SessionRepository {
           })),
       }));
   }
+
+  async workingSetsSince(fromDate: string): Promise<WorkingSetRecord[]> {
+    const sessions = await this.listFinishedSince(fromDate);
+    const dateOf = new Map(sessions.map((s) => [s.id, s.logDate]));
+    const logs = await this.db.setLogs
+      .where('sessionId')
+      .anyOf([...dateOf.keys()])
+      .toArray();
+    return logs.flatMap(({ sessionId, exerciseId, kind, completedAt, weightKg, reps, rir }) => {
+      const logDate = dateOf.get(sessionId);
+      if (kind !== 'working' || completedAt === undefined || logDate === undefined) return [];
+      return [
+        { sessionId, logDate, exerciseId, weightKg, reps, ...(rir !== undefined && { rir }) },
+      ];
+    });
+  }
 }
 
 export class DexieActivityRepository implements ActivityRepository {
@@ -274,6 +300,23 @@ export class DexieActivityRepository implements ActivityRepository {
 
   async remove(id: string): Promise<void> {
     await this.db.activityLogs.delete(id);
+  }
+}
+
+export class DexiePhotoRepository implements PhotoRepository {
+  constructor(private readonly db: KratosDatabase) {}
+
+  async list(): Promise<ProgressPhoto[]> {
+    const photos = await this.db.photos.toArray();
+    return photos.sort((a, b) => b.logDate.localeCompare(a.logDate) || b.createdAt - a.createdAt);
+  }
+
+  async add(photo: ProgressPhoto): Promise<void> {
+    await this.db.photos.put(photo);
+  }
+
+  async remove(id: string): Promise<void> {
+    await this.db.photos.delete(id);
   }
 }
 

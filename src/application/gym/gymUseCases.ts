@@ -1,8 +1,8 @@
-import { z } from 'zod';
+import { z } from 'zod/mini';
 import { err, ok, type Result } from '@/domain/common/result';
 import type { HealthCondition, PlateInventory } from '@/domain/profile/types';
 import type { AppDeps } from '../deps';
-import { conditionSchema, equipmentSchema } from '../profile/schemas';
+import { conditionSchema, equipmentSchema, numberInRange } from '../profile/schemas';
 import { reconcileActiveProgram, type ProgramChange } from '../program/programChanges';
 import { validate } from '../validation';
 
@@ -65,41 +65,34 @@ export const MACHINE_STEP_OPTIONS_KG = [2.5, 5, 10] as const;
 
 const inventorySchema = z
   .object({
-    barKg: z
-      .number({ error: 'number_required' })
-      .min(5, { error: 'bar_range' })
-      .max(30, { error: 'bar_range' }),
+    barKg: numberInRange(5, 30, 'bar_range'),
     platesKg: z
       .array(
         z.union(
           PLATE_OPTIONS_KG.map((p) => z.literal(p)) as [
-            z.ZodLiteral<number>,
-            ...z.ZodLiteral<number>[],
+            z.ZodMiniLiteral<number>,
+            ...z.ZodMiniLiteral<number>[],
           ],
         ),
       )
-      .min(1, { error: 'plates_required' }),
-    dumbbellMinKg: z
-      .number({ error: 'number_required' })
-      .min(1, { error: 'dumbbell_range' })
-      .max(60, { error: 'dumbbell_range' }),
-    dumbbellMaxKg: z
-      .number({ error: 'number_required' })
-      .min(1, { error: 'dumbbell_range' })
-      .max(80, { error: 'dumbbell_range' }),
+      .check(z.minLength(1, { error: 'plates_required' })),
+    dumbbellMinKg: numberInRange(1, 60, 'dumbbell_range'),
+    dumbbellMaxKg: numberInRange(1, 80, 'dumbbell_range'),
     dumbbellStepKg: z.union([z.literal(1), z.literal(2), z.literal(2.5)], { error: 'choose_one' }),
     machineStepKg: z.union(
       MACHINE_STEP_OPTIONS_KG.map((p) => z.literal(p)) as [
-        z.ZodLiteral<number>,
-        ...z.ZodLiteral<number>[],
+        z.ZodMiniLiteral<number>,
+        ...z.ZodMiniLiteral<number>[],
       ],
       { error: 'choose_one' },
     ),
   })
-  .refine((v) => v.dumbbellMaxKg >= v.dumbbellMinKg, {
-    path: ['dumbbellMaxKg'],
-    error: 'dumbbell_order',
-  });
+  .check(
+    z.refine((v) => v.dumbbellMaxKg >= v.dumbbellMinKg, {
+      path: ['dumbbellMaxKg'],
+      error: 'dumbbell_order',
+    }),
+  );
 
 export type InventoryForm = z.infer<typeof inventorySchema>;
 

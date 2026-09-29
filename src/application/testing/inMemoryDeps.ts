@@ -11,6 +11,7 @@ import type {
   PlateInventory,
   UserProfile,
 } from '@/domain/profile/types';
+import type { ProgressPhoto } from '@/domain/progress/photo';
 import type { BodyMetric, ProgramBundle, ResolvedSuggestion } from '@/domain/repositories';
 import type { ActivityLog } from '@/domain/today/activity';
 import type { CheckIn, SetLog, WorkoutSession } from '@/domain/workout/types';
@@ -29,6 +30,7 @@ export interface InMemoryState {
   sessions: WorkoutSession[];
   setLogs: SetLog[];
   activities: ActivityLog[];
+  photos: ProgressPhoto[];
 }
 
 export function createInMemoryDeps(
@@ -47,6 +49,7 @@ export function createInMemoryDeps(
     sessions: [],
     setLogs: [],
     activities: [],
+    photos: [],
   };
   const active = () => state.programs.find((p) => p.program.active) ?? null;
 
@@ -101,6 +104,13 @@ export function createInMemoryDeps(
     },
     bodyMetrics: {
       add: async (m) => void state.bodyMetrics.push(m),
+      remove: async (id) => {
+        state.bodyMetrics = state.bodyMetrics.filter((m) => m.id !== id);
+      },
+      list: async () =>
+        [...state.bodyMetrics].sort(
+          (a, b) => a.logDate.localeCompare(b.logDate) || a.createdAt - b.createdAt,
+        ),
       latestWeightKg: async () => {
         // Seri (jam test tetap): catatan yang ditambahkan belakangan menang.
         let latest: BodyMetric | undefined;
@@ -175,6 +185,21 @@ export function createInMemoryDeps(
           }))
           .filter((h) => h.sets.length > 0)
           .slice(0, limit),
+      workingSetsSince: async (from) => {
+        const dateOf = new Map(
+          state.sessions
+            .filter((s) => s.status === 'finished' && s.logDate >= from)
+            .map((s) => [s.id, s.logDate]),
+        );
+        return state.setLogs.flatMap((log) => {
+          const logDate = dateOf.get(log.sessionId);
+          if (log.kind !== 'working' || log.completedAt === undefined || !logDate) return [];
+          const { sessionId, exerciseId, weightKg, reps, rir } = log;
+          return [
+            { sessionId, logDate, exerciseId, weightKg, reps, ...(rir !== undefined && { rir }) },
+          ];
+        });
+      },
     },
     activities: {
       listSince: async (from) => state.activities.filter((a) => a.logDate >= from),
@@ -183,8 +208,22 @@ export function createInMemoryDeps(
         state.activities = state.activities.filter((a) => a.id !== id);
       },
     },
+    photos: {
+      list: async () =>
+        [...state.photos].sort(
+          (a, b) => b.logDate.localeCompare(a.logDate) || b.createdAt - a.createdAt,
+        ),
+      add: async (p) => void state.photos.push(p),
+      remove: async (id) => {
+        state.photos = state.photos.filter((p) => p.id !== id);
+      },
+    },
     tx: { run: (work) => work() },
-    platform: { requestPersistentStorage: async () => true },
+    platform: {
+      requestPersistentStorage: async () => true,
+      // Tanpa canvas di test: salin isi file sebagai JPEG.
+      resizeImage: async (file) => new Blob([file], { type: 'image/jpeg' }),
+    },
   };
 }
 

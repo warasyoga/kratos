@@ -3,6 +3,7 @@ import { createServices, type Services } from '@/application/services';
 import { systemClock } from '@/infrastructure/clock';
 import { KratosDatabase } from '@/infrastructure/db/database';
 import { ensureCatalog } from '@/infrastructure/db/seed';
+import { resizeImage } from '@/infrastructure/image';
 import { requestPersistentStorage } from '@/infrastructure/platform';
 import {
   DexieActivityRepository,
@@ -11,6 +12,7 @@ import {
   DexieExerciseRepository,
   DexieGymRepository,
   DexieHealthConditionRepository,
+  DexiePhotoRepository,
   DexieProfileRepository,
   DexieProgramRepository,
   DexieSessionRepository,
@@ -39,8 +41,9 @@ export async function createAppServices(): Promise<Services> {
     checkIns: new DexieCheckInRepository(db),
     sessions: new DexieSessionRepository(db),
     activities: new DexieActivityRepository(db),
+    photos: new DexiePhotoRepository(db),
     tx: new DexieTransactionRunner(db),
-    platform: { requestPersistentStorage },
+    platform: { requestPersistentStorage, resizeImage },
   };
   return createServices(deps);
 }

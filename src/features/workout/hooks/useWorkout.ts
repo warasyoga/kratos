@@ -48,6 +48,7 @@ export function useWorkoutAction() {
             queryKeys.activeProgram,
             queryKeys.profileOverview,
             queryKeys.todayPlan,
+            queryKeys.progress,
           ].map((queryKey) => client.invalidateQueries({ queryKey })),
         );
         return result;

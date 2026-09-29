@@ -3,13 +3,13 @@ import type { ProfileOverview } from '@/application/profile/getProfileOverview';
 import { useServices } from '@/application/ServicesContext';
 import type { ActivityLevel, Experience, Sex } from '@/domain/profile/types';
 import { errorText, t } from '@/shared/i18n/id';
+import { parseDecimal } from '@/shared/lib/format';
 import { Button } from '@/shared/ui/Button';
 import { OptionGroup } from '@/shared/ui/OptionGroup';
 import { Sheet } from '@/shared/ui/Sheet';
 import { TextField } from '@/shared/ui/TextField';
 import { describeChanges } from '../changeMessages';
 import { useProfileAction } from '../hooks/useProfileAction';
-import { parseDecimal } from '../onboarding/draft';
 import { activityOptions, experienceOptions, sexOptions } from '../options';
 
 interface Form {

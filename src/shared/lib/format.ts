@@ -36,3 +36,25 @@ export function formatDayDate(isoDate: string): string {
     month: 'long',
   }).format(parseLocalDate(isoDate));
 }
+
+/** "28 Sep" untuk label sumbu grafik dan daftar. Menerima `YYYY-MM-DD` atau epoch ms. */
+export function formatShortDate(date: string | number): string {
+  return new Intl.DateTimeFormat(LOCALE, { day: 'numeric', month: 'short' }).format(
+    typeof date === 'string' ? parseLocalDate(date) : new Date(date),
+  );
+}
+
+/** Angka bertanda untuk perubahan: "+1,2", "−0,5", "0". */
+export function formatSigned(value: number, maxFractionDigits = 1): string {
+  const text = formatNumber(Math.abs(value), maxFractionDigits);
+  if (text === '0') return '0';
+  return `${value > 0 ? '+' : '−'}${text}`;
+}
+
+/** Angka dari input pengguna, koma atau titik desimal. Kosong → undefined, tidak valid → NaN. */
+export function parseDecimal(text: string): number | undefined {
+  const normalized = text.trim().replace(',', '.');
+  if (normalized === '') return undefined;
+  const value = Number(normalized);
+  return Number.isFinite(value) ? value : Number.NaN;
+}

@@ -15,4 +15,11 @@ export const queryKeys = {
   inventory: ['gym', 'inventory'] as const,
   activeSession: ['workout', 'active'] as const,
   session: (id: string) => ['workout', 'session', id] as const,
+  /** Awalan semua query progres, untuk dimuat ulang setelah latihan/penimbangan. */
+  progress: ['progress'] as const,
+  progressStrength: (range: string) => ['progress', 'strength', range] as const,
+  progressExercise: (id: string) => ['progress', 'exercise', id] as const,
+  progressBody: (range: string) => ['progress', 'body', range] as const,
+  progressVolume: (range: string) => ['progress', 'volume', range] as const,
+  photos: ['progress', 'photos'] as const,
 };

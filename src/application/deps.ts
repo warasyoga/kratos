@@ -7,6 +7,7 @@ import type {
   ExerciseRepository,
   GymRepository,
   HealthConditionRepository,
+  PhotoRepository,
   ProfileRepository,
   ProgramRepository,
   SessionRepository,
@@ -28,8 +29,11 @@ export interface AppDeps {
   checkIns: CheckInRepository;
   sessions: SessionRepository;
   activities: ActivityRepository;
+  photos: PhotoRepository;
   tx: TransactionRunner;
   platform: {
     requestPersistentStorage(): Promise<boolean>;
+    /** Perkecil gambar ke sisi terpanjang `maxSidePx` dan simpan sebagai JPEG. Gagal → reject. */
+    resizeImage(file: Blob, maxSidePx: number, quality: number): Promise<Blob>;
   };
 }
