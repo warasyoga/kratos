@@ -50,6 +50,18 @@ export const WEIGHT_GAIN_PCT_PER_WEEK = { min: 0.0025, max: 0.005 } as const;
 
 /** [Internal] Kalibrasi ulang target kalori dari tren berat. */
 export const CALORIE_RECALIBRATION = { everyDays: 14, stepKcal: 150, minWeighIns: 6 } as const;
+/** [Internal] Batas total koreksi kalori dari kalibrasi (koreksi estimasi TDEE, bukan surplus). */
+export const CALORIE_ADJUSTMENT_MAX_KCAL = 500;
+/** [Internal] Pengingat (docs/fitur/10-pengingat.md). */
+export const REMINDER = {
+  defaultWorkoutTime: '17:30',
+  alarmMinutesBefore: 30,
+  waterEveryHours: 2,
+  waterStartHour: 8,
+  waterEndHour: 20,
+} as const;
+/** [Internal] Tombol cepat air minum (ml). */
+export const WATER_QUICK_ADD_ML = [250, 500] as const;
 
 // ── Komposisi tubuh (docs/sains-latihan/04-komposisi-tubuh.md) ─────────────
 
@@ -152,6 +164,19 @@ export const SET_WORK_SEC = 40;
 export const GENERAL_WARMUP_MIN = 5;
 
 // ── Keamanan & pemulihan (docs/sains-latihan/05-keamanan-dan-pemulihan.md) ─
+
+/**
+ * [Internal] Pemulihan otot untuk peta otot, dari anjuran ACSM ≥ 48 jam.
+ * docs/sains-latihan/05-keamanan-dan-pemulihan.md §3
+ */
+export const MUSCLE_RECOVERY = {
+  baseHours: 48,
+  extraHours: 24,
+  maxHours: 72,
+  heavySets: 6,
+  hardRir: 1,
+  partialRatio: 0.5,
+} as const;
 
 /** [Bukti] Bell et al. 2023: deload setiap 4–8 minggu. Kratos: minggu ke-6 dari blok 6 minggu. */
 export const MESOCYCLE_WEEKS = 6;

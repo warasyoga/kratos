@@ -4,6 +4,7 @@ import { Link, useNavigate, useParams } from 'react-router';
 import { queryKeys } from '@/application/queryKeys';
 import { useServices } from '@/application/ServicesContext';
 import { t } from '@/shared/i18n/id';
+import { tCustomExercise, tLibrary } from '@/shared/i18n/library';
 import { Card } from '@/shared/ui/Card';
 import { Chip } from '@/shared/ui/Chip';
 import { ScreenHeader } from '@/shared/ui/ScreenHeader';
@@ -33,7 +34,7 @@ export function ExerciseDetailScreen() {
     return (
       <div className="flex flex-col gap-3">
         {back}
-        <p className="text-muted">{t.library.notFound}</p>
+        <p className="text-muted">{tLibrary.notFound}</p>
       </div>
     );
   }
@@ -43,26 +44,37 @@ export function ExerciseDetailScreen() {
     <div className="flex flex-col gap-3.5">
       {back}
       <ScreenHeader title={exercise.name} eyebrow={t.movement[exercise.pattern]} />
-      {unavailable && <Chip tone="warn">{t.library.unavailable[unavailable]}</Chip>}
-      {!unavailable && progressionLocked && <Chip tone="neutral">{t.library.locked}</Chip>}
+      {exercise.isCustom && (
+        <div className="flex items-center justify-between gap-2">
+          <Chip tone="accent">{tCustomExercise.chip}</Chip>
+          <Link
+            to={`/gerakan/${exercise.id}/ubah`}
+            className="flex min-h-11 items-center text-sm font-semibold text-accent"
+          >
+            {tCustomExercise.editTitle}
+          </Link>
+        </div>
+      )}
+      {unavailable && <Chip tone="warn">{tLibrary.unavailable[unavailable]}</Chip>}
+      {!unavailable && progressionLocked && <Chip tone="neutral">{tLibrary.locked}</Chip>}
 
       <Card>
         <dl className="grid grid-cols-[auto_1fr] gap-x-4 gap-y-2 text-sm">
-          <dt className="text-muted">{t.library.primary}</dt>
+          <dt className="text-muted">{tLibrary.primary}</dt>
           <dd className="font-semibold">
             {exercise.primaryMuscles.map((m) => t.muscle[m]).join(', ')}
           </dd>
           {exercise.secondaryMuscles.length > 0 && (
             <>
-              <dt className="text-muted">{t.library.secondary}</dt>
+              <dt className="text-muted">{tLibrary.secondary}</dt>
               <dd>{exercise.secondaryMuscles.map((m) => t.muscle[m]).join(', ')}</dd>
             </>
           )}
-          <dt className="text-muted">{t.library.equipmentNeeded}</dt>
+          <dt className="text-muted">{tLibrary.equipmentNeeded}</dt>
           <dd>
             {exercise.equipment.length > 0
               ? exercise.equipment.map((q) => t.equipment[q]).join(', ')
-              : t.library.noEquipment}
+              : tLibrary.noEquipment}
           </dd>
         </dl>
       </Card>
@@ -70,7 +82,7 @@ export function ExerciseDetailScreen() {
       {guide && (
         <>
           <Card>
-            <h2 className="font-sans label-caps">{t.library.steps}</h2>
+            <h2 className="font-sans label-caps">{tLibrary.steps}</h2>
             <ol className="flex list-decimal flex-col gap-2 pl-5 text-sm">
               {guide.instructions.map((step) => (
                 <li key={step}>{step}</li>
@@ -78,7 +90,7 @@ export function ExerciseDetailScreen() {
             </ol>
           </Card>
           <Card>
-            <h2 className="font-sans label-caps">{t.library.mistakes}</h2>
+            <h2 className="font-sans label-caps">{tLibrary.mistakes}</h2>
             <ul className="flex list-disc flex-col gap-2 pl-5 text-sm">
               {guide.commonMistakes.map((m) => (
                 <li key={m}>{m}</li>
@@ -90,7 +102,7 @@ export function ExerciseDetailScreen() {
 
       {alternatives.length > 0 && (
         <Card>
-          <h2 className="font-sans label-caps">{t.library.alternatives}</h2>
+          <h2 className="font-sans label-caps">{tLibrary.alternatives}</h2>
           <ul className="flex flex-col divide-y divide-line">
             {alternatives.map((alt) => (
               <li key={alt.id}>

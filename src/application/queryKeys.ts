@@ -6,6 +6,8 @@ export const queryKeys = {
   activeProgram: ['program', 'active'] as const,
   exercises: ['catalog', 'exercises'] as const,
   catalog: ['catalog', 'list'] as const,
+  /** Awalan semua query perpustakaan gerakan. */
+  catalogAll: ['catalog'] as const,
   exerciseDetail: (id: string) => ['catalog', 'detail', id] as const,
   substitutes: (programExerciseId: string) =>
     ['program', 'substitutes', programExerciseId] as const,
@@ -22,4 +24,14 @@ export const queryKeys = {
   progressBody: (range: string) => ['progress', 'body', range] as const,
   progressVolume: (range: string) => ['progress', 'volume', range] as const,
   photos: ['progress', 'photos'] as const,
+  muscles: ['progress', 'muscles'] as const,
+  nutritionDay: ['nutrition', 'day'] as const,
+  reminders: ['reminders'] as const,
+  /** Awalan lencana: dicek ulang setelah latihan, nutrisi, ukuran, dan foto. */
+  achievements: ['achievements'] as const,
+  achievementList: ['achievements', 'list'] as const,
+  achievementSync: ['achievements', 'sync'] as const,
+  evaluationDue: ['achievements', 'evaluation-due'] as const,
+  evaluations: ['achievements', 'evaluations'] as const,
+  evaluation: (key: string) => ['achievements', 'evaluation', key] as const,
 };

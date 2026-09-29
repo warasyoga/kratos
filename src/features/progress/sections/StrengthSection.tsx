@@ -2,7 +2,7 @@ import { ChevronRight, Trophy } from 'lucide-react';
 import { useId, useState } from 'react';
 import { Link } from 'react-router';
 import type { ProgressRange } from '@/domain/progress/range';
-import { t } from '@/shared/i18n/id';
+import { tProgress } from '@/shared/i18n/progress';
 import { cn } from '@/shared/lib/cn';
 import { formatKg, formatShortDate, formatSigned } from '@/shared/lib/format';
 import { Card } from '@/shared/ui/Card';
@@ -19,7 +19,7 @@ export function StrengthSection({ range }: { range: ProgressRange }) {
   const [selectedId, setSelectedId] = useState<string>();
   const selectId = useId();
   if (!data) return null;
-  if (data.exercises.length === 0) return <EmptyCard>{t.progress.strengthEmpty}</EmptyCard>;
+  if (data.exercises.length === 0) return <EmptyCard>{tProgress.strengthEmpty}</EmptyCard>;
 
   const featured = data.exercises.find((e) => e.exercise.id === selectedId) ?? data.exercises[0];
   const first = featured?.points[0];
@@ -31,7 +31,7 @@ export function StrengthSection({ range }: { range: ProgressRange }) {
         <Card tone="gold">
           <h2 className="flex items-center gap-2 font-sans label-caps text-gold">
             <Trophy className="size-4" aria-hidden />
-            {t.progress.prsTitle}
+            {tProgress.prsTitle}
           </h2>
           <ul className="flex flex-col gap-2">
             {data.recentPrs.map((pr) => (
@@ -43,11 +43,11 @@ export function StrengthSection({ range }: { range: ProgressRange }) {
                   <span className="block truncate font-semibold">{pr.exercise.name}</span>
                   <span className="text-xs text-muted">
                     {formatShortDate(pr.logDate)} ·{' '}
-                    {pr.kinds.map((k) => t.progress.prKind[k]).join(' + ')}
+                    {pr.kinds.map((k) => tProgress.prKind[k]).join(' + ')}
                   </span>
                 </span>
                 <span className="font-display text-lg font-bold whitespace-nowrap tabular-nums">
-                  {t.progress.setLine(formatKg(pr.weightKg), pr.reps)}
+                  {tProgress.setLine(formatKg(pr.weightKg), pr.reps)}
                 </span>
               </li>
             ))}
@@ -58,7 +58,7 @@ export function StrengthSection({ range }: { range: ProgressRange }) {
       {featured && (
         <Card>
           <div className="flex items-center justify-between gap-2">
-            <h2 className="font-sans label-caps">{t.progress.e1rmTitle}</h2>
+            <h2 className="font-sans label-caps">{tProgress.e1rmTitle}</h2>
             {featured.changeKg !== null && (
               <Chip tone={featured.changeKg >= 0 ? 'good' : 'warn'}>
                 {formatSigned(featured.changeKg)} kg
@@ -66,7 +66,7 @@ export function StrengthSection({ range }: { range: ProgressRange }) {
             )}
           </div>
           <label htmlFor={selectId} className="sr-only">
-            {t.progress.exercisesTitle}
+            {tProgress.exercisesTitle}
           </label>
           <select
             id={selectId}
@@ -87,7 +87,7 @@ export function StrengthSection({ range }: { range: ProgressRange }) {
           )}
           {first && last && featured.points.length >= 2 ? (
             <LineChart
-              label={t.progress.e1rmChart(
+              label={tProgress.e1rmChart(
                 featured.exercise.name,
                 formatShortDate(first.logDate),
                 formatShortDate(last.logDate),
@@ -103,14 +103,14 @@ export function StrengthSection({ range }: { range: ProgressRange }) {
               formatY={(y) => formatKg1(y).replace(' kg', '')}
             />
           ) : (
-            <p className="text-[13px] text-muted">{t.progress.detailNote}</p>
+            <p className="text-[13px] text-muted">{tProgress.detailNote}</p>
           )}
-          <p className="text-xs text-muted">{t.progress.e1rmNote}</p>
+          <p className="text-xs text-muted">{tProgress.e1rmNote}</p>
         </Card>
       )}
 
       <Card>
-        <h2 className="font-sans label-caps">{t.progress.exercisesTitle}</h2>
+        <h2 className="font-sans label-caps">{tProgress.exercisesTitle}</h2>
         <ul className="flex flex-col divide-y divide-line">
           {data.exercises.map((e) => (
             <li key={e.exercise.id}>
@@ -120,7 +120,7 @@ export function StrengthSection({ range }: { range: ProgressRange }) {
               >
                 <span className="min-w-0 flex-1">
                   <span className="block truncate font-semibold">{e.exercise.name}</span>
-                  <span className="text-xs text-muted">{t.progress.sessions(e.sessionCount)}</span>
+                  <span className="text-xs text-muted">{tProgress.sessions(e.sessionCount)}</span>
                 </span>
                 <Sparkline values={e.points.map((p) => p.e1rmKg)} />
                 <span className="w-20 text-right">

@@ -24,6 +24,8 @@ export function useRefreshProfile() {
         client.invalidateQueries({ queryKey: queryKeys.inventory }),
         client.invalidateQueries({ queryKey: queryKeys.todayPlan }),
         client.invalidateQueries({ queryKey: queryKeys.progress }),
+        client.invalidateQueries({ queryKey: queryKeys.achievements }),
+        client.invalidateQueries({ queryKey: queryKeys.reminders }),
       ]),
     [client],
   );

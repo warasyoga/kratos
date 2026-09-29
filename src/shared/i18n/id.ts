@@ -2,11 +2,10 @@
  * Semua teks yang tampil ke pengguna. Komponen tidak menulis teks langsung.
  * Label untuk nilai domain memakai `satisfies Record<...>` agar tidak ada nilai yang terlewat.
  */
+import type { AchievementId } from '@/domain/achievements/rules';
 import type { BmiCategory } from '@/domain/body/bmi';
-import type { Circumference } from '@/domain/body/types';
 import type { Weekday } from '@/domain/common/weekday';
 import type { MovementPattern, Muscle } from '@/domain/exercise/types';
-import type { ParqQuestion, ParqStatus } from '@/domain/profile/parq';
 import type {
   ActivityLevel,
   BodyArea,
@@ -16,10 +15,7 @@ import type {
   Sex,
 } from '@/domain/profile/types';
 import type { SubstitutionReason } from '@/domain/program/types';
-import type { WeightRateStatus } from '@/domain/progress/body';
-import type { PhotoPose } from '@/domain/progress/photo';
-import type { ProgressRange } from '@/domain/progress/range';
-import type { PrKind } from '@/domain/strength/personalRecord';
+import type { RecoveryStatus } from '@/domain/recovery/muscleRecovery';
 
 /** Nilai saran yang sudah diformat untuk ditampilkan (nama otot/gerakan/hari, angka). */
 export type SuggestionArgs = Partial<
@@ -40,6 +36,14 @@ export type SuggestionArgs = Partial<
     | 'completed'
     | 'scheduled'
     | 'firstDay'
+    | 'minutes'
+    | 'targetMinutes'
+    | 'averageG'
+    | 'targetG'
+    | 'averageHours'
+    | 'deltaKcal'
+    | 'direction'
+    | 'days'
     | 'secondDay'
     | 'weekday',
     string | undefined
@@ -116,6 +120,22 @@ export const t = {
     last_weight: 'Catatan berat terakhir tidak bisa dihapus.',
     photo_invalid: 'Foto tidak bisa dibaca. Pilih file gambar lain.',
     not_found: 'Data tidak ditemukan.',
+    food_label_required: 'Isi nama makanan.',
+    food_label_too_long: 'Nama maksimal 40 karakter.',
+    kcal_range: 'Kalori harus 0–5.000.',
+    macro_range: 'Nilai gram di luar batas wajar.',
+    date_invalid: 'Isi tanggal yang valid.',
+    date_future: 'Tanggal tidak boleh di masa depan.',
+    water_range: 'Air harus 50–2.000 ml.',
+    grams_range: 'Berat harus 1–2.000 g.',
+    profile_missing: 'Profil belum dibuat.',
+    time_invalid: 'Isi jam yang valid (JJ:MM).',
+    exercise_name_required: 'Isi nama gerakan (minimal 2 huruf).',
+    exercise_name_too_long: 'Nama maksimal 40 karakter.',
+    exercise_name_taken: 'Nama gerakan sudah ada.',
+    primary_muscle_required: 'Pilih minimal satu otot utama.',
+    exercise_in_use: 'Gerakan masih dipakai di program. Ganti dulu di Program.',
+    not_custom: 'Gerakan bawaan tidak bisa diubah atau dihapus.',
   } as Record<string, string>,
 
   // ── Nilai domain ──────────────────────────────────────────────────────────
@@ -240,100 +260,8 @@ export const t = {
     user: 'pilihan Anda',
     stagnation: 'variasi',
   } satisfies Record<SubstitutionReason, string>,
-  parq: {
-    title: 'Skrining PAR-Q+',
-    intro:
-      'Tujuh pertanyaan standar internasional sebelum mulai latihan. Jawab jujur; jawaban "ya" tidak menghalangi Anda memakai aplikasi.',
-    source: 'Sumber: PAR-Q+ Collaboration. Terjemahan bebas Kratos.',
-    yes: 'Ya',
-    no: 'Tidak',
-    questions: {
-      heart_condition:
-        'Apakah dokter pernah mengatakan Anda memiliki penyakit jantung atau tekanan darah tinggi?',
-      chest_pain:
-        'Apakah Anda merasakan nyeri dada saat istirahat, beraktivitas sehari-hari, atau berolahraga?',
-      dizziness:
-        'Apakah Anda kehilangan keseimbangan karena pusing, atau pernah pingsan, dalam 12 bulan terakhir?',
-      chronic_condition:
-        'Apakah Anda pernah didiagnosis penyakit kronis lain (selain penyakit jantung atau tekanan darah tinggi)?',
-      medication: 'Apakah Anda sedang minum obat resep untuk penyakit kronis?',
-      bone_joint:
-        'Apakah Anda sedang (atau dalam 12 bulan terakhir) mengalami masalah tulang, sendi, atau jaringan lunak yang bisa memburuk jika lebih aktif?',
-      supervised_only:
-        'Apakah dokter pernah mengatakan Anda hanya boleh berolahraga dengan pengawasan medis?',
-    } satisfies Record<ParqQuestion, string>,
-    status: {
-      missing: 'Belum diisi',
-      clear: 'Aman untuk mulai',
-      consult_doctor: 'Disarankan konsultasi dokter',
-      expired: 'Perlu diisi ulang (lebih dari 12 bulan)',
-    } satisfies Record<ParqStatus, string>,
-    consultAdvice:
-      'Ada jawaban "ya". Anda tetap bisa memakai Kratos, tetapi sebaiknya konsultasikan dengan dokter sebelum latihan berat.',
-    redo: 'Isi ulang',
-  },
 
   // ── Layar ─────────────────────────────────────────────────────────────────
-  onboarding: {
-    welcome: {
-      title: 'Selamat datang di Kratos',
-      body: 'Jawab beberapa pertanyaan singkat (±3 menit). Kratos akan menyusun program latihan, target makan, dan memantau progres Anda seperti trainer pribadi.',
-      start: 'Mulai',
-    },
-    body: {
-      title: 'Data diri',
-      body: 'Dipakai untuk menghitung kebutuhan kalori dan protein.',
-      name: 'Nama panggilan',
-      sex: 'Jenis kelamin',
-      birthDate: 'Tanggal lahir',
-      height: 'Tinggi badan',
-      weight: 'Berat badan',
-      weightHint: 'Paling akurat ditimbang pagi hari sebelum makan.',
-      minorNotice:
-        'Di bawah 18 tahun, sebaiknya latihan beban didampingi pelatih atau orang dewasa.',
-    },
-    experience: { title: 'Pengalaman latihan', body: 'Menentukan tingkat kesulitan gerakan.' },
-    activity: {
-      title: 'Aktivitas di luar gym',
-      body: 'Seberapa aktif Anda sehari-hari, termasuk olahraga lain.',
-    },
-    schedule: {
-      title: 'Jadwal latihan',
-      body: 'Pilih 3–6 hari ke gym. Hari lainnya menjadi hari pemulihan.',
-      count: (n: number) => `${n} hari dipilih`,
-    },
-    equipment: {
-      title: 'Alat di gym Anda',
-      body: 'Matikan alat yang tidak ada. Gerakan akan disesuaikan.',
-      selectAll: 'Pilih semua',
-    },
-    health: {
-      title: 'Kondisi kesehatan',
-      body: 'Ada bagian tubuh yang sakit atau cedera? Program akan menghindari gerakan yang berisiko.',
-      none: 'Tidak ada keluhan',
-      add: 'Tambah keluhan',
-    },
-    submit: 'Buat program saya',
-    creating: 'Menyusun program…',
-    summary: {
-      title: 'Program Anda siap',
-      body: (program: string) => `Kratos menyusun program ${program} berdasarkan jawaban Anda.`,
-      targets: 'Target harian',
-      schedule: 'Jadwal minggu ini',
-      recovery: 'Pemulihan',
-      unfilled:
-        'Beberapa gerakan tidak bisa dipilih karena alat atau kondisi kesehatan. Anda bisa menambahkannya nanti di Program.',
-    },
-    install: {
-      title: 'Pasang ke layar utama',
-      body: 'Agar data aman dan aplikasi bisa dibuka tanpa internet, pasang Kratos seperti aplikasi biasa.',
-      android:
-        'Android (Chrome): ketuk menu ⋮ lalu "Instal aplikasi" atau "Tambahkan ke layar utama".',
-      ios: 'iPhone (Safari): ketuk tombol Bagikan lalu "Tambah ke Layar Utama".',
-      done: 'Selesai, lihat program',
-      later: 'Nanti saja',
-    },
-  },
   today: {
     title: 'Hari Ini',
     gymDay: 'Hari gym',
@@ -361,6 +289,8 @@ export const t = {
     } as Record<string, string>,
     missedTitle: 'Latihan terlewat',
     missedBody: (label: string, day: string) => `${label} (${day}) belum dikerjakan minggu ini.`,
+    missedRecovering: (muscles: string) =>
+      `${muscles} masih baru dilatih (< 50% waktu pulih). Sebaiknya tunda ke besok.`,
     trainNow: (label: string) => `Latih ${label} hari ini`,
     recoveryTitle: 'Aktivitas pemulihan',
     recoveryBody: 'Bergerak ringan membantu pemulihan otot dan kesehatan jantung.',
@@ -373,8 +303,7 @@ export const t = {
     undoActivity: (name: string) => `Batalkan: ${name}`,
     aerobicWeek: (minutes: number) => `Aerobik minggu ini: ${minutes} / 150 menit (WHO)`,
     nextWorkout: (label: string, day: string) => `Latihan berikutnya: ${label} (${day})`,
-    targetsTitle: 'Target harian',
-    targetsSoon: 'Pencatatan makan dan air minum hadir di Tahap 8.',
+    nutritionTitle: 'Nutrisi hari ini',
     suggestionLink: 'Lihat saran di Program',
   },
   program: {
@@ -419,104 +348,6 @@ export const t = {
     added: (name: string, day: string) => `${name} ditambahkan ke ${day}.`,
     swapped: (name: string) => `Diganti dengan ${name}.`,
     back: 'Kembali ke program',
-  },
-  suggestion: {
-    label: 'Saran trainer',
-    apply: 'Terapkan',
-    dismiss: 'Abaikan',
-    why: 'Kenapa?',
-    applied: 'Saran diterapkan.',
-    dismissed: 'Saran disembunyikan selama 14 hari.',
-  },
-  /** Kalimat & dasar ilmiah tiap aturan saran (docs/mesin-trainer/04-saran-trainer.md). */
-  suggestionRules: {
-    low_weekly_volume: {
-      message: (a: SuggestionArgs) =>
-        `Volume ${a.muscle} ${a.sets} set/minggu, di bawah zona 10–20.` +
-        (a.exercise
-          ? ` Tambah ${a.addSets} set ${a.exercise} di ${a.dayLabel}?`
-          : ` Tambah ${a.addSets} set?`),
-      why: 'Meta-analisis Schoenfeld dkk. (2017): 10 set atau lebih per otot per minggu menghasilkan pertumbuhan otot lebih besar dibanding volume rendah.',
-    },
-    high_weekly_volume: {
-      message: (a: SuggestionArgs) =>
-        `Volume ${a.muscle} ${a.sets} set/minggu, di atas 20. Kurangi ${a.removeSets} set agar pemulihan cukup?`,
-      why: 'Di atas ±20 set per otot per minggu, tambahan volume jarang menambah hasil bagi pemula dan memperberat pemulihan (Schoenfeld dkk. 2017).',
-    },
-    low_frequency: {
-      message: (a: SuggestionArgs) =>
-        `Otot ${a.muscle} hanya dilatih ${a.frequency}×/minggu.` +
-        (a.exercise ? ` Tambah ${a.exercise} di ${a.dayLabel}?` : ''),
-      why: 'Melatih setiap otot minimal 2× per minggu lebih efektif untuk hipertrofi dibanding 1× (Schoenfeld dkk. 2016).',
-    },
-    push_pull_imbalance: {
-      message: (a: SuggestionArgs) =>
-        `Set dorong (${a.push}) lebih banyak dari set tarik (${a.pull}). Tambah 2 set gerakan tarik?`,
-      why: 'Menjaga set tarik minimal sama dengan set dorong membantu keseimbangan otot bahu dan postur (aturan Kratos).',
-    },
-    quad_ham_imbalance: {
-      message: (a: SuggestionArgs) =>
-        `Paha belakang ${a.hamstrings} set, kurang dari 75% paha depan (${a.quads} set). Tambah 2 set?`,
-      why: 'Paha belakang yang jauh lebih lemah dari paha depan sering dikaitkan dengan risiko cedera; Kratos menjaga rasio ≥ 0,75.',
-    },
-    stagnation: {
-      message: (a: SuggestionArgs) =>
-        `${a.exercise} tidak naik dalam ${a.sessions} sesi.` +
-        (a.substitute ? ` Coba ganti ke ${a.substitute}?` : ''),
-      why: 'Variasi gerakan untuk otot yang sama bisa memecah kebuntuan progres tanpa mengurangi volume (aturan Kratos).',
-    },
-    deload_due: {
-      message: () => 'Tanda kelelahan menumpuk. Jadikan minggu ini minggu ringan (deload)?',
-      why: 'Konsensus pelatih internasional (Bell dkk. 2023): minggu ringan setiap 4–8 minggu membantu pemulihan dan progres jangka panjang.',
-    },
-    low_attendance: {
-      message: (a: SuggestionArgs) =>
-        `${a.completed} dari ${a.scheduled} sesi dalam 2 minggu terakhir. Ubah ke program 3 hari?`,
-      why: 'Program yang bisa dijalani konsisten lebih efektif daripada program ideal yang sering terlewat.',
-    },
-    consecutive_same_split: {
-      message: (a: SuggestionArgs) =>
-        `${a.firstDay} dan ${a.secondDay} berurutan melatih otot yang sama.` +
-        (a.weekday ? ` Pindahkan ${a.secondDay} ke ${a.weekday}?` : ''),
-      why: 'ACSM menganjurkan jeda minimal 48 jam sebelum melatih otot yang sama secara berat.',
-    },
-    parq_expired: {
-      message: () =>
-        'Skrining PAR-Q+ belum diisi atau sudah lebih dari 12 bulan. Isi ulang di Profil.',
-      why: 'PAR-Q+ adalah skrining kesehatan standar internasional sebelum dan selama program latihan.',
-    },
-  } as Record<string, { message: (a: SuggestionArgs) => string; why: string }>,
-  library: {
-    title: 'Gerakan',
-    search: 'Cari gerakan, otot, atau alat',
-    onlyAvailable: 'Hanya yang bisa saya lakukan',
-    count: (n: number) => `${n} gerakan`,
-    pickToAdd: (day: string) => `Pilih gerakan untuk ${day}`,
-    pickToSwap: 'Pilih gerakan pengganti',
-    empty: 'Tidak ada gerakan yang cocok.',
-    groups: {
-      all: 'Semua',
-      chest: 'Dada',
-      back: 'Punggung',
-      shoulders: 'Bahu',
-      arms: 'Lengan',
-      legs: 'Kaki',
-      core: 'Perut',
-    },
-    unavailable: {
-      equipment: 'Alat tidak ada',
-      health: 'Hindari (kesehatan)',
-      difficulty: 'Terlalu sulit untuk pemula',
-    },
-    locked: 'Boleh, beban tidak naik otomatis',
-    primary: 'Otot utama',
-    secondary: 'Otot pendukung',
-    equipmentNeeded: 'Alat',
-    noEquipment: 'Tanpa alat',
-    steps: 'Cara melakukan',
-    mistakes: 'Kesalahan umum',
-    alternatives: 'Alternatif',
-    notFound: 'Gerakan tidak ditemukan.',
   },
   workout: {
     title: 'Latihan',
@@ -591,240 +422,170 @@ export const t = {
       deload_week: 'Minggu ringan: beban 90%, set dikurangi.',
     },
   },
-  checkIn: {
-    title: 'Check-in sebelum latihan',
-    open: 'Check-in',
-    done: 'Check-in selesai',
-    sleep: 'Tidur semalam',
-    hoursSuffix: 'j',
-    soreness: 'Pegal otot',
-    sorenessScale: ['Tidak', 'Sedikit', 'Sedang', 'Pegal', 'Sangat'] as readonly string[],
-    energy: 'Energi',
-    energyScale: ['Sangat lelah', 'Lelah', 'Biasa', 'Segar', 'Sangat segar'] as readonly string[],
-    pain: 'Ada nyeri tajam hari ini? (opsional)',
-    weight: 'Berat badan pagi ini (opsional)',
-    save: 'Simpan check-in',
-    readiness: {
-      green: 'Siap latihan penuh. Beban sesuai rencana.',
-      yellow: 'Pemulihan belum maksimal. Setiap gerakan dikurangi 1 set dan target RIR +1.',
-      red: 'Tubuh butuh pemulihan. Sesi ringan: set dan beban dikurangi.',
-    },
-    readinessChip: { green: 'Siap penuh', yellow: 'Dikurangi', red: 'Sesi ringan' },
-    ignore: 'Tetap latihan penuh',
-    skip: 'Lewati check-in',
+  achievements: {
+    title: 'Lencana',
+    unlockedCount: (n: number, total: number) => `${n} dari ${total} terbuka`,
+    unlockedToast: (name: string) => `Lencana terbuka: ${name}`,
+    unlockedOn: (date: string) => `Terbuka ${date}`,
+    locked: 'Terkunci',
+    badge: {
+      first_session: { name: 'Langkah Pertama', rule: 'Selesaikan sesi latihan pertama.' },
+      week_complete: {
+        name: 'Minggu Penuh',
+        rule: 'Selesaikan semua sesi terjadwal dalam satu minggu.',
+      },
+      streak_4: { name: 'Konsisten 1 Bulan', rule: 'Streak 4 minggu lengkap berturut-turut.' },
+      streak_12: { name: 'Konsisten 3 Bulan', rule: 'Streak 12 minggu lengkap berturut-turut.' },
+      sessions_10: { name: '10 Sesi', rule: 'Selesaikan 10 sesi latihan.' },
+      sessions_50: { name: '50 Sesi', rule: 'Selesaikan 50 sesi latihan.' },
+      sessions_100: { name: '100 Sesi', rule: 'Selesaikan 100 sesi latihan.' },
+      first_pr: { name: 'Rekor Pertama', rule: 'Pecahkan rekor pribadi pertama.' },
+      pr_10: { name: 'Kolektor Rekor', rule: 'Kumpulkan 10 rekor pribadi.' },
+      bench_bodyweight: {
+        name: 'Bench Seberat Badan',
+        rule: '1RM estimasi Bench Press ≥ berat badan.',
+      },
+      squat_1_25x: {
+        name: 'Squat 1,25× Badan',
+        rule: '1RM estimasi Back Squat ≥ 1,25 × berat badan.',
+      },
+      protein_week: {
+        name: 'Protein Terjaga',
+        rule: 'Target protein tercapai 7 hari berturut-turut.',
+      },
+      block_complete: {
+        name: 'Satu Blok Tuntas',
+        rule: 'Jalani satu blok 6 minggu sampai minggu deload.',
+      },
+      photo_diary: { name: 'Jejak Visual', rule: 'Foto progres di 3 tanggal berbeda.' },
+    } satisfies Record<AchievementId, { name: string; rule: string }>,
+    evaluationsTitle: 'Evaluasi',
+    evaluationsEmpty: 'Evaluasi pertama muncul setelah bulan pertama atau blok 6 minggu selesai.',
+    /** Judul evaluasi: bulan (label YYYY-MM) → "Evaluasi September 2026", blok → "Evaluasi blok 1". */
+    periodTitle: (kind: 'month' | 'block', label: string) =>
+      kind === 'month'
+        ? `Evaluasi ${new Intl.DateTimeFormat('id-ID', { month: 'long', year: 'numeric' }).format(new Date(`${label}-01T12:00:00`))}`
+        : `Evaluasi blok ${label}`,
+    dueCard: 'Evaluasi siap dibaca',
+    open: 'Buka evaluasi',
+    attendance: 'Kehadiran',
+    attendanceValue: (done: number, scheduled: number, pct: string) =>
+      `${done} dari ${scheduled} sesi (${pct}%)`,
+    sessions: 'Sesi selesai',
+    tonnage: 'Total tonase',
+    liftsTitle: '1RM estimasi gerakan utama',
+    liftLine: (from: string, to: string) => `${from} → ${to}`,
+    bodyTitle: 'Tubuh',
+    weightChange: 'Perubahan berat (tren)',
+    habitsTitle: 'Kebiasaan',
+    avgProtein: 'Rata-rata protein',
+    avgSleep: 'Rata-rata tidur',
+    noData: 'Belum ada data',
+    focusTitle: 'Fokus berikutnya',
+    focusEmpty: 'Tidak ada saran: lanjutkan program seperti biasa.',
   },
-  summary: {
-    title: 'Latihan selesai',
-    duration: 'menit',
-    sets: 'set kerja',
-    tonnage: 'kg total',
-    prs: 'Rekor pribadi baru',
-    prLine: (name: string, kg: string, reps: number) => `${name} · ${kg} × ${reps}`,
-    next: 'Sesi berikutnya',
-    nextLine: {
-      increase: (from: string, to: string, reps: number) => `${from} → ${to} × ${reps}`,
-      hold: (from: string, _to: string, reps: number) => `Tetap ${from}, target ${reps} repetisi`,
-      decrease: (from: string, to: string, reps: number) => `${from} → ${to} × ${reps}`,
-      deload: (from: string, to: string, reps: number) => `${from} → ${to} × ${reps}`,
-    },
-    nextKind: { increase: 'Naik', hold: 'Tetap', decrease: 'Turun', deload: 'Ringan' },
-    done: 'Kembali ke Hari Ini',
-    notFound: 'Ringkasan tidak ditemukan.',
+  reminders: {
+    title: 'Pengingat',
+    workoutTime: 'Jam latihan',
+    addToCalendar: 'Tambahkan ke kalender HP',
+    calendarHint:
+      'Jadwal latihan berulang tiap minggu + alarm 30 menit sebelumnya. Buka file yang terunduh lalu pilih Kalender.',
+    calendarOutdated:
+      'Jadwal atau jam berubah sejak file kalender dibuat. Tambahkan ulang agar kalender HP sesuai (hapus jadwal lama jika dobel).',
+    calendarName: 'Kratos · Latihan',
+    calendarSummary: (label: string) => `Latihan ${label} (Kratos)`,
+    calendarAlarm: 'Latihan 30 menit lagi',
+    calendarSaved: 'File kalender diunduh. Buka untuk menambahkan ke kalender.',
+    restTimer: 'Notifikasi timer istirahat',
+    restTimerHint: 'Muncul saat aplikasi di latar belakang ketika istirahat habis.',
+    water: 'Pengingat minum air',
+    waterHint: 'Saat aplikasi terbuka: tiap 2 jam (08.00–20.00) jika target air belum tercapai.',
+    denied: 'Izin notifikasi ditolak. Aktifkan lewat pengaturan situs di browser/HP.',
+    unsupported:
+      'Notifikasi tidak tersedia di sini. Di iPhone, pasang Kratos ke layar utama terlebih dahulu.',
+    limitation:
+      'Tanpa server, notifikasi hanya andal saat aplikasi aktif. Untuk jadwal latihan, pakai kalender HP.',
+    restDoneTitle: 'Istirahat selesai',
+    restDoneBody: 'Waktunya set berikutnya.',
+    waterTitle: 'Waktunya minum air',
+    waterBody: (ml: string, target: string) => `Baru ${ml} dari ${target} ml hari ini.`,
+    measureBanner: 'Waktunya mengukur lingkar tubuh (tiap 14 hari).',
+    measureOpen: 'Catat ukuran',
   },
-  inventory: {
-    title: 'Pelat & dumbbell',
-    hint: 'Dipakai untuk membulatkan beban dan kalkulator pelat.',
-    bar: 'Berat bar',
-    plates: 'Pelat yang tersedia',
-    dumbbellMin: 'Dumbbell teringan',
-    dumbbellMax: 'Dumbbell terberat',
-    dumbbellStep: 'Kelipatan dumbbell',
-    machineStep: 'Kelipatan tumpukan mesin',
-    summary: (bar: string, plates: string, dMin: string, dMax: string) =>
-      `Bar ${bar} · pelat ${plates} · dumbbell ${dMin}–${dMax}`,
+  muscleMap: {
+    title: 'Peta otot',
+    modeLabel: 'Tampilan peta',
+    modes: { recovery: 'Pemulihan', volume: 'Volume minggu ini' },
+    front: 'Depan',
+    back: 'Belakang',
+    status: {
+      fresh: 'Segar',
+      partial: 'Pulih sebagian',
+      recent: 'Baru dilatih',
+    } satisfies Record<RecoveryStatus, string>,
+    regionLabel: (muscle: string, detail: string) => `${muscle}, ${detail.toLowerCase()}`,
+    setsValue: (sets: string) => `${sets} set`,
+    legendVolume: 'Makin pekat = makin banyak set minggu ini. Garis hijau = zona 10–20 set.',
+    rule: 'Pulih 48 jam setelah dilatih; 72 jam jika ≥ 6 set atau RIR rata-rata ≤ 1 (dari anjuran ACSM ≥ 48 jam).',
+    setsThisWeek: 'Set minggu ini',
+    lastTrained: 'Terakhir dilatih',
+    readyAt: 'Siap lagi',
+    readyNow: 'Siap dilatih',
+    never: 'Belum dilatih minggu ini',
+    dayPart: (weekday: string, hour: number) =>
+      `${weekday} ${hour < 11 ? 'pagi' : hour < 15 ? 'siang' : hour < 18 ? 'sore' : 'malam'}`,
+    todayTitle: 'Otot yang sedang pulih',
+    todayAllFresh: 'Semua otot besar sudah pulih.',
+    open: 'Lihat peta otot',
   },
-  progress: {
-    title: 'Progres',
-    sectionsLabel: 'Bagian progres',
-    sections: { strength: 'Kekuatan', body: 'Tubuh', volume: 'Volume', photos: 'Foto' },
-    rangeLabel: 'Rentang waktu',
-    ranges: { '4w': '4 mgg', '12w': '12 mgg', all: 'Semua' } satisfies Record<
-      ProgressRange,
-      string
-    >,
-    since: (date: string) => `Sejak ${date}`,
-
-    // Kekuatan
-    prsTitle: 'Rekor pribadi terbaru',
-    prKind: { estimated_1rm: '1RM', reps_at_weight: 'Repetisi' } satisfies Record<PrKind, string>,
-    setLine: (kg: string, reps: number) => `${kg} × ${reps}`,
-    e1rmTitle: '1RM estimasi',
-    e1rmNote: 'Dari set terbaik tiap sesi (rumus Epley, set ≤ 10 repetisi). Dumbbell per tangan.',
-    e1rmChart: (name: string, from: string, to: string, value: string) =>
-      `1RM estimasi ${name}, ${from} sampai ${to}. Terakhir ${value}.`,
-    exercisesTitle: 'Semua gerakan',
-    sessions: (n: number) => `${n} sesi`,
-    strengthEmpty:
-      'Belum ada latihan berbeban di rentang ini. Selesaikan sesi latihan untuk melihat grafik kekuatan.',
-    detailBest: '1RM terbaik (kg)',
-    detailCurrent: '1RM terakhir (kg)',
-    detailSessions: 'sesi',
-    historyTitle: 'Riwayat sesi',
-    prChip: 'PR',
-    guideLink: 'Lihat panduan gerakan',
-    detailNote: 'Grafik muncul setelah 2 sesi dengan set ≤ 10 repetisi.',
-
-    // Tubuh
-    weightTitle: 'Berat badan',
-    weightChart: (from: string, to: string, value: string) =>
-      `Tren berat ${from} sampai ${to}. Terakhir ${value}.`,
-    weightLegend:
-      'Garis = tren (rata-rata bergerak), titik = timbangan harian, pita hijau = laju naik sehat 0,25–0,5%/minggu.',
-    weightOne: 'Timbang tiap pagi (setelah ke toilet, sebelum makan) agar tren terbentuk.',
-    rateValue: (kg: string, pct: string) => `${kg} kg/minggu (${pct}%)`,
-    rateStatus: {
-      below: 'Di bawah target',
-      on_target: 'Sesuai target',
-      above: 'Terlalu cepat',
-    } satisfies Record<WeightRateStatus, string>,
-    rateHint: {
-      below: 'Naik < 0,25%/minggu. Jika bertahan 2 minggu, tambah ±150 kkal per hari.',
-      on_target: 'Laju ideal untuk menambah otot dengan sedikit lemak.',
-      above:
-        'Naik > 0,5%/minggu: kelebihan cenderung jadi lemak. Jika bertahan 2 minggu, kurangi ±150 kkal.',
-    } satisfies Record<WeightRateStatus, string>,
-    rateNeedsData: 'Laju mingguan muncul setelah 8 hari data timbangan.',
-    logWeight: 'Catat berat',
-    measureTitle: 'Ukuran tubuh',
-    measureDue: 'Waktunya mengukur',
-    measureDueHint: 'Ukur lingkar tubuh setiap 14 hari.',
-    lastMeasured: (date: string) => `Terakhir diukur ${date}`,
-    measureEmpty: 'Belum ada ukuran. Ukur leher dan pinggang untuk estimasi persen lemak.',
-    logMeasure: 'Catat ukuran',
-    field: {
-      neckCm: 'Leher',
-      chestCm: 'Dada',
-      armCm: 'Lengan atas',
-      waistCm: 'Pinggang',
-      hipCm: 'Pinggul',
-      thighCm: 'Paha',
-    } satisfies Record<Circumference, string>,
-    fieldHint: {
-      neckCm: 'Tepat di bawah jakun',
-      chestCm: 'Sejajar puting, setelah buang napas',
-      armCm: 'Bagian terbesar, lengan ditekuk dan dikencangkan',
-      waistCm: 'Pria: setinggi pusar · wanita: bagian tersempit',
-      hipCm: 'Bagian terlebar bokong',
-      thighCm: 'Bagian terbesar, di bawah lipatan bokong',
-    } satisfies Record<Circumference, string>,
-    changeCm: (value: string) => `${value} cm`,
-    bodyFatTitle: 'Estimasi lemak tubuh',
-    bodyFatNote: 'Rumus US Navy (Hodgdon & Beckett 1984). Galat ±3–4%: pakai untuk melihat tren.',
-    bodyFatNeeds: (female: boolean) =>
-      female
-        ? 'Isi leher, pinggang, dan pinggul untuk estimasi persen lemak.'
-        : 'Isi leher dan pinggang untuk estimasi persen lemak.',
-    entriesTitle: 'Catatan terakhir',
-    removeEntry: (date: string) => `Hapus catatan ${date}`,
-    entryRemoved: 'Catatan dihapus.',
-    metricSheet: 'Catat berat & ukuran',
-    metricSheetHint:
-      'Isi yang diukur saja. Pagi hari sebelum makan; pita ukur menempel di kulit tanpa menekan.',
-    weightField: 'Berat badan',
-
-    // Volume
-    weekVolumeTitle: 'Set per otot minggu ini',
-    weekVolumeZone: 'Zona hijau 10–20 set',
-    weekVolumeValue: (done: string, planned: string) => `${done} / ${planned}`,
-    weekVolumeNote: 'Dikerjakan / rencana program. Otot pendukung dihitung ½ set.',
-    tonnageTitle: 'Tonase per minggu',
-    tonnageChart: (weeks: number, last: string) => `Tonase ${weeks} minggu, minggu ini ${last}.`,
-    tonnageNote: 'Σ beban × repetisi set kerja; dumbbell dihitung per tangan.',
-    attendanceTitle: 'Kehadiran',
-    attendanceValue: (done: number, scheduled: number) => `${done} dari ${scheduled} sesi`,
-    attendanceWeek: (week: string, done: number, scheduled: number) =>
-      `Minggu ${week}: ${done} dari ${scheduled}`,
-    volumeEmpty: 'Buat program dulu untuk melihat volume latihan.',
-
-    // Foto
-    photosEmpty:
-      'Belum ada foto. Ambil foto depan, samping, dan belakang setiap 2–4 minggu di tempat, cahaya, dan jam yang sama.',
-    addPhoto: 'Tambah foto',
-    photoSheet: 'Tambah foto progres',
-    poseLabel: 'Pose',
-    pose: { front: 'Depan', side: 'Samping', back: 'Belakang' } satisfies Record<PhotoPose, string>,
-    choosePhoto: 'Pilih atau ambil foto',
-    photoPrivacy: 'Foto dikecilkan lalu disimpan hanya di HP ini, tidak diunggah ke mana pun.',
-    photoSaved: 'Foto tersimpan.',
-    photoAlt: (pose: string, date: string) => `Foto ${pose}, ${date}`,
-    compare: 'Bandingkan',
-    compareDone: 'Selesai',
-    compareHint: 'Pilih 2 foto untuk dibandingkan.',
-    compareTitle: 'Perbandingan',
-    compareModes: { slider: 'Geser', side: 'Berdampingan' },
-    compareSlider: 'Geser untuk membandingkan',
-    selectPhoto: (alt: string) => `Pilih: ${alt}`,
-    openPhoto: (alt: string) => `Buka: ${alt}`,
-    removePhoto: 'Hapus foto',
-    removePhotoConfirm: 'Hapus foto ini dari HP? Tindakan ini tidak bisa dibatalkan.',
-    photoRemoved: 'Foto dihapus.',
-  },
-  profile: {
-    title: 'Profil',
-    summary: (sex: string, age: number, height: number, weight: string) =>
-      `${sex} · ${age} th · ${height} cm · ${weight}`,
-    bmi: 'BMI',
-    bmiAsiaNote: (category: string) =>
-      `Batas Asia (WHO): ${category}. BMI tidak membedakan otot dan lemak.`,
-    kcal: 'kkal / hari',
-    protein: 'protein / hari',
-    targets: 'Target harian',
-    fat: 'Lemak',
+  nutrition: {
+    title: 'Nutrisi',
+    intakeTitle: 'Asupan hari ini',
+    kcal: 'Kalori',
+    protein: 'Protein',
     carbs: 'Karbohidrat',
+    fat: 'Lemak',
     water: 'Air minum',
-    waterValue: (rest: string, gym: string) => `${rest} L (hari gym ${gym} L)`,
-    goalSchedule: 'Tujuan & jadwal',
-    goal: 'Tujuan',
-    goalValue: 'Menambah otot',
-    experience: 'Pengalaman',
-    trainingDays: 'Hari gym',
-    activity: 'Aktivitas harian',
-    proteinFactor: 'Protein',
-    proteinFactorValue: (g: string) => `${g} g/kg`,
-    units: 'Satuan',
-    unitsValue: 'kg',
-    editBody: 'Ubah data diri',
-    editSchedule: 'Ubah jadwal',
-    scheduleWarning:
-      'Mengubah jumlah atau hari latihan membuat program baru dari template. Riwayat latihan tetap tersimpan, tetapi editan manual pada program lama tidak dibawa.',
-    scheduleConfirm: 'Buat program baru',
-    equipment: 'Alat di gym saya',
-    equipmentHint: 'Ketuk untuk menyalakan atau mematikan. Program menyesuaikan otomatis.',
-    health: 'Kondisi kesehatan',
-    healthEmpty: 'Tidak ada keluhan.',
-    healthAdd: 'Tambah keluhan',
-    healthEdit: 'Ubah keluhan',
-    healthActive: 'Aktif',
-    healthInactive: 'Nonaktif (sudah sembuh)',
-    healthArea: 'Bagian tubuh',
-    healthSeverity: 'Tingkat keluhan',
-    healthMovements: 'Gerakan yang terasa sakit (opsional)',
-    healthNote: 'Catatan (opsional)',
-    healthDeactivate: 'Tandai sudah sembuh',
-    healthActivate: 'Aktifkan lagi',
-    healthDoctor: 'Untuk keluhan berat, konsultasikan dengan dokter atau fisioterapis.',
-    appearance: 'Tampilan',
-    about: 'Tentang',
-    version: 'Versi',
-    disclaimer: 'Kratos bukan pengganti dokter atau pelatih bersertifikat.',
-  },
-  changes: {
-    none: 'Tersimpan. Program tidak berubah.',
-    summary: (n: number) => `Tersimpan. ${n} gerakan disesuaikan.`,
-    substituted: (from: string, to: string) => `${from} → ${to}`,
-    restored: (from: string, to: string) => `${to} dikembalikan (menggantikan ${from})`,
-    unavailable: (name: string) => `${name} tidak punya pengganti`,
-    newProgram: (name: string) => `Program baru dibuat: ${name}`,
+    ofTarget: (value: string, target: string, unit: string) => `${value} / ${target} ${unit}`,
+    gymDayWater: 'Target air hari gym (+0,5 L per jam latihan).',
+    adjustment: (kcal: string) => `Target kalori termasuk koreksi kalibrasi ${kcal} kkal.`,
+    addWater: (ml: number) => `+${ml} ml`,
+    addWaterLabel: (ml: number) => `Tambah air ${ml} ml`,
+    undoWater: 'Batalkan air terakhir',
+    foodsTitle: 'Makan hari ini',
+    foodsEmpty: 'Belum ada catatan makan hari ini.',
+    logFood: 'Catat makan',
+    editFood: 'Ubah catatan makan',
+    editFoodLabel: (label: string) => `Ubah ${label}`,
+    removeFood: 'Hapus catatan',
+    foodLine: (kcal: string, protein: string) => `${kcal} kkal · ${protein} g protein`,
+    field: {
+      label: 'Nama makanan',
+      kcal: 'Kalori',
+      proteinG: 'Protein',
+      carbsG: 'Karbohidrat (opsional)',
+      fatG: 'Lemak (opsional)',
+      logDate: 'Tanggal',
+    },
+    saveAsMeal: 'Simpan sebagai menu favorit',
+    mealsTitle: 'Menu favorit',
+    mealsEmpty:
+      'Centang "Simpan sebagai menu favorit" saat mencatat agar bisa dicatat ulang dengan sekali ketuk.',
+    logMeal: (label: string) => `Catat ${label}`,
+    removeMeal: (label: string) => `Hapus menu ${label}`,
+    referencesTitle: 'Porsi referensi',
+    referencesHint:
+      'Nilai gizi per 100 g dari Tabel Komposisi Pangan Indonesia (TKPI) 2019 Kemenkes; dada ayam tanpa kulit dari USDA. Berat porsi bisa diubah.',
+    referenceSource: (source: string, code: string) => `${source} · ${code}`,
+    grams: 'Berat',
+    logReference: (name: string) => `Catat ${name}`,
+    historyTitle: '7 hari terakhir',
+    historyAverage: (kcal: string, protein: string) =>
+      `Rata-rata ${kcal} kkal · ${protein} g protein`,
+    historyEmpty: 'Belum ada catatan di 7 hari terakhir.',
+    historyNote: 'Hari tanpa catatan tidak dihitung.',
+    logged: 'Tercatat.',
+    open: 'Buka nutrisi',
   },
   pwa: {
     offlineReady: 'Kratos siap dipakai tanpa internet.',

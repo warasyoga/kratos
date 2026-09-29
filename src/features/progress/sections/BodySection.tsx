@@ -4,6 +4,8 @@ import { useServices } from '@/application/ServicesContext';
 import { CIRCUMFERENCES } from '@/domain/body/types';
 import type { ProgressRange } from '@/domain/progress/range';
 import { t } from '@/shared/i18n/id';
+import { tProfile } from '@/shared/i18n/onboarding';
+import { tProgress } from '@/shared/i18n/progress';
 import { cn } from '@/shared/lib/cn';
 import { formatFixed, formatNumber, formatShortDate, formatSigned } from '@/shared/lib/format';
 import { Button } from '@/shared/ui/Button';
@@ -31,10 +33,10 @@ export function BodySection({ range }: { range: ProgressRange }) {
     <>
       <Card>
         <div className="flex items-center justify-between gap-2">
-          <h2 className="font-sans label-caps">{t.progress.weightTitle}</h2>
+          <h2 className="font-sans label-caps">{tProgress.weightTitle}</h2>
           {rate && (
             <Chip tone={rate.status === 'on_target' ? 'good' : 'warn'}>
-              {t.progress.rateStatus[rate.status]}
+              {tProgress.rateStatus[rate.status]}
             </Chip>
           )}
         </div>
@@ -46,7 +48,7 @@ export function BodySection({ range }: { range: ProgressRange }) {
           )}
           {rate && (
             <p className="text-right text-[13px] font-semibold tabular-nums">
-              {t.progress.rateValue(
+              {tProgress.rateValue(
                 formatSigned(rate.weeklyChangeKg, 2),
                 formatSigned(rate.weeklyPct * 100, 2),
               )}
@@ -56,7 +58,7 @@ export function BodySection({ range }: { range: ProgressRange }) {
         {first && last && data.trend.length >= 2 ? (
           <>
             <LineChart
-              label={t.progress.weightChart(
+              label={tProgress.weightChart(
                 formatShortDate(first.logDate),
                 formatShortDate(last.logDate),
                 formatKg1(last.trendKg),
@@ -79,26 +81,26 @@ export function BodySection({ range }: { range: ProgressRange }) {
               formatX={formatDayX}
               formatY={(y) => formatNumber(y, 1)}
             />
-            <p className="text-xs text-muted">{t.progress.weightLegend}</p>
+            <p className="text-xs text-muted">{tProgress.weightLegend}</p>
           </>
         ) : (
-          <p className="text-[13px] text-muted">{t.progress.weightOne}</p>
+          <p className="text-[13px] text-muted">{tProgress.weightOne}</p>
         )}
         <p className="text-[13px]">
-          {rate ? t.progress.rateHint[rate.status] : t.progress.rateNeedsData}
+          {rate ? tProgress.rateHint[rate.status] : tProgress.rateNeedsData}
         </p>
         <Button variant="ghost" onClick={() => setSheet('weight')}>
-          {t.progress.logWeight}
+          {tProgress.logWeight}
         </Button>
       </Card>
 
       <Card>
         <div className="flex items-center justify-between gap-2">
-          <h2 className="font-sans label-caps">{t.progress.measureTitle}</h2>
-          {data.measurementDue && <Chip tone="accent">{t.progress.measureDue}</Chip>}
+          <h2 className="font-sans label-caps">{tProgress.measureTitle}</h2>
+          {data.measurementDue && <Chip tone="accent">{tProgress.measureDue}</Chip>}
         </div>
         {data.measurements.length === 0 ? (
-          <p className="text-sm text-muted">{t.progress.measureEmpty}</p>
+          <p className="text-sm text-muted">{tProgress.measureEmpty}</p>
         ) : (
           <table className="w-full text-sm">
             <tbody className="divide-y divide-line">
@@ -108,7 +110,7 @@ export function BodySection({ range }: { range: ProgressRange }) {
                   ? [
                       <tr key={field}>
                         <th scope="row" className="py-2 text-left font-normal">
-                          {t.progress.field[field]}
+                          {tProgress.field[field]}
                         </th>
                         <td className="py-2 text-right font-semibold tabular-nums">
                           {formatNumber(m.latestCm, 1)} cm
@@ -119,9 +121,7 @@ export function BodySection({ range }: { range: ProgressRange }) {
                             m.changeCm === null ? 'text-muted' : 'text-ink',
                           )}
                         >
-                          {m.changeCm === null
-                            ? '—'
-                            : t.progress.changeCm(formatSigned(m.changeCm))}
+                          {m.changeCm === null ? '—' : tProgress.changeCm(formatSigned(m.changeCm))}
                         </td>
                       </tr>,
                     ]
@@ -132,17 +132,17 @@ export function BodySection({ range }: { range: ProgressRange }) {
         )}
         {data.lastMeasuredOn && (
           <p className="text-xs text-muted">
-            {t.progress.lastMeasured(formatShortDate(data.lastMeasuredOn))} ·{' '}
-            {t.progress.measureDueHint}
+            {tProgress.lastMeasured(formatShortDate(data.lastMeasuredOn))} ·{' '}
+            {tProgress.measureDueHint}
           </p>
         )}
         <Button variant="ghost" onClick={() => setSheet('measure')}>
-          {t.progress.logMeasure}
+          {tProgress.logMeasure}
         </Button>
       </Card>
 
       <Card>
-        <h2 className="font-sans label-caps">{t.progress.bodyFatTitle}</h2>
+        <h2 className="font-sans label-caps">{tProgress.bodyFatTitle}</h2>
         <div className="grid grid-cols-2 gap-2">
           <Stat
             value={data.bodyFat ? `${formatFixed(data.bodyFat.latest.pct, 1)}%` : '—'}
@@ -158,18 +158,16 @@ export function BodySection({ range }: { range: ProgressRange }) {
           />
         </div>
         <p className="text-xs text-muted">
-          {data.bodyFat ? t.progress.bodyFatNote : t.progress.bodyFatNeeds(data.sex === 'female')}
+          {data.bodyFat ? tProgress.bodyFatNote : tProgress.bodyFatNeeds(data.sex === 'female')}
         </p>
         {data.bmi && (
-          <p className="text-xs text-muted">
-            {t.profile.bmiAsiaNote(t.bmi[data.bmi.asiaCategory])}
-          </p>
+          <p className="text-xs text-muted">{tProfile.bmiAsiaNote(t.bmi[data.bmi.asiaCategory])}</p>
         )}
       </Card>
 
       {data.recentEntries.length > 0 && (
         <Card>
-          <h2 className="font-sans label-caps">{t.progress.entriesTitle}</h2>
+          <h2 className="font-sans label-caps">{tProgress.entriesTitle}</h2>
           <ul className="flex flex-col divide-y divide-line">
             {data.recentEntries.map((entry) => {
               const parts = [
@@ -177,7 +175,7 @@ export function BodySection({ range }: { range: ProgressRange }) {
                 ...CIRCUMFERENCES.map(
                   (f) =>
                     entry[f] !== undefined &&
-                    `${t.progress.field[f]} ${formatNumber(entry[f] ?? 0, 1)}`,
+                    `${tProgress.field[f]} ${formatNumber(entry[f] ?? 0, 1)}`,
                 ),
               ].filter(Boolean);
               const date = formatShortDate(entry.logDate);
@@ -188,9 +186,9 @@ export function BodySection({ range }: { range: ProgressRange }) {
                   <button
                     type="button"
                     disabled={pending}
-                    aria-label={t.progress.removeEntry(date)}
+                    aria-label={tProgress.removeEntry(date)}
                     onClick={() =>
-                      void run(() => progress.removeMetric(entry.id), t.progress.entryRemoved)
+                      void run(() => progress.removeMetric(entry.id), tProgress.entryRemoved)
                     }
                     className="grid size-11 shrink-0 place-items-center rounded-full text-muted"
                   >

@@ -1,8 +1,9 @@
 import type { CatalogItem } from '@/application/program/catalog';
 import type { Exercise, Muscle } from '@/domain/exercise/types';
 import { t } from '@/shared/i18n/id';
+import { tLibrary } from '@/shared/i18n/library';
 
-export type MuscleGroup = keyof typeof t.library.groups;
+export type MuscleGroup = keyof typeof tLibrary.groups;
 
 const GROUP_MUSCLES: Record<Exclude<MuscleGroup, 'all'>, readonly Muscle[]> = {
   chest: ['chest'],
@@ -13,7 +14,7 @@ const GROUP_MUSCLES: Record<Exclude<MuscleGroup, 'all'>, readonly Muscle[]> = {
   core: ['abs'],
 };
 
-export const MUSCLE_GROUPS = Object.keys(t.library.groups) as MuscleGroup[];
+export const MUSCLE_GROUPS = Object.keys(tLibrary.groups) as MuscleGroup[];
 
 /** Huruf kecil tanpa aksen, agar pencarian tidak peka tanda baca. */
 const normalize = (text: string) =>

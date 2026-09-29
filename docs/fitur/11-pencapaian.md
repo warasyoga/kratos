@@ -34,6 +34,15 @@ Otomatis dibuat tanggal 1 dan setelah minggu deload:
 - Toast + animasi singkat saat lencana terbuka (hormati reduced motion)
 - Kartu evaluasi di Hari Ini pada tanggal 1
 
+## Implementasi (Tahap 8)
+- `domain/achievements/rules.ts`: 14 lencana, syarat dari `AchievementFacts`; tiap lencana diuji di ambang dan satu
+  langkah di bawahnya. Tersimpan di tabel `achievements` (indeks unik `achievementId` → tidak terbuka dua kali).
+- `services.achievements.sync()` dijalankan ulang setiap kali hook aksi latihan/nutrisi/progres/profil memuat ulang
+  kunci `achievements`; komponen `AchievementWatcher` mengumumkan lencana baru lewat toast.
+- `services.evaluation`: periode bulan (sejak profil dibuat) dan blok 6 minggu; laporan kehadiran, sesi, tonase,
+  1RM 3 gerakan utama, tren berat, lengan/dada/pinggang, rata-rata protein & tidur, dan ≤ 3 saran fokus.
+- Progres → Lencana (grid lencana + daftar evaluasi), `/progres/evaluasi/:key`.
+
 ## Kriteria selesai
 - [ ] Setiap lencana punya test syarat terpenuhi & belum terpenuhi
 - [ ] Lencana tidak bisa terbuka dua kali

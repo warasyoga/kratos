@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import type { ProgressPhoto } from '@/domain/progress/photo';
-import { t } from '@/shared/i18n/id';
+import { tProgress } from '@/shared/i18n/progress';
 import { formatShortDate } from '@/shared/lib/format';
 import { SegmentedControl } from '@/shared/ui/SegmentedControl';
 import { Sheet } from '@/shared/ui/Sheet';
@@ -22,13 +22,13 @@ export function PhotoCompareSheet({
   const [position, setPosition] = useState(50);
 
   return (
-    <Sheet open title={t.progress.compareTitle} onClose={onClose}>
+    <Sheet open title={tProgress.compareTitle} onClose={onClose}>
       <div className="flex flex-col gap-3">
         <SegmentedControl
-          label={t.progress.compareTitle}
+          label={tProgress.compareTitle}
           options={(['slider', 'side'] as const).map((value) => ({
             value,
-            label: t.progress.compareModes[value],
+            label: tProgress.compareModes[value],
           }))}
           value={mode}
           onChange={setMode}
@@ -58,7 +58,7 @@ export function PhotoCompareSheet({
               min={0}
               max={100}
               value={position}
-              aria-label={t.progress.compareSlider}
+              aria-label={tProgress.compareSlider}
               onChange={(e) => setPosition(Number(e.target.value))}
               className="w-full accent-[var(--accent)]"
             />

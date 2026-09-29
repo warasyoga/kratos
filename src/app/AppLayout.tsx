@@ -1,7 +1,9 @@
 import { Outlet } from 'react-router';
 import { t } from '@/shared/i18n/id';
 import { TabBar } from '@/shared/ui/TabBar';
+import { AchievementWatcher } from './AchievementWatcher';
 import { navItems } from './navigation';
+import { ReminderWatcher } from './ReminderWatcher';
 
 export function AppLayout() {
   return (
@@ -11,6 +13,8 @@ export function AppLayout() {
         <Outlet />
       </main>
       <TabBar items={navItems} label={t.nav.label} />
+      <AchievementWatcher />
+      <ReminderWatcher />
     </div>
   );
 }

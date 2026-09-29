@@ -1,5 +1,6 @@
 import { EQUIPMENT, type Equipment } from '@/domain/profile/types';
 import { t } from '@/shared/i18n/id';
+import { tProfile } from '@/shared/i18n/onboarding';
 import { ToggleChip } from '@/shared/ui/ToggleChip';
 
 export interface EquipmentPickerProps {
@@ -17,7 +18,7 @@ export function EquipmentPicker({ value, onChange, disabled }: EquipmentPickerPr
     );
 
   return (
-    <div role="group" aria-label={t.profile.equipment} className="flex flex-wrap gap-2">
+    <div role="group" aria-label={tProfile.equipment} className="flex flex-wrap gap-2">
       {EQUIPMENT.map((item) => (
         <ToggleChip
           key={item}

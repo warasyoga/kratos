@@ -1,5 +1,6 @@
 import { WEEKDAYS } from '@/domain/common/weekday';
 import { t } from '@/shared/i18n/id';
+import { tOnboarding, tProfile } from '@/shared/i18n/onboarding';
 import { formatNumber } from '@/shared/lib/format';
 import { Card } from '@/shared/ui/Card';
 import { Stat } from '@/shared/ui/Stat';
@@ -9,7 +10,7 @@ import { StepLayout } from './StepLayout';
 export function SummaryStep({ hasWarnings, onNext }: { hasWarnings: boolean; onNext: () => void }) {
   const overview = useProfileOverview().data;
   const program = useActiveProgram().data;
-  const text = t.onboarding.summary;
+  const text = tOnboarding.summary;
   const byWeekday = new Map(program?.days.map((d) => [d.day.weekday, d.day.label]));
 
   return (
@@ -23,12 +24,9 @@ export function SummaryStep({ hasWarnings, onNext }: { hasWarnings: boolean; onN
         <Card>
           <h2 className="font-sans label-caps">{text.targets}</h2>
           <div className="grid grid-cols-3 gap-2">
-            <Stat value={formatNumber(overview.targets.kcal, 0)} label={t.profile.kcal} />
-            <Stat value={`${overview.targets.proteinG} g`} label={t.profile.protein} />
-            <Stat
-              value={`${formatNumber(overview.targets.waterRestL)} L`}
-              label={t.profile.water}
-            />
+            <Stat value={formatNumber(overview.targets.kcal, 0)} label={tProfile.kcal} />
+            <Stat value={`${overview.targets.proteinG} g`} label={tProfile.protein} />
+            <Stat value={`${formatNumber(overview.targets.waterRestL)} L`} label={tProfile.water} />
           </div>
         </Card>
       )}

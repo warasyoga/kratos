@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { useServices } from '@/application/ServicesContext';
 import type { ProgressPhoto } from '@/domain/progress/photo';
 import { t } from '@/shared/i18n/id';
+import { tProgress } from '@/shared/i18n/progress';
 import { formatDayDate } from '@/shared/lib/format';
 import { Button } from '@/shared/ui/Button';
 import { Sheet } from '@/shared/ui/Sheet';
@@ -21,18 +22,18 @@ export function PhotoViewerSheet({
   const [confirming, setConfirming] = useState(false);
 
   const remove = async () => {
-    if (await run(() => progress.photos.remove(photo.id), t.progress.photoRemoved)) onClose();
+    if (await run(() => progress.photos.remove(photo.id), tProgress.photoRemoved)) onClose();
   };
 
   return (
     <Sheet
       open
-      title={t.progress.pose[photo.pose]}
+      title={tProgress.pose[photo.pose]}
       onClose={onClose}
       footer={
         confirming ? (
           <div className="flex flex-col gap-2">
-            <p className="text-sm">{t.progress.removePhotoConfirm}</p>
+            <p className="text-sm">{tProgress.removePhotoConfirm}</p>
             <div className="grid grid-cols-2 gap-2">
               <Button variant="ghost" onClick={() => setConfirming(false)}>
                 {t.common.cancel}
@@ -44,7 +45,7 @@ export function PhotoViewerSheet({
           </div>
         ) : (
           <Button variant="ghost" fullWidth onClick={() => setConfirming(true)}>
-            {t.progress.removePhoto}
+            {tProgress.removePhoto}
           </Button>
         )
       }

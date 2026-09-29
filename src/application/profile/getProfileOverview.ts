@@ -30,6 +30,8 @@ export interface ProfileOverview {
     kcal: number;
     bmr: number;
     tdee: number;
+    /** Koreksi dari kalibrasi tren berat, sudah termasuk di kcal. */
+    calorieAdjustmentKcal: number;
     waterRestL: number;
     waterGymL: number;
   };
@@ -57,7 +59,8 @@ export function makeGetProfileOverview(deps: AppDeps) {
     const bmi = calculateBmi(weightKg, profile.heightCm);
     const bmr = calculateBmr({ sex: profile.sex, weightKg, heightCm: profile.heightCm, ageYears });
     const tdee = calculateTdee(bmr, profile.activityLevel);
-    const kcal = calculateCalorieTarget(tdee);
+    const calorieAdjustmentKcal = profile.calorieAdjustmentKcal ?? 0;
+    const kcal = calculateCalorieTarget(tdee) + calorieAdjustmentKcal;
     const proteinG = calculateProteinTarget(weightKg, profile.proteinGPerKg);
 
     return {
@@ -72,6 +75,7 @@ export function makeGetProfileOverview(deps: AppDeps) {
         kcal,
         bmr,
         tdee,
+        calorieAdjustmentKcal,
         waterRestL: calculateWaterTargetL(profile.sex),
         waterGymL: calculateWaterTargetL(profile.sex, GYM_SESSION_MINUTES),
       },

@@ -101,6 +101,30 @@ Perubahan diusulkan sebagai **saran**, bukan otomatis.
 
 **Contoh:** berat 68,4 kg → rentang target naik 0,17–0,34 kg/minggu.
 
+## 8. Porsi referensi · **Standar**
+Nilai per 100 g bagian yang dapat dimakan, dari Tabel Komposisi Pangan Indonesia (TKPI) 2019 Kemenkes RI
+(`src/domain/nutrition/foodReferences.ts`). Berat porsi rumah tangga = aturan internal, bisa diubah pengguna.
+
+| Bahan | Kode | kkal | Protein | Lemak | Karbo |
+|---|---|---|---|---|---|
+| Nasi putih | AP001 | 180 | 3,0 | 0,3 | 39,8 |
+| Kentang | BR013 | 62 | 2,1 | 0,2 | 13,5 |
+| Telur ayam ras | HR002 | 154 | 12,4 | 10,8 | 0,7 |
+| Ayam goreng, dada | FP029 | 246 | 37,9 | 9,0 | 0,7 |
+| Ikan tongkol | GR080 | 100 | 13,7 | 1,5 | 8,0 |
+| Udang | GR084 | 91 | 21,0 | 0,2 | 0,1 |
+| Tempe goreng | CP076 | 350 | 24,5 | 26,6 | 10,4 |
+| Tempe mentah | CP077 | 201 | 20,8 | 8,8 | 13,5 |
+| Tahu | CP061 | 80 | 10,9 | 4,7 | 0,8 |
+| Susu sapi segar | JR006 | 61 | 3,2 | 3,5 | 4,3 |
+| Pisang ambon | ER074 | 108 | 1,0 | 0,8 | 24,3 |
+| Dada ayam tanpa kulit, panggang (USDA SR) | 05064 | 165 | 31,0 | 3,6 | 0 |
+
+**Contoh:** nasi 1 piring 150 g = 180 × 1,5 = **270 kkal**, protein 3,0 × 1,5 = **4,5 g**.
+
+Koreksi kalibrasi (§7) disimpan terpisah dari surplus dan dibatasi **±500 kkal** (aturan internal): koreksi ini
+membetulkan estimasi TDEE, bukan mengubah besar surplus.
+
 ## Konstanta (`standards.ts`)
 
 ```ts

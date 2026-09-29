@@ -2,6 +2,8 @@ import { useState } from 'react';
 import { useServices } from '@/application/ServicesContext';
 import { BODY_AREAS, type BodyArea } from '@/domain/profile/types';
 import { errorText, t } from '@/shared/i18n/id';
+import { tOnboarding } from '@/shared/i18n/onboarding';
+import { tCheckIn } from '@/shared/i18n/workout';
 import { formatNumber } from '@/shared/lib/format';
 import { Button } from '@/shared/ui/Button';
 import { SegmentedControl } from '@/shared/ui/SegmentedControl';
@@ -68,46 +70,46 @@ export function CheckInSheet({ onClose }: { onClose: () => void }) {
       }),
     );
     if (!result.ok) return setErrors(result.error.fields);
-    toast(t.checkIn.readiness[result.value.readiness]);
+    toast(tCheckIn.readiness[result.value.readiness]);
     onClose();
   };
 
   return (
     <Sheet
       open
-      title={t.checkIn.title}
+      title={tCheckIn.title}
       onClose={onClose}
       footer={
         <Button fullWidth disabled={pending} onClick={() => void save()}>
-          {t.checkIn.save}
+          {tCheckIn.save}
         </Button>
       }
     >
       <div className="flex flex-col gap-5">
         <Stepper
-          label={t.checkIn.sleep}
+          label={tCheckIn.sleep}
           value={sleepHours}
           min={0}
           max={14}
           step={0.5}
-          suffix={t.checkIn.hoursSuffix}
+          suffix={tCheckIn.hoursSuffix}
           format={(v) => formatNumber(v)}
           onChange={setSleep}
         />
         <ScaleField
-          label={t.checkIn.soreness}
-          captions={t.checkIn.sorenessScale}
+          label={tCheckIn.soreness}
+          captions={tCheckIn.sorenessScale}
           value={soreness}
           onChange={setSoreness}
         />
         <ScaleField
-          label={t.checkIn.energy}
-          captions={t.checkIn.energyScale}
+          label={tCheckIn.energy}
+          captions={tCheckIn.energyScale}
           value={energy}
           onChange={setEnergy}
         />
         <fieldset className="flex flex-col gap-2">
-          <legend className="mb-1.5 text-sm font-semibold">{t.checkIn.pain}</legend>
+          <legend className="mb-1.5 text-sm font-semibold">{tCheckIn.pain}</legend>
           <div className="flex flex-wrap gap-2">
             {BODY_AREAS.map((area) => (
               <ToggleChip
@@ -121,13 +123,13 @@ export function CheckInSheet({ onClose }: { onClose: () => void }) {
         </fieldset>
         <TextField
           id="checkin-weight"
-          label={t.checkIn.weight}
+          label={tCheckIn.weight}
           inputMode="decimal"
           suffix="kg"
           value={weight}
           onChange={(e) => setWeight(e.target.value)}
           error={errorText(errors?.bodyWeightKg)}
-          hint={t.onboarding.body.weightHint}
+          hint={tOnboarding.body.weightHint}
         />
       </div>
     </Sheet>

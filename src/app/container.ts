@@ -6,13 +6,16 @@ import { ensureCatalog } from '@/infrastructure/db/seed';
 import { resizeImage } from '@/infrastructure/image';
 import { requestPersistentStorage } from '@/infrastructure/platform';
 import {
+  DexieAchievementRepository,
   DexieActivityRepository,
   DexieBodyMetricRepository,
   DexieCheckInRepository,
   DexieExerciseRepository,
   DexieGymRepository,
   DexieHealthConditionRepository,
+  DexieNutritionRepository,
   DexiePhotoRepository,
+  DexieReminderRepository,
   DexieProfileRepository,
   DexieProgramRepository,
   DexieSessionRepository,
@@ -42,6 +45,9 @@ export async function createAppServices(): Promise<Services> {
     sessions: new DexieSessionRepository(db),
     activities: new DexieActivityRepository(db),
     photos: new DexiePhotoRepository(db),
+    nutrition: new DexieNutritionRepository(db),
+    achievements: new DexieAchievementRepository(db),
+    reminders: new DexieReminderRepository(db),
     tx: new DexieTransactionRunner(db),
     platform: { requestPersistentStorage, resizeImage },
   };

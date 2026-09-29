@@ -2,10 +2,10 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router';
 import { useServices } from '@/application/ServicesContext';
 import type { SuggestionDraft } from '@/domain/trainer/suggestions';
-import { t } from '@/shared/i18n/id';
+import { tSuggestion } from '@/shared/i18n/library';
 import { Button } from '@/shared/ui/Button';
 import { useProgramAction } from '../hooks/useProgram';
-import { describeSuggestion } from '../suggestionText';
+import { describeSuggestion } from '@/shared/i18n/suggestionText';
 
 export interface SuggestionCardProps {
   draft: SuggestionDraft;
@@ -26,31 +26,31 @@ export function SuggestionCard({ draft, nameOf }: SuggestionCardProps) {
       ? navigate('/profil')
       : void run(
           () => program.suggestions.apply(draft.ruleId, draft.targetKey),
-          t.suggestion.applied,
+          tSuggestion.applied,
         );
   const dismiss = () =>
     void run(
       () => program.suggestions.dismiss(draft.ruleId, draft.targetKey),
-      t.suggestion.dismissed,
+      tSuggestion.dismissed,
       false,
     );
 
   return (
     <section
-      aria-label={t.suggestion.label}
+      aria-label={tSuggestion.label}
       className="flex flex-col gap-2.5 rounded-[18px] border border-gold-line bg-gold-bg p-3.5"
     >
-      <h2 className="font-sans label-caps text-gold">{t.suggestion.label}</h2>
+      <h2 className="font-sans label-caps text-gold">{tSuggestion.label}</h2>
       <p className="text-sm">{message}</p>
       {showWhy && why && <p className="text-[13px] text-muted">{why}</p>}
       <div className="flex flex-wrap gap-2">
         {draft.action && (
           <Button size="sm" disabled={pending} onClick={apply}>
-            {t.suggestion.apply}
+            {tSuggestion.apply}
           </Button>
         )}
         <Button size="sm" variant="ghost" disabled={pending} onClick={dismiss}>
-          {t.suggestion.dismiss}
+          {tSuggestion.dismiss}
         </Button>
         {why && (
           <Button
@@ -59,7 +59,7 @@ export function SuggestionCard({ draft, nameOf }: SuggestionCardProps) {
             aria-expanded={showWhy}
             onClick={() => setShowWhy((s) => !s)}
           >
-            {t.suggestion.why}
+            {tSuggestion.why}
           </Button>
         )}
       </div>

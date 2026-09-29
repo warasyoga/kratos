@@ -1,4 +1,5 @@
 import { t } from '@/shared/i18n/id';
+import { tOnboarding } from '@/shared/i18n/onboarding';
 import { useInstallPrompt } from '@/shared/lib/installPrompt';
 import { Button } from '@/shared/ui/Button';
 import { Card } from '@/shared/ui/Card';
@@ -22,8 +23,8 @@ export function InstallCard({ title }: { title?: string }) {
       ) : (
         <div className="flex flex-col gap-2 text-sm">
           <p className="text-muted">{t.pwa.installHint}</p>
-          <p>{t.onboarding.install.android}</p>
-          <p>{t.onboarding.install.ios}</p>
+          <p>{tOnboarding.install.android}</p>
+          <p>{tOnboarding.install.ios}</p>
         </div>
       )}
     </Card>

@@ -41,6 +41,13 @@ Gambar: ilustrasi sederhana buatan sendiri atau aset berlisensi bebas; dicatat s
 - Gerakan bawaan tidak bisa dihapus, hanya disembunyikan.
 - Gerakan buatan pengguna wajib: nama, pola, otot utama, alat, jenis beban.
 
+## Implementasi gerakan buatan sendiri (Tahap 8)
+- `/gerakan/baru` dan `/gerakan/:id/ubah`: nama (unik), pola gerakan, otot utama (wajib) & pendukung, alat, jenis beban,
+  dicatat sebagai repetisi/detik, catatan cara melakukan (jadi panduan).
+- Mekanik (majemuk/isolasi) dan area tubuh yang terbebani diturunkan dari pola gerakan (`domain/exercise/custom.ts`),
+  sehingga penyesuaian kondisi kesehatan tetap berlaku. ID diawali `custom-`; pembaruan katalog bawaan tidak menyentuhnya.
+- Hapus ditolak selama gerakan dipakai program aktif; riwayat latihannya tetap tersimpan.
+
 ## Data
 `Exercise` + `ExerciseGuide`. Katalog bawaan di `src/infrastructure/seed/exerciseCatalog.ts` (TypeScript, dicek
 tipe saat build) berisi 61 gerakan. Test memastikan ID unik, panduan lengkap, data latihan identik dengan data uji

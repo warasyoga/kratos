@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { useServices } from '@/application/ServicesContext';
 import type { HealthCondition } from '@/domain/profile/types';
 import { t } from '@/shared/i18n/id';
+import { tProfile } from '@/shared/i18n/onboarding';
 import { Button } from '@/shared/ui/Button';
 import { Card } from '@/shared/ui/Card';
 import { Chip } from '@/shared/ui/Chip';
@@ -46,13 +47,13 @@ export function HealthCard({ conditions }: { conditions: readonly HealthConditio
   return (
     <Card>
       <div className="flex items-center justify-between gap-2">
-        <h2 className="font-sans label-caps">{t.profile.health}</h2>
+        <h2 className="font-sans label-caps">{tProfile.health}</h2>
         <Button variant="ghost" size="sm" onClick={() => open({ draft: EMPTY_CONDITION })}>
           + {t.common.add}
         </Button>
       </div>
       {conditions.length === 0 ? (
-        <p className="text-muted">{t.profile.healthEmpty}</p>
+        <p className="text-muted">{tProfile.healthEmpty}</p>
       ) : (
         <ul className="flex flex-col divide-y divide-line">
           {conditions.map((c) => (
@@ -70,7 +71,7 @@ export function HealthCard({ conditions }: { conditions: readonly HealthConditio
                   </span>
                 </span>
                 <Chip tone={c.active ? 'warn' : 'neutral'}>
-                  {c.active ? t.profile.healthActive : t.profile.healthInactive}
+                  {c.active ? tProfile.healthActive : tProfile.healthInactive}
                 </Chip>
               </button>
             </li>
@@ -80,7 +81,7 @@ export function HealthCard({ conditions }: { conditions: readonly HealthConditio
 
       <Sheet
         open={editing !== null}
-        title={editing?.id ? t.profile.healthEdit : t.profile.healthAdd}
+        title={editing?.id ? tProfile.healthEdit : tProfile.healthAdd}
         onClose={() => setEditing(null)}
         footer={
           editing && (
@@ -95,7 +96,7 @@ export function HealthCard({ conditions }: { conditions: readonly HealthConditio
                     disabled={pending}
                     onClick={() => void save({ ...editing, active: !editing.active })}
                   >
-                    {editing.active ? t.profile.healthDeactivate : t.profile.healthActivate}
+                    {editing.active ? tProfile.healthDeactivate : tProfile.healthActivate}
                   </Button>
                   <Button
                     variant="ghost"

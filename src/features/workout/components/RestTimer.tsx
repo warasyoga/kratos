@@ -1,16 +1,25 @@
+import { useQuery } from '@tanstack/react-query';
 import { useEffect, useRef } from 'react';
+import { queryKeys } from '@/application/queryKeys';
 import { useServices } from '@/application/ServicesContext';
 import type { SetLog } from '@/domain/workout/types';
 import { t } from '@/shared/i18n/id';
 import { formatClock, useNow, vibrate } from '@/shared/lib/device';
+import { showNotification } from '@/shared/lib/notifications';
 import { useWorkoutAction } from '../hooks/useWorkout';
 
 /**
  * Timer istirahat dari `restEndsAt` (waktu absolut), sehingga tetap tepat setelah layar mati
- * atau aplikasi di latar. HP bergetar saat habis (Android).
+ * atau aplikasi di latar. HP bergetar saat habis (Android); jika aplikasi di latar dan
+ * notifikasi timer dinyalakan (Profil → Pengingat), muncul notifikasi.
  */
 export function RestTimer({ set, totalSec }: { set: SetLog; totalSec: number }) {
-  const { workout, clock } = useServices();
+  const { workout, clock, reminders } = useServices();
+  const { data: reminderView } = useQuery({
+    queryKey: queryKeys.reminders,
+    queryFn: reminders.get,
+  });
+  const notify = reminderView?.settings.restTimerNotify ?? false;
   const { run } = useWorkoutAction();
   const now = useNow(clock.now);
   const endsAt = set.restEndsAt ?? now;
@@ -22,8 +31,10 @@ export function RestTimer({ set, totalSec }: { set: SetLog; totalSec: number }) 
     if (!running && buzzed.current !== `${set.id}:${endsAt}` && now - endsAt < 5000) {
       buzzed.current = `${set.id}:${endsAt}`;
       vibrate([200, 100, 200]);
+      if (notify && document.visibilityState === 'hidden')
+        void showNotification(t.reminders.restDoneTitle, t.reminders.restDoneBody, 'kratos-rest');
     }
-  }, [running, now, endsAt, set.id]);
+  }, [running, now, endsAt, set.id, notify]);
 
   // Tampil selama istirahat dan 5 detik setelahnya.
   if (!running && now - endsAt > 5000) return null;

@@ -1,7 +1,9 @@
 import { useState } from 'react';
 import { useServices } from '@/application/ServicesContext';
 import type { Weekday } from '@/domain/common/weekday';
-import { errorText, t } from '@/shared/i18n/id';
+import { errorText } from '@/shared/i18n/id';
+import { tProfile } from '@/shared/i18n/onboarding';
+import { tChanges } from '@/shared/i18n/profile';
 import { Button } from '@/shared/ui/Button';
 import { Sheet } from '@/shared/ui/Sheet';
 import { useProfileAction } from '../hooks/useProfileAction';
@@ -22,7 +24,7 @@ export function ScheduleSheet({
   const save = async () => {
     const saved = await run(
       () => profile.changeTrainingDays(days),
-      ({ programName }) => [t.changes.newProgram(programName)],
+      ({ programName }) => [tChanges.newProgram(programName)],
     );
     if (saved) onClose();
   };
@@ -30,18 +32,18 @@ export function ScheduleSheet({
   return (
     <Sheet
       open
-      title={t.profile.editSchedule}
+      title={tProfile.editSchedule}
       onClose={onClose}
       footer={
         <Button fullWidth disabled={pending || unchanged} onClick={() => void save()}>
-          {t.profile.scheduleConfirm}
+          {tProfile.scheduleConfirm}
         </Button>
       }
     >
       <div className="flex flex-col gap-4">
         <DayPicker value={days} onChange={setDays} error={errorText(errors?._)} />
         <p className="rounded-[14px] bg-warn-bg px-3.5 py-3 text-[13px] text-warn">
-          {t.profile.scheduleWarning}
+          {tProfile.scheduleWarning}
         </p>
       </div>
     </Sheet>

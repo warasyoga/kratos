@@ -33,7 +33,6 @@ describe('rencana hari ini', () => {
       isDeloadWeek: false,
       hasActiveSession: false,
       streakWeeks: 0,
-      targets: { kcal: 2880, proteinG: 137, waterL: 2.5 },
     });
     expect(plan.day?.day.label).toBe('Upper A');
     expect(plan.week.map((d) => d.status)).toEqual([
@@ -63,7 +62,8 @@ describe('rencana hari ini', () => {
     expect(plan.kind).toBe('recovery');
     expect(plan.missed.map((d) => d.label)).toEqual(['Lower A']);
     expect(plan.next?.label).toBe('Upper B');
-    expect(plan.targets?.waterL).toBe(2);
+    // Target air hari pemulihan (tanpa tambahan jam latihan) ada di nutrisi harian.
+    expect(must(await services.nutrition.day()).targets.waterMl).toBe(2000);
   });
 
   it('aktivitas pemulihan dicatat dan bisa dihapus', async () => {

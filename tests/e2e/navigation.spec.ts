@@ -51,7 +51,18 @@ test.describe('Kratos di HP', () => {
 
   test('tidak ada geser horizontal di layar mana pun', async ({ page }) => {
     await completeOnboarding(page);
-    for (const path of ['/', '/program', '/profil', '/onboarding']) {
+    for (const path of [
+      '/',
+      '/program',
+      '/profil',
+      '/nutrisi',
+      '/progres',
+      '/progres?bagian=tubuh',
+      '/progres?bagian=lencana',
+      '/progres/otot',
+      '/gerakan/baru',
+      '/onboarding',
+    ]) {
       await page.goto(path);
       await page.waitForLoadState('networkidle');
       const overflow = await page.evaluate(

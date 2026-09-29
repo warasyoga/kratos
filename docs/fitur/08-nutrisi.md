@@ -23,6 +23,16 @@ Target dari [01-nutrisi.md](../sains-latihan/01-nutrisi.md):
 - Target dihitung ulang saat berat badan (tren) berubah ≥ 1 kg atau profil berubah.
 - Kalibrasi kalori 14 hari muncul sebagai saran.
 
+## Implementasi (Tahap 8)
+- Domain: `nutrition/intake.ts` (jumlah asupan, per hari; hari tanpa catatan tidak dihitung),
+  `nutrition/foodReferences.ts` (12 bahan, nilai per 100 g dari TKPI 2019 dengan kode TKPI; dada ayam tanpa kulit dari
+  USDA SR 05064 karena TKPI hanya punya daging ayam berkulit), `recalibrationInput` di `nutrition/recalibration.ts`.
+- Use case `services.nutrition`: `day`, `logFood`/`updateFood` (tanggal bisa dipindah, tidak boleh ke masa depan),
+  `removeFood`, `logMeal` (menu favorit sekali ketuk), `logReference` (berat bisa diubah), `logWater`/`removeWater`.
+- Target kalori = TDEE + surplus + koreksi kalibrasi (`UserProfile.calorieAdjustmentKcal`, maks. ±500 kkal).
+  Saran kalibrasi muncul paling cepat 14 hari setelah profil dibuat / koreksi terakhir, dari tren berat 14 hari.
+- Layar `/nutrisi` (dibuka dari kartu di Hari Ini).
+
 ## Data
 `NutritionLog`, `WaterLog`, `SavedMeal`. Use case `logFood`, `logWater`, `saveMeal`, `getDailyNutrition`.
 

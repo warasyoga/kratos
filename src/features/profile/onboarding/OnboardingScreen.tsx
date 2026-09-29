@@ -3,6 +3,7 @@ import { Navigate, useNavigate } from 'react-router';
 import { useServices } from '@/application/ServicesContext';
 import { toLocalDate } from '@/domain/common/clock';
 import { errorText, t } from '@/shared/i18n/id';
+import { tOnboarding, tParq } from '@/shared/i18n/onboarding';
 import { Button } from '@/shared/ui/Button';
 import { OptionGroup } from '@/shared/ui/OptionGroup';
 import { DayPicker } from '../components/DayPicker';
@@ -79,7 +80,7 @@ export function OnboardingScreen() {
     await refresh();
   };
 
-  const text = t.onboarding;
+  const text = tOnboarding;
   const common = { progress, onBack: back, primaryLabel: t.common.next, onPrimary: next } as const;
 
   switch (step) {
@@ -153,7 +154,7 @@ export function OnboardingScreen() {
       return (
         <StepLayout
           {...common}
-          title={t.parq.title}
+          title={tParq.title}
           primaryLabel={submitting ? text.creating : text.submit}
           primaryDisabled={submitting}
           onPrimary={() => void submit()}

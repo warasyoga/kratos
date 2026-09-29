@@ -11,6 +11,8 @@ import {
 import type { AppDeps } from '../deps';
 import { makeChangeTrainingDays } from '../profile/updateProfile';
 import type { ProgramEditor } from './programEditor';
+import { loadHistoryInputs } from './suggestionInputs';
+import { CALORIE_ADJUSTMENT_MAX_KCAL } from '@/domain/standards';
 
 /**
  * Saran trainer untuk program aktif: daftar, terapkan, abaikan.
@@ -56,6 +58,7 @@ export function makeSuggestionUseCases(deps: AppDeps, editor: ProgramEditor) {
       isDeloadWeek: isScheduledDeloadWeek(bundle.program.startDate, toLocalDate(now)),
       parqCompletedAt: profile.parqCompletedAt ?? null,
       ...(aerobic !== undefined && { aerobicMinutesLastWeek: aerobic }),
+      ...(await loadHistoryInputs(deps, bundle, profile)),
     };
     return { ctx, programId: bundle.program.id };
   }
@@ -129,6 +132,24 @@ export function makeSuggestionUseCases(deps: AppDeps, editor: ProgramEditor) {
         case 'regenerate_program':
           result = await makeChangeTrainingDays(deps)(action.trainingDays);
           break;
+        case 'set_calorie_offset': {
+          const profile = await deps.profiles.get();
+          if (!profile) return err({ code: 'profile_missing', message: 'Profil tidak ada' });
+          const current = profile.calorieAdjustmentKcal ?? 0;
+          const next = Math.max(
+            -CALORIE_ADJUSTMENT_MAX_KCAL,
+            Math.min(CALORIE_ADJUSTMENT_MAX_KCAL, current + action.deltaKcal),
+          );
+          const now = deps.clock.now();
+          await deps.profiles.save({
+            ...profile,
+            calorieAdjustmentKcal: next,
+            calorieAdjustedAt: now,
+            updatedAt: now,
+          });
+          result = ok(undefined);
+          break;
+        }
         default:
           // Deload, kalori, dan layar lain ditangani di tahap masing-masing (atau oleh UI).
           return err({ code: 'not_supported', message: 'Aksi ini belum tersedia' });

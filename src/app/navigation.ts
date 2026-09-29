@@ -10,6 +10,7 @@ export const paths = {
   profile: '/profil',
   onboarding: '/onboarding',
   library: '/gerakan',
+  nutrition: '/nutrisi',
 } as const;
 
 export const navItems: readonly TabItem[] = [

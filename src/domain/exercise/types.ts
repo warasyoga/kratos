@@ -18,23 +18,26 @@ export const MOVEMENT_PATTERNS = [
 ] as const;
 export type MovementPattern = (typeof MOVEMENT_PATTERNS)[number];
 
-export type Muscle =
-  | 'chest'
-  | 'back_lats'
-  | 'back_upper'
-  | 'shoulder_front'
-  | 'shoulder_side'
-  | 'shoulder_rear'
-  | 'biceps'
-  | 'triceps'
-  | 'forearm'
-  | 'quads'
-  | 'hamstrings'
-  | 'glutes'
-  | 'calves'
-  | 'abs';
+export const MUSCLES = [
+  'chest',
+  'back_lats',
+  'back_upper',
+  'shoulder_front',
+  'shoulder_side',
+  'shoulder_rear',
+  'biceps',
+  'triceps',
+  'forearm',
+  'abs',
+  'quads',
+  'hamstrings',
+  'glutes',
+  'calves',
+] as const;
+export type Muscle = (typeof MUSCLES)[number];
 
-export type LoadType = 'barbell' | 'dumbbell' | 'machine' | 'cable' | 'bodyweight';
+export const LOAD_TYPES = ['barbell', 'dumbbell', 'machine', 'cable', 'bodyweight'] as const;
+export type LoadType = (typeof LOAD_TYPES)[number];
 
 export interface Exercise {
   /** Slug stabil, mis. 'barbell-bench-press'. */

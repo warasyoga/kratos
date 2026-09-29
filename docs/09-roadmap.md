@@ -77,11 +77,13 @@ Centang item saat selesai. Urutan disusun agar fondasi dan rumus selesai sebelum
 - [x] Foto progres (kompresi 1080 px + thumbnail, perbandingan geser/berdampingan)
 
 ## Tahap 8 · Nutrisi, Peta Otot, Pencapaian, Pengingat
-- [ ] Catat makanan cepat, menu tersimpan, air minum
-- [ ] Kalibrasi ulang kalori dari tren berat setiap 2 minggu
-- [ ] Peta otot (status pemulihan)
-- [ ] Lencana & evaluasi bulanan
-- [ ] Pengingat (notifikasi + ekspor kalender .ics)
+- [x] Catat makanan cepat, menu tersimpan, air minum, porsi referensi TKPI
+- [x] Kalibrasi ulang kalori dari tren berat setiap 2 minggu (sebagai saran)
+- [x] Peta otot (status pemulihan + volume minggu ini)
+- [x] Lencana & evaluasi bulanan / akhir blok
+- [x] Pengingat (notifikasi + ekspor kalender .ics)
+- [x] Gerakan buatan sendiri (tambah, ubah, hapus)
+- [x] Aturan saran yang butuh riwayat kini aktif: stagnasi, kehadiran, protein, tidur, kalibrasi kalori
 
 ## Tahap 9 · Backup & Rilis
 - [ ] Ekspor/impor `.zip` (JSON + foto) dengan validasi Zod

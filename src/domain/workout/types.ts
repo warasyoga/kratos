@@ -16,6 +16,8 @@ export interface WorkingSetRecord extends SetResult {
   sessionId: string;
   logDate: string;
   exerciseId: string;
+  /** Waktu set dicentang (untuk pemulihan otot). */
+  completedAt?: number;
 }
 
 export type Readiness = 'green' | 'yellow' | 'red';

@@ -11,7 +11,10 @@ import type {
   PlateInventory,
   UserProfile,
 } from '@/domain/profile/types';
+import type { UnlockedAchievement } from '@/domain/achievements/rules';
+import type { NutritionLog, SavedMeal, WaterLog } from '@/domain/nutrition/intake';
 import type { ProgressPhoto } from '@/domain/progress/photo';
+import { DEFAULT_REMINDERS, type ReminderSettings } from '@/domain/reminders/reminders';
 import type { BodyMetric, ProgramBundle, ResolvedSuggestion } from '@/domain/repositories';
 import type { ActivityLog } from '@/domain/today/activity';
 import type { CheckIn, SetLog, WorkoutSession } from '@/domain/workout/types';
@@ -31,12 +34,19 @@ export interface InMemoryState {
   setLogs: SetLog[];
   activities: ActivityLog[];
   photos: ProgressPhoto[];
+  foods: NutritionLog[];
+  water: WaterLog[];
+  meals: SavedMeal[];
+  achievements: UnlockedAchievement[];
+  reminders: ReminderSettings;
 }
 
 export function createInMemoryDeps(
   options: { clock?: Clock; library?: readonly Exercise[] } = {},
 ): AppDeps & { state: InMemoryState } {
-  const library = options.library ?? TEST_EXERCISES;
+  const builtIn = options.library ?? TEST_EXERCISES;
+  const custom = new Map<string, { exercise: Exercise; note?: string }>();
+  const library = () => [...builtIn, ...[...custom.values()].map((c) => c.exercise)];
   const state: InMemoryState = {
     profile: null,
     conditions: new Map(),
@@ -50,6 +60,11 @@ export function createInMemoryDeps(
     setLogs: [],
     activities: [],
     photos: [],
+    foods: [],
+    water: [],
+    meals: [],
+    achievements: [],
+    reminders: DEFAULT_REMINDERS,
   };
   const active = () => state.programs.find((p) => p.program.active) ?? null;
 
@@ -73,13 +88,22 @@ export function createInMemoryDeps(
       setInventory: async (i) => void (state.inventory = i),
     },
     exercises: {
-      list: async () => [...library],
-      get: async (id) => library.find((e) => e.id === id) ?? null,
-      getGuide: async (id) => ({
-        exerciseId: id,
-        instructions: ['Langkah 1', 'Langkah 2'],
-        commonMistakes: ['Kesalahan'],
-      }),
+      list: async () => library(),
+      get: async (id) => library().find((e) => e.id === id) ?? null,
+      getGuide: async (id) => {
+        const own = custom.get(id);
+        if (own) {
+          return own.note ? { exerciseId: id, instructions: [own.note], commonMistakes: [] } : null;
+        }
+        return {
+          exerciseId: id,
+          instructions: ['Langkah 1', 'Langkah 2'],
+          commonMistakes: ['Kesalahan'],
+        };
+      },
+      saveCustom: async (exercise, note) =>
+        void custom.set(exercise.id, { exercise, ...(note && { note }) }),
+      removeCustom: async (id) => void custom.delete(id),
     },
     programs: {
       getActive: async () => active(),
@@ -133,6 +157,7 @@ export function createInMemoryDeps(
     },
     checkIns: {
       getByDate: async (d) => state.checkIns.find((c) => c.logDate === d) ?? null,
+      listSince: async (from) => state.checkIns.filter((c) => c.logDate >= from),
       save: async (c) => {
         state.checkIns = [...state.checkIns.filter((x) => x.logDate !== c.logDate), c];
       },
@@ -194,9 +219,17 @@ export function createInMemoryDeps(
         return state.setLogs.flatMap((log) => {
           const logDate = dateOf.get(log.sessionId);
           if (log.kind !== 'working' || log.completedAt === undefined || !logDate) return [];
-          const { sessionId, exerciseId, weightKg, reps, rir } = log;
+          const { sessionId, exerciseId, weightKg, reps, rir, completedAt } = log;
           return [
-            { sessionId, logDate, exerciseId, weightKg, reps, ...(rir !== undefined && { rir }) },
+            {
+              sessionId,
+              logDate,
+              exerciseId,
+              weightKg,
+              reps,
+              completedAt,
+              ...(rir !== undefined && { rir }),
+            },
           ];
         });
       },
@@ -217,6 +250,41 @@ export function createInMemoryDeps(
       remove: async (id) => {
         state.photos = state.photos.filter((p) => p.id !== id);
       },
+    },
+    nutrition: {
+      listFoodsSince: async (from) => state.foods.filter((f) => f.logDate >= from),
+      saveFood: async (log) => {
+        state.foods = [...state.foods.filter((f) => f.id !== log.id), log].sort(
+          (a, b) => a.createdAt - b.createdAt,
+        );
+      },
+      removeFood: async (id) => {
+        state.foods = state.foods.filter((f) => f.id !== id);
+      },
+      listWaterSince: async (from) => state.water.filter((w) => w.logDate >= from),
+      addWater: async (log) => void state.water.push(log),
+      removeWater: async (id) => {
+        state.water = state.water.filter((w) => w.id !== id);
+      },
+      listMeals: async () => [...state.meals].sort((a, b) => a.label.localeCompare(b.label)),
+      saveMeal: async (meal) => {
+        state.meals = [...state.meals.filter((m) => m.id !== meal.id), meal];
+      },
+      removeMeal: async (id) => {
+        state.meals = state.meals.filter((m) => m.id !== id);
+      },
+    },
+    achievements: {
+      list: async () => [...state.achievements],
+      add: async (record) => {
+        if (state.achievements.some((a) => a.achievementId === record.achievementId))
+          throw new Error('ConstraintError');
+        state.achievements.push(record);
+      },
+    },
+    reminders: {
+      get: async () => ({ ...state.reminders }),
+      save: async (r) => void (state.reminders = { ...r }),
     },
     tx: { run: (work) => work() },
     platform: {

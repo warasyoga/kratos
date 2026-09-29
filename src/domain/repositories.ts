@@ -3,11 +3,14 @@
  * implementasinya (Dexie/IndexedDB) ada di src/infrastructure/repositories.
  * Lihat docs/03-arsitektur.md dan ADR-002.
  */
+import type { UnlockedAchievement } from './achievements/rules';
 import type { BodyMetric } from './body/types';
 import type { Exercise, ExerciseGuide } from './exercise/types';
+import type { NutritionLog, SavedMeal, WaterLog } from './nutrition/intake';
 import type { Equipment, HealthCondition, PlateInventory, UserProfile } from './profile/types';
 import type { ProgramBundle, ProgramExercise } from './program/types';
 import type { ProgressPhoto } from './progress/photo';
+import type { ReminderSettings } from './reminders/reminders';
 import type { ActivityLog } from './today/activity';
 import type {
   CheckIn,
@@ -43,6 +46,9 @@ export interface ExerciseRepository {
   list(): Promise<Exercise[]>;
   get(id: string): Promise<Exercise | null>;
   getGuide(id: string): Promise<ExerciseGuide | null>;
+  /** Simpan gerakan buatan pengguna; catatan (opsional) jadi langkah panduannya. */
+  saveCustom(exercise: Exercise, note?: string): Promise<void>;
+  removeCustom(id: string): Promise<void>;
 }
 
 export interface ProgramRepository {
@@ -79,6 +85,8 @@ export interface BodyMetricRepository {
 
 export interface CheckInRepository {
   getByDate(logDate: string): Promise<CheckIn | null>;
+  /** Check-in sejak tanggal tertentu (rata-rata tidur untuk saran). */
+  listSince(fromDate: string): Promise<CheckIn[]>;
   /** Satu check-in per tanggal: menyimpan ulang menimpa. */
   save(checkIn: CheckIn): Promise<void>;
 }
@@ -112,6 +120,29 @@ export interface ActivityRepository {
   listSince(fromDate: string): Promise<ActivityLog[]>;
   add(log: ActivityLog): Promise<void>;
   remove(id: string): Promise<void>;
+}
+
+export interface NutritionRepository {
+  /** Catatan makan sejak tanggal tertentu, urut waktu dicatat. */
+  listFoodsSince(fromDate: string): Promise<NutritionLog[]>;
+  saveFood(log: NutritionLog): Promise<void>;
+  removeFood(id: string): Promise<void>;
+  listWaterSince(fromDate: string): Promise<WaterLog[]>;
+  addWater(log: WaterLog): Promise<void>;
+  removeWater(id: string): Promise<void>;
+  listMeals(): Promise<SavedMeal[]>;
+  saveMeal(meal: SavedMeal): Promise<void>;
+  removeMeal(id: string): Promise<void>;
+}
+
+export interface ReminderRepository {
+  get(): Promise<ReminderSettings>;
+  save(settings: ReminderSettings): Promise<void>;
+}
+
+export interface AchievementRepository {
+  list(): Promise<UnlockedAchievement[]>;
+  add(record: UnlockedAchievement): Promise<void>;
 }
 
 export interface PhotoRepository {

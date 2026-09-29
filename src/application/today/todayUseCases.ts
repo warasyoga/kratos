@@ -18,7 +18,10 @@ import {
 import { blockWeek, programWeek } from '@/domain/trainer/deload';
 import { MESOCYCLE_WEEKS } from '@/domain/standards';
 import type { CheckIn } from '@/domain/workout/types';
+import type { Muscle } from '@/domain/exercise/types';
 import type { AppDeps } from '../deps';
+import { makeMuscleMap } from '../progress/muscleMap';
+import { measurementDue } from '@/domain/progress/body';
 import { makeGetProfileOverview } from '../profile/getProfileOverview';
 import { makeGetActiveProgram, type ProgramDayView } from '../program/getActiveProgram';
 
@@ -39,29 +42,37 @@ export interface TodayPlan {
   isDeloadWeek: boolean;
   week: WeekDayView[];
   streakWeeks: number;
-  missed: ScheduledDay[];
+  /** Latihan terlewat minggu ini + otot utamanya yang baru dilatih (< 50% waktu pulih). */
+  missed: (ScheduledDay & { recovering: Muscle[] })[];
+  /** Otot yang belum pulih penuh (baru dilatih / pulih sebagian). */
+  recoveringMuscles: { muscle: Muscle; status: 'partial' | 'recent' }[];
+  /** Hari pemulihan dan lingkar tubuh belum diukur ≥ 14 hari (banner). */
+  measurementDue: boolean;
   next?: ScheduledDay;
   activitiesToday: ActivityLog[];
   aerobicMinutesThisWeek: number;
-  targets?: { kcal: number; proteinG: number; waterL: number };
 }
 
 /** Isi layar Hari Ini dan pencatatan aktivitas pemulihan. docs/fitur/02-hari-ini.md */
 export function makeTodayUseCases(deps: AppDeps) {
   const getProgram = makeGetActiveProgram(deps);
   const getOverview = makeGetProfileOverview(deps);
+  const getMuscles = makeMuscleMap(deps);
 
   async function plan(): Promise<TodayPlan | null> {
     const today = toLocalDate(deps.clock.now());
     const monday = startOfWeek(today);
-    const [program, overview, active, checkIn, finished, activities] = await Promise.all([
-      getProgram(),
-      getOverview(),
-      deps.sessions.getActive(),
-      deps.checkIns.getByDate(today),
-      deps.sessions.listFinishedSince(addDays(monday, -7 * STREAK_LOOKBACK_WEEKS)),
-      deps.activities.listSince(monday),
-    ]);
+    const [program, overview, active, checkIn, finished, activities, muscles, metrics] =
+      await Promise.all([
+        getProgram(),
+        getOverview(),
+        deps.sessions.getActive(),
+        deps.checkIns.getByDate(today),
+        deps.sessions.listFinishedSince(addDays(monday, -7 * STREAK_LOOKBACK_WEEKS)),
+        deps.activities.listSince(monday),
+        getMuscles(),
+        deps.bodyMetrics.list(),
+      ]);
     if (!program || !overview) return null;
 
     const schedule: ScheduledDay[] = program.days.map((d) => ({
@@ -75,7 +86,6 @@ export function makeTodayUseCases(deps: AppDeps) {
     const done = finished.find((s) => s.logDate === today);
     const week = programWeek(program.program.startDate, today);
     const next = nextScheduledDay(schedule, today);
-    const t = overview.targets;
 
     return {
       date: today,
@@ -90,11 +100,23 @@ export function makeTodayUseCases(deps: AppDeps) {
       isDeloadWeek: blockWeek(week) === MESOCYCLE_WEEKS,
       week: weekOverview(schedule, refs, today),
       streakWeeks: streakWeeks(refs, schedule.length, today),
-      missed: missedDays(schedule, refs, today),
+      missed: missedDays(schedule, refs, today).map((d) => ({
+        ...d,
+        recovering: [
+          ...new Set(
+            (program.days.find((p) => p.day.id === d.programDayId)?.exercises ?? []).flatMap(
+              (e) => e.exercise.primaryMuscles,
+            ),
+          ),
+        ].filter((m) => muscles.find((x) => x.muscle === m)?.status === 'recent'),
+      })),
+      measurementDue: !day && measurementDue(metrics, today),
+      recoveringMuscles: muscles.flatMap((m) =>
+        m.status === 'fresh' ? [] : [{ muscle: m.muscle, status: m.status }],
+      ),
       ...(next && { next }),
       activitiesToday: activities.filter((a) => a.logDate === today),
       aerobicMinutesThisWeek: aerobicMinutes(activities),
-      targets: { kcal: t.kcal, proteinG: t.proteinG, waterL: day ? t.waterGymL : t.waterRestL },
     };
   }
 

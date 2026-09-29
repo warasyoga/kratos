@@ -37,7 +37,14 @@ Layar pertama yang dibuka setiap hari: menjawab "apa yang harus saya lakukan har
   Streak = minggu berturut-turut dengan jumlah sesi ≥ jumlah hari latihan; minggu berjalan dihitung jika sudah lengkap.
 - Aktivitas pemulihan disimpan di tabel `activityLogs` (skema v2): jalan kaki 35 mnt, mobilitas 10 mnt.
   Menit jalan kaki minggu lalu dipakai aturan saran `aerobic_below_who` (hanya setelah program berjalan satu minggu penuh).
-- "Latih hari ini" untuk latihan terlewat langsung memulai sesi hari itu (pengecekan pemulihan otot menyusul di Tahap 8).
+- "Latih hari ini" untuk latihan terlewat langsung memulai sesi hari itu.
+
+## Implementasi (Tahap 8)
+- Kartu **Nutrisi hari ini** memakai query yang sama dengan layar Nutrisi (`nutrition.day`), jadi angkanya selalu sama;
+  tombol cepat air +250/+500 ml dan tautan "Catat makan".
+- Latihan terlewat menampilkan peringatan jika otot utamanya masih "baru dilatih" (< 50% waktu pulih).
+- Hari pemulihan: peta otot kecil (otot yang masih pulih) dan banner "Waktunya mengukur" jika lingkar tubuh ≥ 14 hari.
+- Kartu evaluasi (emas) selama 3 hari setelah bulan/blok 6 minggu selesai.
 
 ## Data
 Query `getTodayPlan(date)` → `{ kind: 'gym' | 'recovery', day?, checkIn?, activeSession?, nutrition, week, topSuggestion? }`

@@ -43,6 +43,14 @@ Program bawaan tidak memicu saran apa pun (dijamin test); saran muncul setelah e
 | `parq_expired` | PAR-Q+ > 12 bulan | "Sudah setahun sejak skrining terakhir. Isi ulang PAR-Q+." | Buka formulir | PAR-Q+ |
 | `backup_reminder` | Backup terakhir > 14 hari | "Data belum di-backup 2 minggu. Ekspor sekarang?" | Buka ekspor | Aturan internal |
 
+## Data riwayat (Tahap 8)
+`application/program/suggestionInputs.ts` mengisi konteks aturan yang butuh riwayat: 1RM estimasi per sesi untuk tiap
+gerakan program (`stagnation`), kehadiran 14 hari penuh (`low_attendance`, hanya jika program sudah berjalan 14 hari),
+protein 7 hari yang dicatat (`low_protein`), tidur dari check-in 14 hari (`low_sleep`), dan kalibrasi kalori
+(`calorie_recalibration`, paling cepat 14 hari setelah profil dibuat/koreksi terakhir). Menerapkan kalibrasi mengubah
+`UserProfile.calorieAdjustmentKcal` (batas ±500 kkal). `deload_due` dan `backup_reminder` menyusul (Tahap 9).
+Setiap aturan wajib punya kalimat & dasar ilmiah di `src/shared/i18n/suggestionText.ts` (dikunci test).
+
 ## Aturan tampilan
 - Maksimal **2 saran terbuka** di layar Program sekaligus; urutan: keamanan → program → nutrisi → lainnya.
 - Saran yang diabaikan tidak muncul lagi selama **14 hari** untuk `ruleId` + target yang sama.

@@ -6,9 +6,12 @@ import type {
   PlateInventory,
   UserProfile,
 } from '@/domain/profile/types';
+import type { NutritionLog, SavedMeal, WaterLog } from '@/domain/nutrition/intake';
 import type { Program, ProgramDay, ProgramExercise } from '@/domain/program/types';
+import type { UnlockedAchievement } from '@/domain/achievements/rules';
 import type { BodyMetric } from '@/domain/body/types';
 import type { ProgressPhoto } from '@/domain/progress/photo';
+import type { ReminderSettings } from '@/domain/reminders/reminders';
 import type { ResolvedSuggestion } from '@/domain/repositories';
 import type { ActivityLog } from '@/domain/today/activity';
 import type { CheckIn, SetLog, WorkoutSession } from '@/domain/workout/types';
@@ -29,6 +32,7 @@ export interface SettingsRow {
   catalogVersion?: number;
   inventory?: PlateInventory;
   lastBackupAt?: number;
+  reminders?: ReminderSettings;
 }
 
 /**
@@ -77,6 +81,10 @@ export class KratosDatabase extends Dexie {
   setLogs!: EntityTable<SetLog, 'id'>;
   activityLogs!: EntityTable<ActivityLog, 'id'>;
   photos!: EntityTable<ProgressPhoto, 'id'>;
+  nutritionLogs!: EntityTable<NutritionLog, 'id'>;
+  waterLogs!: EntityTable<WaterLog, 'id'>;
+  savedMeals!: EntityTable<SavedMeal, 'id'>;
+  achievements!: EntityTable<UnlockedAchievement, 'id'>;
   settings!: EntityTable<SettingsRow, 'id'>;
 
   constructor(name = 'kratos') {

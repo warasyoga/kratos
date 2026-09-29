@@ -3,6 +3,7 @@ import type { ProfileOverview } from '@/application/profile/getProfileOverview';
 import { useServices } from '@/application/ServicesContext';
 import type { Equipment } from '@/domain/profile/types';
 import { t } from '@/shared/i18n/id';
+import { tProfile } from '@/shared/i18n/onboarding';
 import { formatFixed, formatKg, formatNumber } from '@/shared/lib/format';
 import { useThemePreference, type ThemePreference } from '@/shared/lib/theme';
 import { Button } from '@/shared/ui/Button';
@@ -16,6 +17,7 @@ import { EditBodySheet } from './components/EditBodySheet';
 import { EquipmentPicker } from './components/EquipmentPicker';
 import { HealthCard } from './components/HealthCard';
 import { InstallCard } from './components/InstallCard';
+import { ReminderCard } from './components/ReminderCard';
 import { InventoryCard } from './components/InventoryCard';
 import { ParqCard } from './components/ParqCard';
 import { ScheduleSheet } from './components/ScheduleSheet';
@@ -48,7 +50,7 @@ function BodyCard({ overview }: { overview: ProfileOverview }) {
         <div>
           <h1 className="text-[26px] leading-none uppercase">{p.name}</h1>
           <p className="text-[13px] text-muted tabular-nums">
-            {t.profile.summary(
+            {tProfile.summary(
               t.sex[p.sex],
               overview.ageYears,
               p.heightCm,
@@ -60,27 +62,27 @@ function BodyCard({ overview }: { overview: ProfileOverview }) {
       <div className="grid grid-cols-3 gap-2">
         <Stat
           value={formatNumber(overview.bmi)}
-          label={`${t.profile.bmi} · ${t.bmi[overview.bmiCategory]}`}
+          label={`${tProfile.bmi} · ${t.bmi[overview.bmiCategory]}`}
         />
-        <Stat value={formatNumber(targets.kcal, 0)} label={t.profile.kcal} />
-        <Stat value={`${targets.proteinG} g`} label={t.profile.protein} />
+        <Stat value={formatNumber(targets.kcal, 0)} label={tProfile.kcal} />
+        <Stat value={`${targets.proteinG} g`} label={tProfile.protein} />
       </div>
-      <p className="text-xs text-muted">{t.profile.bmiAsiaNote(t.bmi[overview.bmiAsiaCategory])}</p>
+      <p className="text-xs text-muted">{tProfile.bmiAsiaNote(t.bmi[overview.bmiAsiaCategory])}</p>
       <Card>
-        <h2 className="font-sans label-caps">{t.profile.targets}</h2>
+        <h2 className="font-sans label-caps">{tProfile.targets}</h2>
         <Meter
-          label={t.profile.fat}
+          label={tProfile.fat}
           valueText={`${targets.fatG} g`}
           ratio={(targets.fatG * 9) / targets.kcal}
         />
         <Meter
-          label={t.profile.carbs}
+          label={tProfile.carbs}
           valueText={`${targets.carbsG} g`}
           ratio={(targets.carbsG * 4) / targets.kcal}
         />
         <Row
-          label={t.profile.water}
-          value={t.profile.waterValue(
+          label={tProfile.water}
+          value={tProfile.waterValue(
             formatNumber(targets.waterRestL),
             formatNumber(targets.waterGymL),
           )}
@@ -95,7 +97,7 @@ function EquipmentCard({ equipment }: { equipment: Equipment[] }) {
   const { run, pending } = useProfileAction();
   return (
     <Card>
-      <h2 className="font-sans label-caps">{t.profile.equipment}</h2>
+      <h2 className="font-sans label-caps">{tProfile.equipment}</h2>
       <EquipmentPicker
         value={equipment}
         disabled={pending}
@@ -106,7 +108,7 @@ function EquipmentCard({ equipment }: { equipment: Equipment[] }) {
           )
         }
       />
-      <p className="text-xs text-muted">{t.profile.equipmentHint}</p>
+      <p className="text-xs text-muted">{tProfile.equipmentHint}</p>
     </Card>
   );
 }
@@ -117,7 +119,7 @@ export function ProfileScreen() {
   const [theme, setTheme] = useThemePreference();
   const [sheet, setSheet] = useState<'body' | 'schedule' | null>(null);
 
-  if (!overview) return <ScreenHeader title={t.profile.title} />;
+  if (!overview) return <ScreenHeader title={tProfile.title} />;
   const p = overview.profile;
 
   return (
@@ -125,27 +127,27 @@ export function ProfileScreen() {
       <BodyCard overview={overview} />
 
       <Card>
-        <h2 className="font-sans label-caps">{t.profile.goalSchedule}</h2>
+        <h2 className="font-sans label-caps">{tProfile.goalSchedule}</h2>
         <div className="divide-y divide-line">
-          <Row label={t.profile.goal} value={t.profile.goalValue} />
-          <Row label={t.profile.experience} value={t.experience[p.experience].label} />
+          <Row label={tProfile.goal} value={tProfile.goalValue} />
+          <Row label={tProfile.experience} value={t.experience[p.experience].label} />
           <Row
-            label={t.profile.trainingDays}
+            label={tProfile.trainingDays}
             value={p.trainingDays.map((d) => t.weekdayShort[d]).join(', ')}
           />
-          <Row label={t.profile.activity} value={t.activity[p.activityLevel].label} />
+          <Row label={tProfile.activity} value={t.activity[p.activityLevel].label} />
           <Row
-            label={t.profile.proteinFactor}
-            value={t.profile.proteinFactorValue(formatFixed(p.proteinGPerKg, 1))}
+            label={tProfile.proteinFactor}
+            value={tProfile.proteinFactorValue(formatFixed(p.proteinGPerKg, 1))}
           />
-          <Row label={t.profile.units} value={t.profile.unitsValue} />
+          <Row label={tProfile.units} value={tProfile.unitsValue} />
         </div>
         <div className="grid grid-cols-2 gap-2">
           <Button variant="ghost" size="sm" onClick={() => setSheet('body')}>
-            {t.profile.editBody}
+            {tProfile.editBody}
           </Button>
           <Button variant="ghost" size="sm" onClick={() => setSheet('schedule')}>
-            {t.profile.editSchedule}
+            {tProfile.editSchedule}
           </Button>
         </div>
       </Card>
@@ -154,9 +156,10 @@ export function ProfileScreen() {
       <InventoryCard />
       <HealthCard conditions={overview.conditions} />
       <ParqCard status={overview.parq} />
+      <ReminderCard />
 
       <Card>
-        <h2 className="font-sans label-caps">{t.profile.appearance}</h2>
+        <h2 className="font-sans label-caps">{tProfile.appearance}</h2>
         <SegmentedControl
           label={t.theme.label}
           options={themeOptions}
@@ -168,9 +171,9 @@ export function ProfileScreen() {
       <InstallCard title={t.pwa.install} />
 
       <Card>
-        <h2 className="font-sans label-caps">{t.profile.about}</h2>
-        <Row label={t.app.name} value={`${t.profile.version} ${__APP_VERSION__}`} />
-        <p className="text-xs text-muted">{t.profile.disclaimer}</p>
+        <h2 className="font-sans label-caps">{tProfile.about}</h2>
+        <Row label={t.app.name} value={`${tProfile.version} ${__APP_VERSION__}`} />
+        <p className="text-xs text-muted">{tProfile.disclaimer}</p>
       </Card>
 
       {sheet === 'body' && <EditBodySheet overview={overview} onClose={() => setSheet(null)} />}

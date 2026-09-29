@@ -6,6 +6,7 @@ import { queryKeys } from '@/application/queryKeys';
 import { useServices } from '@/application/ServicesContext';
 import { PROGRAM_EDIT_LIMITS } from '@/domain/standards';
 import { errorText, t } from '@/shared/i18n/id';
+import { tLibrary } from '@/shared/i18n/library';
 import { Button } from '@/shared/ui/Button';
 import { SegmentedControl } from '@/shared/ui/SegmentedControl';
 import { Sheet } from '@/shared/ui/Sheet';
@@ -66,7 +67,7 @@ export function EditExerciseSheet({ item, onClose }: { item: Item; onClose: () =
               <span className="font-semibold">{exercise.name}</span>
               <span className="text-[13px] text-muted">
                 {exercise.primaryMuscles.map((m) => t.muscle[m]).join(', ')}
-                {progressionLocked && ` · ${t.library.locked}`}
+                {progressionLocked && ` · ${tLibrary.locked}`}
               </span>
             </button>
           ))}

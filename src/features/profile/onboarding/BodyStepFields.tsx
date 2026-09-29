@@ -1,5 +1,6 @@
 import { ageOn } from '@/domain/profile/types';
-import { errorText, t } from '@/shared/i18n/id';
+import { errorText } from '@/shared/i18n/id';
+import { tOnboarding } from '@/shared/i18n/onboarding';
 import { OptionGroup } from '@/shared/ui/OptionGroup';
 import { TextField } from '@/shared/ui/TextField';
 import { sexOptions } from '../options';
@@ -14,7 +15,7 @@ export interface BodyStepFieldsProps {
 
 export function BodyStepFields({ draft, patch, errors, today }: BodyStepFieldsProps) {
   const age = draft.birthDate ? ageOn(draft.birthDate, today) : undefined;
-  const text = t.onboarding.body;
+  const text = tOnboarding.body;
   return (
     <div className="flex flex-col gap-4">
       <TextField

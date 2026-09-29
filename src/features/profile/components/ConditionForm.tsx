@@ -1,5 +1,6 @@
 import type { MovementPattern } from '@/domain/exercise/types';
-import { errorText, t } from '@/shared/i18n/id';
+import { errorText } from '@/shared/i18n/id';
+import { tProfile } from '@/shared/i18n/onboarding';
 import { OptionGroup } from '@/shared/ui/OptionGroup';
 import { TextField } from '@/shared/ui/TextField';
 import { ToggleChip } from '@/shared/ui/ToggleChip';
@@ -24,7 +25,7 @@ export function ConditionForm({ value, onChange, errors }: ConditionFormProps) {
   return (
     <div className="flex flex-col gap-5">
       <fieldset className="flex flex-col gap-2">
-        <legend className="mb-1.5 text-[13px] font-semibold">{t.profile.healthArea}</legend>
+        <legend className="mb-1.5 text-[13px] font-semibold">{tProfile.healthArea}</legend>
         <div className="flex flex-wrap gap-2">
           {bodyAreaOptions.map((o) => (
             <ToggleChip
@@ -40,18 +41,18 @@ export function ConditionForm({ value, onChange, errors }: ConditionFormProps) {
 
       <OptionGroup
         name="severity"
-        label={t.profile.healthSeverity}
+        label={tProfile.healthSeverity}
         options={severityOptions}
         value={value.severity}
         onChange={(severity) => onChange({ ...value, severity })}
         error={errorText(errors?.severity)}
       />
       {value.severity === 'severe' && (
-        <p className="text-[13px] text-warn">{t.profile.healthDoctor}</p>
+        <p className="text-[13px] text-warn">{tProfile.healthDoctor}</p>
       )}
 
       <fieldset className="flex flex-col gap-2">
-        <legend className="mb-1.5 text-[13px] font-semibold">{t.profile.healthMovements}</legend>
+        <legend className="mb-1.5 text-[13px] font-semibold">{tProfile.healthMovements}</legend>
         <div className="flex flex-wrap gap-2">
           {movementOptions.map((o) => (
             <ToggleChip
@@ -66,7 +67,7 @@ export function ConditionForm({ value, onChange, errors }: ConditionFormProps) {
 
       <TextField
         id="condition-note"
-        label={t.profile.healthNote}
+        label={tProfile.healthNote}
         value={value.note}
         maxLength={200}
         onChange={(e) => onChange({ ...value, note: e.target.value })}

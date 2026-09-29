@@ -1,7 +1,7 @@
 import { Check, Plus } from 'lucide-react';
 import { useState } from 'react';
 import type { ProgressPhoto } from '@/domain/progress/photo';
-import { t } from '@/shared/i18n/id';
+import { tProgress } from '@/shared/i18n/progress';
 import { cn } from '@/shared/lib/cn';
 import { formatDayDate } from '@/shared/lib/format';
 import { Button } from '@/shared/ui/Button';
@@ -47,7 +47,7 @@ export function PhotosSection() {
     <div className="grid grid-cols-2 gap-2">
       <Button onClick={() => setAdding(true)}>
         <Plus className="size-5" aria-hidden />
-        {t.progress.addPhoto}
+        {tProgress.addPhoto}
       </Button>
       <Button
         variant="ghost"
@@ -55,7 +55,7 @@ export function PhotosSection() {
         aria-pressed={comparing}
         onClick={toggleCompare}
       >
-        {comparing ? t.progress.compareDone : t.progress.compare}
+        {comparing ? tProgress.compareDone : tProgress.compare}
       </Button>
     </div>
   );
@@ -63,8 +63,8 @@ export function PhotosSection() {
   return (
     <>
       {actions}
-      {comparing && <p className="text-[13px] text-muted">{t.progress.compareHint}</p>}
-      {!isPending && photos.length === 0 && <EmptyCard>{t.progress.photosEmpty}</EmptyCard>}
+      {comparing && <p className="text-[13px] text-muted">{tProgress.compareHint}</p>}
+      {!isPending && photos.length === 0 && <EmptyCard>{tProgress.photosEmpty}</EmptyCard>}
 
       {byDate(photos).map(([date, group]) => (
         <Card key={date}>
@@ -77,7 +77,7 @@ export function PhotosSection() {
                 <li key={photo.id}>
                   <button
                     type="button"
-                    aria-label={comparing ? t.progress.selectPhoto(alt) : t.progress.openPhoto(alt)}
+                    aria-label={comparing ? tProgress.selectPhoto(alt) : tProgress.openPhoto(alt)}
                     aria-pressed={comparing ? isSelected : undefined}
                     onClick={() => (comparing ? select(photo.id) : setViewing(photo))}
                     className={cn(
@@ -87,7 +87,7 @@ export function PhotosSection() {
                   >
                     <PhotoImage photo={photo} size="thumb" className="aspect-[3/4]" />
                     <span className="absolute inset-x-0 bottom-0 bg-black/45 py-0.5 text-[11px] font-semibold text-white">
-                      {t.progress.pose[photo.pose]}
+                      {tProgress.pose[photo.pose]}
                     </span>
                     {isSelected && (
                       <span className="absolute top-1.5 right-1.5 grid size-6 place-items-center rounded-full bg-accent text-accent-ink">

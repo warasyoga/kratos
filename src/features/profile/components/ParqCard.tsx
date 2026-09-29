@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { useServices } from '@/application/ServicesContext';
 import type { ParqStatus } from '@/domain/profile/parq';
 import { t } from '@/shared/i18n/id';
+import { tParq } from '@/shared/i18n/onboarding';
 import { Button } from '@/shared/ui/Button';
 import { Card } from '@/shared/ui/Card';
 import { Chip, type ChipTone } from '@/shared/ui/Chip';
@@ -28,19 +29,19 @@ export function ParqCard({ status }: { status: ParqStatus }) {
   return (
     <Card>
       <div className="flex items-center justify-between gap-2">
-        <h2 className="font-sans label-caps">{t.parq.title}</h2>
-        <Chip tone={TONE[status]}>{t.parq.status[status]}</Chip>
+        <h2 className="font-sans label-caps">{tParq.title}</h2>
+        <Chip tone={TONE[status]}>{tParq.status[status]}</Chip>
       </div>
       {status === 'consult_doctor' && (
-        <p className="text-[13px] text-muted">{t.parq.consultAdvice}</p>
+        <p className="text-[13px] text-muted">{tParq.consultAdvice}</p>
       )}
       <Button variant="ghost" size="sm" onClick={() => setDraft({})}>
-        {t.parq.redo}
+        {tParq.redo}
       </Button>
 
       <Sheet
         open={draft !== null}
-        title={t.parq.title}
+        title={tParq.title}
         onClose={() => setDraft(null)}
         footer={
           draft && (

@@ -62,6 +62,8 @@ interface UserProfile {
   proteinGPerKg: number;      // default 2.0, rentang 1.6–2.2
   parqCompletedAt?: number;
   parqAllNo?: boolean;
+  calorieAdjustmentKcal?: number; // koreksi kalibrasi kalori (±500), Tahap 8
+  calorieAdjustedAt?: number;
   createdAt: number;
   updatedAt: number;
 }
@@ -284,9 +286,15 @@ interface UnlockedAchievement { id: string; achievementId: string; unlockedAt: n
 
 interface Settings {
   id: 'settings';
-  reminderTime?: string;          // '17:30'
-  hapticsEnabled: boolean;
+  catalogVersion?: number;
+  inventory?: PlateInventory;
   lastBackupAt?: number;
+  reminders?: {                   // Tahap 8
+    workoutTime: string;          // '17:30'
+    restTimerNotify: boolean;
+    waterNotify: boolean;
+    calendarSignature?: string;   // jadwal saat .ics terakhir dibuat
+  };
 }
 ```
 

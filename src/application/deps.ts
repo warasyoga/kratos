@@ -1,13 +1,16 @@
 import type { Clock } from '@/domain/common/clock';
 import type { IdGenerator } from '@/domain/common/id';
 import type {
+  AchievementRepository,
   ActivityRepository,
   BodyMetricRepository,
   CheckInRepository,
   ExerciseRepository,
   GymRepository,
   HealthConditionRepository,
+  NutritionRepository,
   PhotoRepository,
+  ReminderRepository,
   ProfileRepository,
   ProgramRepository,
   SessionRepository,
@@ -30,6 +33,9 @@ export interface AppDeps {
   sessions: SessionRepository;
   activities: ActivityRepository;
   photos: PhotoRepository;
+  nutrition: NutritionRepository;
+  achievements: AchievementRepository;
+  reminders: ReminderRepository;
   tx: TransactionRunner;
   platform: {
     requestPersistentStorage(): Promise<boolean>;

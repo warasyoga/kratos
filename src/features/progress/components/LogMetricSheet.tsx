@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { useServices } from '@/application/ServicesContext';
 import { CIRCUMFERENCES, type Circumference } from '@/domain/body/types';
 import { errorText, t } from '@/shared/i18n/id';
+import { tProgress } from '@/shared/i18n/progress';
 import { parseDecimal } from '@/shared/lib/format';
 import { Button } from '@/shared/ui/Button';
 import { Sheet } from '@/shared/ui/Sheet';
@@ -36,7 +37,7 @@ export function LogMetricSheet({
   return (
     <Sheet
       open
-      title={mode === 'weight' ? t.progress.logWeight : t.progress.logMeasure}
+      title={mode === 'weight' ? tProgress.logWeight : tProgress.logMeasure}
       onClose={onClose}
       footer={
         <Button fullWidth disabled={pending} onClick={() => void save()}>
@@ -45,15 +46,15 @@ export function LogMetricSheet({
       }
     >
       <div className="flex flex-col gap-4">
-        <p className="text-[13px] text-muted">{t.progress.metricSheetHint}</p>
+        <p className="text-[13px] text-muted">{tProgress.metricSheetHint}</p>
         <div className="grid grid-cols-2 gap-3">
           {fields.map((field) => (
             <TextField
               key={field}
               id={`metric-${field}`}
               className={mode === 'weight' ? 'col-span-2' : undefined}
-              label={field === 'weightKg' ? t.progress.weightField : t.progress.field[field]}
-              hint={field === 'weightKg' ? undefined : t.progress.fieldHint[field]}
+              label={field === 'weightKg' ? tProgress.weightField : tProgress.field[field]}
+              hint={field === 'weightKg' ? undefined : tProgress.fieldHint[field]}
               inputMode="decimal"
               suffix={field === 'weightKg' ? 'kg' : 'cm'}
               value={values[field] ?? ''}

@@ -1,5 +1,6 @@
 import { sortWeekdays, type Weekday } from '@/domain/common/weekday';
 import { t } from '@/shared/i18n/id';
+import { tOnboarding, tProfile } from '@/shared/i18n/onboarding';
 import { ToggleChip } from '@/shared/ui/ToggleChip';
 import { weekdays } from '../options';
 
@@ -17,7 +18,7 @@ export function DayPicker({ value, onChange, error }: DayPickerProps) {
     <div className="flex flex-col gap-2">
       <div
         role="group"
-        aria-label={t.profile.trainingDays}
+        aria-label={tProfile.trainingDays}
         className="grid grid-cols-4 gap-2 sm:grid-cols-7"
       >
         {weekdays.map((day) => (
@@ -29,7 +30,7 @@ export function DayPicker({ value, onChange, error }: DayPickerProps) {
           />
         ))}
       </div>
-      <p className="text-[13px] text-muted">{t.onboarding.schedule.count(value.length)}</p>
+      <p className="text-[13px] text-muted">{tOnboarding.schedule.count(value.length)}</p>
       {error && <p className="text-[13px] text-bad">{error}</p>}
     </div>
   );

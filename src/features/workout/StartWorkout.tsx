@@ -3,6 +3,7 @@ import { useServices } from '@/application/ServicesContext';
 import { toLocalDate } from '@/domain/common/clock';
 import { weekdayOf } from '@/domain/common/weekday';
 import { t } from '@/shared/i18n/id';
+import { tCheckIn } from '@/shared/i18n/workout';
 import { Button } from '@/shared/ui/Button';
 import { Card } from '@/shared/ui/Card';
 import { Chip, type ChipTone } from '@/shared/ui/Chip';
@@ -38,17 +39,17 @@ export function StartWorkout() {
 
       <Card>
         <div className="flex items-center justify-between gap-2">
-          <h2 className="font-sans label-caps">{t.checkIn.title}</h2>
+          <h2 className="font-sans label-caps">{tCheckIn.title}</h2>
           {checkIn && (
-            <Chip tone={TONE[checkIn.readiness]}>{t.checkIn.readinessChip[checkIn.readiness]}</Chip>
+            <Chip tone={TONE[checkIn.readiness]}>{tCheckIn.readinessChip[checkIn.readiness]}</Chip>
           )}
         </div>
         {checkIn ? (
           <>
-            <p className="text-sm">{t.checkIn.readiness[checkIn.readiness]}</p>
+            <p className="text-sm">{tCheckIn.readiness[checkIn.readiness]}</p>
             {checkIn.readiness !== 'green' && (
               <ToggleChip
-                label={t.checkIn.ignore}
+                label={tCheckIn.ignore}
                 pressed={ignoreReadiness}
                 onToggle={() => setIgnore((v) => !v)}
               />
@@ -56,7 +57,7 @@ export function StartWorkout() {
           </>
         ) : (
           <Button variant="ghost" onClick={() => setCheckingIn(true)}>
-            {t.checkIn.open}
+            {tCheckIn.open}
           </Button>
         )}
       </Card>

@@ -1,6 +1,8 @@
+import { Link } from 'react-router';
 import type { ProgressRange } from '@/domain/progress/range';
 import { WEEKLY_SETS_PER_MUSCLE } from '@/domain/standards';
 import { t } from '@/shared/i18n/id';
+import { tProgress } from '@/shared/i18n/progress';
 import { cn } from '@/shared/lib/cn';
 import { formatNumber, formatShortDate } from '@/shared/lib/format';
 import { Card } from '@/shared/ui/Card';
@@ -16,7 +18,7 @@ const SCALE_MAX = 24;
 export function VolumeSection({ range }: { range: ProgressRange }) {
   const { data } = useVolumeProgress(range);
   if (data === undefined) return null;
-  if (data === null) return <EmptyCard>{t.progress.volumeEmpty}</EmptyCard>;
+  if (data === null) return <EmptyCard>{tProgress.volumeEmpty}</EmptyCard>;
 
   const zoneStart = (WEEKLY_SETS_PER_MUSCLE.min / SCALE_MAX) * 100;
   const zoneWidth = ((WEEKLY_SETS_PER_MUSCLE.max - WEEKLY_SETS_PER_MUSCLE.min) / SCALE_MAX) * 100;
@@ -27,8 +29,8 @@ export function VolumeSection({ range }: { range: ProgressRange }) {
     <>
       <Card>
         <div className="flex items-center justify-between gap-2">
-          <h2 className="font-sans label-caps">{t.progress.weekVolumeTitle}</h2>
-          <span className="text-xs text-muted">{t.progress.weekVolumeZone}</span>
+          <h2 className="font-sans label-caps">{tProgress.weekVolumeTitle}</h2>
+          <span className="text-xs text-muted">{tProgress.weekVolumeZone}</span>
         </div>
         <ul className="flex flex-col gap-2.5">
           {data.thisWeek.map((v) => (
@@ -57,23 +59,26 @@ export function VolumeSection({ range }: { range: ProgressRange }) {
                 )}
               </span>
               <span className="font-semibold tabular-nums">
-                {t.progress.weekVolumeValue(formatNumber(v.doneSets), formatNumber(v.plannedSets))}
+                {tProgress.weekVolumeValue(formatNumber(v.doneSets), formatNumber(v.plannedSets))}
               </span>
             </li>
           ))}
         </ul>
-        <p className="text-xs text-muted">{t.progress.weekVolumeNote}</p>
+        <p className="text-xs text-muted">{tProgress.weekVolumeNote}</p>
+        <Link to="/progres/otot" className="text-sm font-semibold text-accent">
+          {t.muscleMap.open}
+        </Link>
       </Card>
 
       <Card>
-        <h2 className="font-sans label-caps">{t.progress.tonnageTitle}</h2>
+        <h2 className="font-sans label-caps">{tProgress.tonnageTitle}</h2>
         {lastTonnage && (
           <p className="font-display text-[32px] leading-none font-bold tabular-nums">
             {formatNumber(lastTonnage.tonnageKg, 0)} kg
           </p>
         )}
         <BarChart
-          label={t.progress.tonnageChart(
+          label={tProgress.tonnageChart(
             data.tonnage.length,
             `${formatNumber(lastTonnage?.tonnageKg ?? 0, 0)} kg`,
           )}
@@ -84,14 +89,14 @@ export function VolumeSection({ range }: { range: ProgressRange }) {
           }))}
           formatY={formatCompact}
         />
-        <p className="text-xs text-muted">{t.progress.tonnageNote}</p>
+        <p className="text-xs text-muted">{tProgress.tonnageNote}</p>
       </Card>
 
       <Card>
-        <h2 className="font-sans label-caps">{t.progress.attendanceTitle}</h2>
+        <h2 className="font-sans label-caps">{tProgress.attendanceTitle}</h2>
         <Meter
-          label={t.progress.since(formatShortDate(data.fromDate))}
-          valueText={t.progress.attendanceValue(done, scheduled)}
+          label={tProgress.since(formatShortDate(data.fromDate))}
+          valueText={tProgress.attendanceValue(done, scheduled)}
           ratio={scheduled > 0 ? done / scheduled : 0}
         />
         <ol className="flex flex-wrap gap-1.5">
@@ -102,7 +107,7 @@ export function VolumeSection({ range }: { range: ProgressRange }) {
               return (
                 <li
                   key={w.weekStart}
-                  aria-label={t.progress.attendanceWeek(date, w.done, w.scheduled)}
+                  aria-label={tProgress.attendanceWeek(date, w.done, w.scheduled)}
                   className={cn(
                     'rounded-lg px-2 py-1 text-xs font-bold tabular-nums',
                     w.done >= w.scheduled ? 'bg-good-bg text-good' : 'bg-surface-2 text-muted',

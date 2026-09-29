@@ -1,4 +1,6 @@
+import type { TrendPoint, WeighIn } from '../body/weightTrend';
 import { assertPositive } from '../common/assert';
+import { addDays } from '../common/weekday';
 import { CALORIE_RECALIBRATION, WEIGHT_GAIN_PCT_PER_WEEK } from '../standards';
 
 export type CalorieAdjustment =
@@ -35,6 +37,26 @@ export function decideCalorieAdjustment({
     return { kind: 'decrease', deltaKcal: -CALORIE_RECALIBRATION.stepKcal };
   }
   return { kind: 'keep' };
+}
+
+/**
+ * Masukan kalibrasi dari tren berat: perubahan tren 14 hari terakhir ÷ 2 minggu
+ * dan jumlah penimbangan di jendela itu. null jika tren belum 14 hari.
+ */
+export function recalibrationInput(
+  trend: readonly TrendPoint[],
+  weighIns: readonly WeighIn[],
+): RecalibrationInput | null {
+  const last = trend.at(-1);
+  if (!last) return null;
+  const windowStart = addDays(last.logDate, -CALORIE_RECALIBRATION.everyDays);
+  const start = trend.find((p) => p.logDate === windowStart);
+  if (!start) return null;
+  return {
+    weeklyGainKg: ((last.trendKg - start.trendKg) * 7) / CALORIE_RECALIBRATION.everyDays,
+    bodyWeightKg: last.trendKg,
+    weighInsInWindow: weighIns.filter((w) => w.logDate > windowStart).length,
+  };
 }
 
 /** Rentang target naik berat per minggu (kg). Contoh 68,4 kg → 0,17–0,34 kg. */

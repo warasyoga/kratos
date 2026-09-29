@@ -58,3 +58,16 @@ export function parseDecimal(text: string): number | undefined {
   const value = Number(normalized);
   return Number.isFinite(value) ? value : Number.NaN;
 }
+
+/** Nama hari dari waktu (epoch ms): "Kamis". */
+export function formatWeekday(time: number): string {
+  return new Intl.DateTimeFormat(LOCALE, { weekday: 'long' }).format(new Date(time));
+}
+
+/** "1 Sep – 30 Sep" untuk rentang [from, toExclusive). */
+export function formatDateRange(from: string, toExclusive: string): string {
+  const fmt = new Intl.DateTimeFormat(LOCALE, { day: 'numeric', month: 'short' });
+  const last = parseLocalDate(toExclusive);
+  last.setDate(last.getDate() - 1);
+  return `${fmt.format(parseLocalDate(from))} – ${fmt.format(last)}`;
+}

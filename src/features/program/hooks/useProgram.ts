@@ -49,6 +49,8 @@ export function useProgramAction() {
           queryKeys.suggestions,
           queryKeys.profileOverview,
           queryKeys.todayPlan,
+          queryKeys.nutritionDay,
+          queryKeys.catalogAll,
         ].map((queryKey) => client.invalidateQueries({ queryKey })),
       ),
     [client],

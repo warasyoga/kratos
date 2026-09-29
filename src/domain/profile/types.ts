@@ -63,6 +63,10 @@ export interface UserProfile {
   proteinGPerKg: number;
   parqCompletedAt?: number;
   parqAllNo?: boolean;
+  /** Koreksi target kalori dari kalibrasi tren berat (kkal, ± CALORIE_ADJUSTMENT_MAX_KCAL). */
+  calorieAdjustmentKcal?: number;
+  /** Waktu koreksi kalori terakhir diterapkan (kalibrasi berikutnya ≥ 14 hari setelahnya). */
+  calorieAdjustedAt?: number;
   createdAt: number;
   updatedAt: number;
 }

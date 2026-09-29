@@ -1,6 +1,7 @@
 import { ChevronLeft } from 'lucide-react';
 import { Link, useNavigate, useParams } from 'react-router';
 import { t } from '@/shared/i18n/id';
+import { tProgress } from '@/shared/i18n/progress';
 import { formatDayDate, formatKg, formatShortDate } from '@/shared/lib/format';
 import { Card } from '@/shared/ui/Card';
 import { LineChart } from '@/shared/ui/charts/LineChart';
@@ -44,23 +45,23 @@ export function ExerciseProgressScreen() {
   return (
     <div className="flex flex-col gap-3.5">
       {back}
-      <ScreenHeader title={exercise.name} eyebrow={t.progress.e1rmTitle} />
+      <ScreenHeader title={exercise.name} eyebrow={tProgress.e1rmTitle} />
       <div className="grid grid-cols-3 gap-2">
         <Stat
           value={last ? formatKg1(last.e1rmKg).replace(' kg', '') : '—'}
-          label={t.progress.detailCurrent}
+          label={tProgress.detailCurrent}
         />
         <Stat
           value={data.bestE1rmKg === null ? '—' : formatKg1(data.bestE1rmKg).replace(' kg', '')}
-          label={t.progress.detailBest}
+          label={tProgress.detailBest}
         />
-        <Stat value={String(sessions.length)} label={t.progress.detailSessions} />
+        <Stat value={String(sessions.length)} label={tProgress.detailSessions} />
       </div>
 
       <Card>
         {first && last && points.length >= 2 ? (
           <LineChart
-            label={t.progress.e1rmChart(
+            label={tProgress.e1rmChart(
               exercise.name,
               formatShortDate(first.logDate),
               formatShortDate(last.logDate),
@@ -76,20 +77,20 @@ export function ExerciseProgressScreen() {
             formatY={(y) => formatKg1(y).replace(' kg', '')}
           />
         ) : (
-          <p className="text-[13px] text-muted">{t.progress.detailNote}</p>
+          <p className="text-[13px] text-muted">{tProgress.detailNote}</p>
         )}
-        <p className="text-xs text-muted">{t.progress.e1rmNote}</p>
+        <p className="text-xs text-muted">{tProgress.e1rmNote}</p>
       </Card>
 
       <Card>
-        <h2 className="font-sans label-caps">{t.progress.historyTitle}</h2>
+        <h2 className="font-sans label-caps">{tProgress.historyTitle}</h2>
         <ul className="flex flex-col divide-y divide-line">
           {sessions.map((s) => (
             <li key={s.sessionId} className="flex flex-col gap-1 py-2.5">
               <div className="flex items-center justify-between gap-2">
                 <span className="text-sm font-semibold">{formatDayDate(s.logDate)}</span>
                 {prSessions.has(s.sessionId) ? (
-                  <Chip tone="accent">{t.progress.prChip}</Chip>
+                  <Chip tone="accent">{tProgress.prChip}</Chip>
                 ) : (
                   s.e1rmKg !== null && (
                     <span className="text-xs text-muted tabular-nums">{formatKg1(s.e1rmKg)}</span>
@@ -98,7 +99,7 @@ export function ExerciseProgressScreen() {
               </div>
               <p className="text-[13px] text-muted tabular-nums">
                 {s.sets
-                  .map((set) => t.progress.setLine(formatKg(set.weightKg), set.reps))
+                  .map((set) => tProgress.setLine(formatKg(set.weightKg), set.reps))
                   .join(' · ')}
               </p>
             </li>
@@ -110,7 +111,7 @@ export function ExerciseProgressScreen() {
         to={`/gerakan/${exercise.id}`}
         className="flex min-h-11 items-center justify-center text-sm font-semibold text-accent"
       >
-        {t.progress.guideLink}
+        {tProgress.guideLink}
       </Link>
     </div>
   );

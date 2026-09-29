@@ -2,12 +2,14 @@ import { Link, useNavigate } from 'react-router';
 import { useServices } from '@/application/ServicesContext';
 import { MESOCYCLE_WEEKS } from '@/domain/standards';
 import { t } from '@/shared/i18n/id';
-import { formatDayDate, formatNumber } from '@/shared/lib/format';
+import { formatDayDate } from '@/shared/lib/format';
 import { Button } from '@/shared/ui/Button';
 import { Card } from '@/shared/ui/Card';
 import { Chip } from '@/shared/ui/Chip';
 import { ScreenHeader } from '@/shared/ui/ScreenHeader';
-import { Stat } from '@/shared/ui/Stat';
+import { EvaluationDueCard } from './components/EvaluationDueCard';
+import { MuscleRecoveryCard } from './components/MuscleRecoveryCard';
+import { NutritionCard } from './components/NutritionCard';
 import { RecoveryCard } from './components/RecoveryCard';
 import { WeekCard } from './components/WeekCard';
 import { useTodayAction, useTodayPlan, useTopSuggestion } from './hooks/useToday';
@@ -46,6 +48,7 @@ export function TodayScreen() {
           </Chip>
         }
       />
+      <EvaluationDueCard />
       {plan.isDeloadWeek && (
         <p className="rounded-[14px] bg-warn-bg px-3.5 py-2.5 text-[13px] text-warn">
           {t.today.deloadBody}
@@ -115,6 +118,11 @@ export function TodayScreen() {
           <p className="text-sm">
             {t.today.missedBody(missed.label, t.weekdayLong[missed.weekday])}
           </p>
+          {missed.recovering.length > 0 && (
+            <p className="rounded-[14px] bg-warn-bg px-3.5 py-2.5 text-[13px] text-warn">
+              {t.today.missedRecovering(missed.recovering.map((m) => t.muscle[m]).join(', '))}
+            </p>
+          )}
           <Button
             variant="ghost"
             disabled={pending}
@@ -131,6 +139,16 @@ export function TodayScreen() {
             activities={plan.activitiesToday}
             aerobicMinutes={plan.aerobicMinutesThisWeek}
           />
+          <MuscleRecoveryCard muscles={plan.recoveringMuscles} />
+          {plan.measurementDue && (
+            <Link
+              to="/progres?bagian=tubuh"
+              className="flex min-h-12 items-center justify-between gap-2 rounded-[14px] bg-accent-soft px-4 py-2.5 text-sm font-semibold text-accent"
+            >
+              {t.reminders.measureBanner}
+              <span className="shrink-0 font-bold">{t.reminders.measureOpen}</span>
+            </Link>
+          )}
           {plan.next && (
             <p className="text-[13px] font-semibold text-accent">
               {t.today.nextWorkout(plan.next.label, t.weekdayLong[plan.next.weekday])}
@@ -141,17 +159,7 @@ export function TodayScreen() {
 
       <WeekCard week={plan.week} streakWeeks={plan.streakWeeks} />
 
-      {plan.targets && (
-        <Card>
-          <h2 className="font-sans label-caps">{t.today.targetsTitle}</h2>
-          <div className="grid grid-cols-3 gap-2">
-            <Stat value={formatNumber(plan.targets.kcal, 0)} label={t.profile.kcal} />
-            <Stat value={`${plan.targets.proteinG} g`} label={t.profile.protein} />
-            <Stat value={`${formatNumber(plan.targets.waterL)} L`} label={t.profile.water} />
-          </div>
-          <p className="text-xs text-muted">{t.today.targetsSoon}</p>
-        </Card>
-      )}
+      <NutritionCard />
 
       {suggestions.length > 0 && (
         <Link

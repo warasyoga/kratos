@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import type { ConditionInput } from '@/application/profile/schemas';
 import { t } from '@/shared/i18n/id';
+import { tOnboarding, tProfile } from '@/shared/i18n/onboarding';
 import { Button } from '@/shared/ui/Button';
 import { Card } from '@/shared/ui/Card';
 import { Sheet } from '@/shared/ui/Sheet';
@@ -28,7 +29,7 @@ export function HealthStepFields({ conditions, onChange }: HealthStepFieldsProps
     <div className="flex flex-col gap-3">
       {conditions.length === 0 ? (
         <p className="rounded-[14px] border border-dashed border-line px-4 py-3 text-muted">
-          {t.onboarding.health.none}
+          {tOnboarding.health.none}
         </p>
       ) : (
         conditions.map((c, index) => (
@@ -58,12 +59,12 @@ export function HealthStepFields({ conditions, onChange }: HealthStepFieldsProps
           setEditing(EMPTY_CONDITION);
         }}
       >
-        + {t.onboarding.health.add}
+        + {tOnboarding.health.add}
       </Button>
 
       <Sheet
         open={editing !== null}
-        title={t.profile.healthAdd}
+        title={tProfile.healthAdd}
         onClose={() => setEditing(null)}
         footer={
           <Button fullWidth onClick={save}>

@@ -12,7 +12,7 @@ Panduan untuk asisten AI yang bekerja di repo ini.
 2. Semua angka ilmiah berada di `src/domain/standards.ts` dengan sumber; rumus mengikuti `docs/sains-latihan/`.
 3. Setiap contoh hitung di `docs/sains-latihan/` dan tabel uji di `docs/mesin-trainer/` harus menjadi unit test.
 4. Perubahan perilaku = perbarui dokumen terkait di commit yang sama.
-5. Teks yang tampil ke pengguna ada di `src/shared/i18n/id.ts`.
+5. Teks yang tampil ke pengguna ada di `src/shared/i18n/` (`id.ts` untuk teks umum; teks yang hanya dipakai layar lazy di modul terpisah seperti `progress.ts`).
 6. Warna hanya lewat token di `src/shared/styles/tokens.css`.
 7. Satuan beban hanya kg.
 

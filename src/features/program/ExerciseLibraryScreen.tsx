@@ -1,8 +1,10 @@
+import { Plus } from 'lucide-react';
 import { useMemo, useState } from 'react';
 import { Link, useNavigate, useSearchParams } from 'react-router';
 import type { CatalogItem } from '@/application/program/catalog';
 import { useServices } from '@/application/ServicesContext';
 import { t } from '@/shared/i18n/id';
+import { tCustomExercise, tLibrary } from '@/shared/i18n/library';
 import { Chip } from '@/shared/ui/Chip';
 import { ScreenHeader } from '@/shared/ui/ScreenHeader';
 import { TextField } from '@/shared/ui/TextField';
@@ -21,9 +23,9 @@ function ItemBody({ item }: { item: CatalogItem }) {
         </span>
       </span>
       {unavailable ? (
-        <Chip tone="warn">{t.library.unavailable[unavailable]}</Chip>
+        <Chip tone="warn">{tLibrary.unavailable[unavailable]}</Chip>
       ) : (
-        progressionLocked && <Chip tone="neutral">{t.library.locked}</Chip>
+        progressionLocked && <Chip tone="neutral">{tLibrary.locked}</Chip>
       )}
     </>
   );
@@ -73,39 +75,53 @@ export function ExerciseLibraryScreen() {
   };
 
   const title = addToDay
-    ? t.library.pickToAdd(dayOf(addToDay)?.day.label ?? '')
+    ? tLibrary.pickToAdd(dayOf(addToDay)?.day.label ?? '')
     : replace
-      ? t.library.pickToSwap
-      : t.library.title;
+      ? tLibrary.pickToSwap
+      : tLibrary.title;
 
   return (
     <div className="flex flex-col gap-3.5">
-      <ScreenHeader title={title} eyebrow={t.library.count(results.length)} />
+      <ScreenHeader
+        title={title}
+        eyebrow={tLibrary.count(results.length)}
+        aside={
+          !picking && (
+            <Link
+              to="/gerakan/baru"
+              className="flex min-h-11 items-center gap-1 rounded-[10px] bg-accent-soft px-3 text-[13px] font-bold text-accent"
+            >
+              <Plus className="size-4" aria-hidden />
+              {tCustomExercise.add}
+            </Link>
+          )
+        }
+      />
       <TextField
         id="library-search"
-        label={t.library.search}
+        label={tLibrary.search}
         type="search"
         value={query}
         onChange={(e) => setQuery(e.target.value)}
       />
-      <div role="group" aria-label={t.library.title} className="flex flex-wrap gap-2">
+      <div role="group" aria-label={tLibrary.title} className="flex flex-wrap gap-2">
         {MUSCLE_GROUPS.map((g) => (
           <ToggleChip
             key={g}
-            label={t.library.groups[g]}
+            label={tLibrary.groups[g]}
             pressed={group === g}
             onToggle={() => setGroup(g)}
           />
         ))}
       </div>
       <ToggleChip
-        label={t.library.onlyAvailable}
+        label={tLibrary.onlyAvailable}
         pressed={onlyAvailable}
         onToggle={() => setOnlyAvailable((v) => !v)}
       />
 
       {results.length === 0 ? (
-        <p className="text-muted">{t.library.empty}</p>
+        <p className="text-muted">{tLibrary.empty}</p>
       ) : (
         <ul className="flex flex-col divide-y divide-line rounded-[18px] border border-line bg-surface px-4">
           {results.map((item) => {

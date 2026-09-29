@@ -7,7 +7,9 @@ import type {
   UserProfile,
 } from '@/domain/profile/types';
 import type { ProgramExercise } from '@/domain/program/types';
+import type { UnlockedAchievement } from '@/domain/achievements/rules';
 import type {
+  AchievementRepository,
   BodyMetric,
   ActivityRepository,
   BodyMetricRepository,
@@ -16,7 +18,9 @@ import type {
   ExerciseRepository,
   GymRepository,
   HealthConditionRepository,
+  NutritionRepository,
   PhotoRepository,
+  ReminderRepository,
   ProfileRepository,
   ProgramBundle,
   ProgramRepository,
@@ -25,7 +29,9 @@ import type {
   SuggestionRepository,
   TransactionRunner,
 } from '@/domain/repositories';
+import type { NutritionLog, SavedMeal, WaterLog } from '@/domain/nutrition/intake';
 import type { ProgressPhoto } from '@/domain/progress/photo';
+import { DEFAULT_REMINDERS, type ReminderSettings } from '@/domain/reminders/reminders';
 import type { ActivityLog } from '@/domain/today/activity';
 import type { CheckIn, SetLog, WorkingSetRecord, WorkoutSession } from '@/domain/workout/types';
 import type { ExerciseRow, KratosDatabase } from '../db/database';
@@ -102,6 +108,18 @@ export class DexieExerciseRepository implements ExerciseRepository {
   async getGuide(id: string): Promise<ExerciseGuide | null> {
     const row = await this.db.exercises.get(id);
     return row?.guide ? { exerciseId: id, ...row.guide } : null;
+  }
+
+  async saveCustom(exercise: Exercise, note?: string): Promise<void> {
+    await this.db.exercises.put({
+      ...exercise,
+      ...(note && { guide: { instructions: [note], commonMistakes: [] } }),
+    });
+  }
+
+  async removeCustom(id: string): Promise<void> {
+    const row = await this.db.exercises.get(id);
+    if (row?.isCustom) await this.db.exercises.delete(id);
   }
 }
 
@@ -194,6 +212,10 @@ export class DexieCheckInRepository implements CheckInRepository {
     return (await this.db.checkIns.where('logDate').equals(logDate).first()) ?? null;
   }
 
+  listSince(fromDate: string): Promise<CheckIn[]> {
+    return this.db.checkIns.where('logDate').aboveOrEqual(fromDate).toArray();
+  }
+
   async save(checkIn: CheckIn): Promise<void> {
     const { db } = this;
     await db.transaction('rw', db.checkIns, async () => {
@@ -281,7 +303,15 @@ export class DexieSessionRepository implements SessionRepository {
       const logDate = dateOf.get(sessionId);
       if (kind !== 'working' || completedAt === undefined || logDate === undefined) return [];
       return [
-        { sessionId, logDate, exerciseId, weightKg, reps, ...(rir !== undefined && { rir }) },
+        {
+          sessionId,
+          logDate,
+          exerciseId,
+          weightKg,
+          reps,
+          completedAt,
+          ...(rir !== undefined && { rir }),
+        },
       ];
     });
   }
@@ -317,6 +347,79 @@ export class DexiePhotoRepository implements PhotoRepository {
 
   async remove(id: string): Promise<void> {
     await this.db.photos.delete(id);
+  }
+}
+
+const byCreatedAt = (a: { createdAt: number }, b: { createdAt: number }) =>
+  a.createdAt - b.createdAt;
+
+export class DexieNutritionRepository implements NutritionRepository {
+  constructor(private readonly db: KratosDatabase) {}
+
+  async listFoodsSince(fromDate: string): Promise<NutritionLog[]> {
+    return (await this.db.nutritionLogs.where('logDate').aboveOrEqual(fromDate).toArray()).sort(
+      byCreatedAt,
+    );
+  }
+
+  async saveFood(log: NutritionLog): Promise<void> {
+    await this.db.nutritionLogs.put(log);
+  }
+
+  async removeFood(id: string): Promise<void> {
+    await this.db.nutritionLogs.delete(id);
+  }
+
+  async listWaterSince(fromDate: string): Promise<WaterLog[]> {
+    return (await this.db.waterLogs.where('logDate').aboveOrEqual(fromDate).toArray()).sort(
+      byCreatedAt,
+    );
+  }
+
+  async addWater(log: WaterLog): Promise<void> {
+    await this.db.waterLogs.put(log);
+  }
+
+  async removeWater(id: string): Promise<void> {
+    await this.db.waterLogs.delete(id);
+  }
+
+  async listMeals(): Promise<SavedMeal[]> {
+    return (await this.db.savedMeals.toArray()).sort((a, b) => a.label.localeCompare(b.label));
+  }
+
+  async saveMeal(meal: SavedMeal): Promise<void> {
+    await this.db.savedMeals.put(meal);
+  }
+
+  async removeMeal(id: string): Promise<void> {
+    await this.db.savedMeals.delete(id);
+  }
+}
+
+export class DexieAchievementRepository implements AchievementRepository {
+  constructor(private readonly db: KratosDatabase) {}
+
+  list(): Promise<UnlockedAchievement[]> {
+    return this.db.achievements.toArray();
+  }
+
+  /** Indeks unik achievementId menolak lencana ganda. */
+  async add(record: UnlockedAchievement): Promise<void> {
+    await this.db.achievements.add(record);
+  }
+}
+
+export class DexieReminderRepository implements ReminderRepository {
+  constructor(private readonly db: KratosDatabase) {}
+
+  async get(): Promise<ReminderSettings> {
+    return { ...DEFAULT_REMINDERS, ...(await this.db.settings.get('settings'))?.reminders };
+  }
+
+  async save(reminders: ReminderSettings): Promise<void> {
+    const settings = (await this.db.settings.get('settings')) ?? { id: 'settings' as const };
+    await this.db.settings.put({ ...settings, reminders });
   }
 }
 

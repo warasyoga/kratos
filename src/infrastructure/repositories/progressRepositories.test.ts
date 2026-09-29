@@ -68,6 +68,7 @@ describe('DexieSessionRepository.workingSetsSince', () => {
         exerciseId: 'barbell-bench-press',
         weightKg: 50,
         reps: 10,
+        completedAt: 1,
         rir: 2,
       },
     ]);

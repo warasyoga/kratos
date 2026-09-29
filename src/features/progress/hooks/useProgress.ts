@@ -64,9 +64,12 @@ export function useProgressAction() {
           if (!fields || fields._) toast(errorMessage(fields?._ ?? code));
         }
         await Promise.all(
-          [queryKeys.progress, queryKeys.profileOverview, queryKeys.todayPlan].map((queryKey) =>
-            client.invalidateQueries({ queryKey }),
-          ),
+          [
+            queryKeys.progress,
+            queryKeys.profileOverview,
+            queryKeys.todayPlan,
+            queryKeys.achievements,
+          ].map((queryKey) => client.invalidateQueries({ queryKey })),
         );
         return result.ok;
       } finally {

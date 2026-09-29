@@ -29,9 +29,12 @@ export function useTodayAction() {
         const result = await action();
         if (!result.ok) toast(errorMessage(result.error.code));
         await Promise.all(
-          [queryKeys.todayPlan, queryKeys.activeSession, queryKeys.suggestions].map((queryKey) =>
-            client.invalidateQueries({ queryKey }),
-          ),
+          [
+            queryKeys.todayPlan,
+            queryKeys.activeSession,
+            queryKeys.suggestions,
+            queryKeys.nutritionDay,
+          ].map((queryKey) => client.invalidateQueries({ queryKey })),
         );
         return result;
       } finally {

@@ -25,6 +25,16 @@ Profil → Pengingat:
 - Mengubah hari gym → tampilkan ajakan memperbarui file kalender.
 - iPhone: notifikasi hanya tersedia jika aplikasi sudah dipasang ke Home Screen; tampilkan penjelasan jika belum.
 
+## Implementasi (Tahap 8)
+- `domain/reminders/reminders.ts`: file .ics RFC 5545 (CRLF, escape teks, lipat baris ≤ 75 oktet, waktu "floating" agar
+  mengikuti zona waktu kalender HP, UID stabil per hari program sehingga impor ulang tidak menggandakan),
+  `RRULE:FREQ=WEEKLY`, `VALARM` 30 menit sebelumnya. Tanda jadwal disimpan; jika hari/jam berubah, kartu Pengingat
+  meminta file ditambahkan ulang.
+- Profil → Pengingat: jam latihan, "Tambahkan ke kalender HP" (unduh .ics), toggle notifikasi timer istirahat & air.
+  Izin diminta saat toggle dinyalakan; ditolak/tidak didukung → penjelasan, fitur lain tetap jalan.
+- Timer istirahat: notifikasi jika aplikasi di latar saat istirahat habis. Air: dicek tiap menit selama aplikasi terbuka.
+- Banner ukur tubuh di Hari Ini (hari pemulihan). Backup menyusul di Tahap 9.
+
 ## Data
 `Settings.reminderTime`. Adapter `infrastructure/notifications/icsCalendar.ts`, `webNotifications.ts`.
 

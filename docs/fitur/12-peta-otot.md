@@ -15,6 +15,13 @@ Lihat [05-keamanan-dan-pemulihan.md §3](../sains-latihan/05-keamanan-dan-pemuli
 perhitungan set per otot di [03-desain-program.md](../sains-latihan/03-desain-program.md).
 Status tidak hanya dibedakan warna: sheet dan label teks menyebut statusnya.
 
+## Implementasi (Tahap 8)
+- `domain/recovery/muscleRecovery.ts`: kelelahan dari sesi terakhir yang melatih otot (utama 1, pendukung ½ set),
+  48 jam (+24 jam jika ≥ 6 set atau RIR rata-rata ≤ 1, maks. 72 jam), status segar/pulih sebagian/baru dilatih.
+  Konstanta `MUSCLE_RECOVERY` di standards.ts. Set kerja kini membawa `completedAt`.
+- Siluet SVG `shared/ui/BodyMap.tsx` (depan & belakang, satu kelompok bentuk per otot, bisa diketuk/keyboard,
+  label pembaca layar "Dada, baru dilatih"). Layar `/progres/otot` dengan mode Pemulihan/Volume dan daftar teks.
+
 ## Data
 Query `getMuscleStatus(now)` → `Record<Muscle, { setsThisWeek, lastTrainedAt, recoveredAt, status }>`.
 

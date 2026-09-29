@@ -96,6 +96,6 @@ export const PROTEIN_G_PER_KG = { min: 1.6, default: 2.0, max: 2.2 } as const;
 
 - [ ] `npm run lint`, `npm run typecheck`, `npm run test` lulus
 - [ ] Rumus baru punya test dengan contoh dari dokumen `sains-latihan`
-- [ ] Teks baru ada di `i18n/id.ts`
+- [ ] Teks baru ada di `i18n/id.ts` (atau modul teks layar lazy di `src/shared/i18n/`, agar tidak masuk JavaScript awal)
 - [ ] Tampilan dicek di lebar 360 px, mode terang dan gelap
 - [ ] Dokumen terkait di `docs/` diperbarui

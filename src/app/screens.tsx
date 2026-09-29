@@ -16,6 +16,9 @@ export const DayEditScreen = lazy(() =>
 export const ExerciseLibraryScreen = lazy(() =>
   import('@/features/program').then((m) => ({ default: m.ExerciseLibraryScreen })),
 );
+export const CustomExerciseScreen = lazy(() =>
+  import('@/features/program').then((m) => ({ default: m.CustomExerciseScreen })),
+);
 export const ExerciseDetailScreen = lazy(() =>
   import('@/features/program').then((m) => ({ default: m.ExerciseDetailScreen })),
 );
@@ -24,6 +27,15 @@ export const SummaryScreen = lazy(() =>
 );
 export const WorkoutScreen = lazy(() =>
   import('@/features/workout').then((m) => ({ default: m.WorkoutScreen })),
+);
+export const EvaluationScreen = lazy(() =>
+  import('@/features/progress').then((m) => ({ default: m.EvaluationScreen })),
+);
+export const MuscleMapScreen = lazy(() =>
+  import('@/features/progress').then((m) => ({ default: m.MuscleMapScreen })),
+);
+export const NutritionScreen = lazy(() =>
+  import('@/features/nutrition').then((m) => ({ default: m.NutritionScreen })),
 );
 export const ProgressScreen = lazy(() =>
   import('@/features/progress').then((m) => ({ default: m.ProgressScreen })),

@@ -3,6 +3,7 @@ import type { ProfileOverview } from '@/application/profile/getProfileOverview';
 import { useServices } from '@/application/ServicesContext';
 import type { ActivityLevel, Experience, Sex } from '@/domain/profile/types';
 import { errorText, t } from '@/shared/i18n/id';
+import { tOnboarding, tProfile } from '@/shared/i18n/onboarding';
 import { parseDecimal } from '@/shared/lib/format';
 import { Button } from '@/shared/ui/Button';
 import { OptionGroup } from '@/shared/ui/OptionGroup';
@@ -70,7 +71,7 @@ export function EditBodySheet({
   return (
     <Sheet
       open
-      title={t.profile.editBody}
+      title={tProfile.editBody}
       onClose={onClose}
       footer={
         <Button fullWidth disabled={pending} onClick={() => void save()}>
@@ -81,14 +82,14 @@ export function EditBodySheet({
       <div className="flex flex-col gap-4">
         <TextField
           id="edit-name"
-          label={t.onboarding.body.name}
+          label={tOnboarding.body.name}
           value={form.name}
           onChange={(e) => set({ name: e.target.value })}
           error={errorText(errors?.name)}
         />
         <OptionGroup
           name="edit-sex"
-          label={t.onboarding.body.sex}
+          label={tOnboarding.body.sex}
           layout="row"
           options={sexOptions}
           value={form.sex}
@@ -96,7 +97,7 @@ export function EditBodySheet({
         />
         <TextField
           id="edit-birth"
-          label={t.onboarding.body.birthDate}
+          label={tOnboarding.body.birthDate}
           type="date"
           value={form.birthDate}
           onChange={(e) => set({ birthDate: e.target.value })}
@@ -105,7 +106,7 @@ export function EditBodySheet({
         <div className="grid grid-cols-2 gap-3">
           <TextField
             id="edit-height"
-            label={t.onboarding.body.height}
+            label={tOnboarding.body.height}
             inputMode="decimal"
             suffix="cm"
             value={form.heightCm}
@@ -114,7 +115,7 @@ export function EditBodySheet({
           />
           <TextField
             id="edit-weight"
-            label={t.onboarding.body.weight}
+            label={tOnboarding.body.weight}
             inputMode="decimal"
             suffix="kg"
             value={form.weightKg}
@@ -124,21 +125,21 @@ export function EditBodySheet({
         </div>
         <OptionGroup
           name="edit-experience"
-          label={t.profile.experience}
+          label={tProfile.experience}
           options={experienceOptions}
           value={form.experience}
           onChange={(experience) => set({ experience })}
         />
         <OptionGroup
           name="edit-activity"
-          label={t.profile.activity}
+          label={tProfile.activity}
           options={activityOptions}
           value={form.activityLevel}
           onChange={(activityLevel) => set({ activityLevel })}
         />
         <TextField
           id="edit-protein"
-          label={t.profile.proteinFactor}
+          label={tProfile.proteinFactor}
           inputMode="decimal"
           suffix="g/kg"
           hint="1,6–2,2 g/kg (ISSN). Default 2,0."
