@@ -44,9 +44,12 @@ export function useProgramAction() {
   const refresh = useCallback(
     () =>
       Promise.all(
-        [queryKeys.activeProgram, queryKeys.suggestions, queryKeys.profileOverview].map(
-          (queryKey) => client.invalidateQueries({ queryKey }),
-        ),
+        [
+          queryKeys.activeProgram,
+          queryKeys.suggestions,
+          queryKeys.profileOverview,
+          queryKeys.todayPlan,
+        ].map((queryKey) => client.invalidateQueries({ queryKey })),
       ),
     [client],
   );

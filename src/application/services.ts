@@ -13,6 +13,7 @@ import { makeCatalogUseCases } from './program/catalog';
 import { makeGetActiveProgram } from './program/getActiveProgram';
 import { createProgramEditor } from './program/programEditor';
 import { makeSuggestionUseCases } from './program/suggestions';
+import { makeTodayUseCases } from './today/todayUseCases';
 import { makeCheckInUseCases } from './workout/checkIn';
 import { makeSessionLifecycle } from './workout/sessionLifecycle';
 import { makeSetActions } from './workout/setActions';
@@ -44,6 +45,7 @@ export function createServices(deps: AppDeps) {
       suggestions: makeSuggestionUseCases(deps, editor),
     },
     catalog: makeCatalogUseCases(deps),
+    today: makeTodayUseCases(deps),
     checkIn: makeCheckInUseCases(deps),
     workout: {
       ...makeSessionLifecycle(deps),

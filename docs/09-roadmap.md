@@ -62,8 +62,13 @@ Centang item saat selesai. Urutan disusun agar fondasi dan rumus selesai sebelum
 - [ ] Suara saat timer habis → ditunda (getaran Android + tampilan "Istirahat selesai" sudah ada)
 
 ## Tahap 6 · Hari Ini
-- [ ] Mode hari gym vs hari pemulihan
-- [ ] Ringkasan nutrisi, kalender minggu, streak
+- [x] Mode hari gym vs hari pemulihan
+- [x] Ringkasan nutrisi, kalender minggu, streak
+- [x] Check-in & tombol latihan kontekstual (Check-in sekarang / Mulai / Lanjutkan / Lihat ringkasan)
+- [x] Latihan terlewat minggu ini bisa dikerjakan hari ini
+- [x] Aktivitas pemulihan (jalan kaki, mobilitas) + menit aerobik vs WHO 150 menit; saran aerobik aktif
+- [x] Migrasi database pertama (v1 → v2, tabel `activityLogs`) dengan test
+- [ ] Ringkasan nutrisi harian (konsumsi vs target) → Tahap 8; sementara tampil target saja
 
 ## Tahap 7 · Progres
 - [ ] Grafik 1RM per gerakan, daftar PR

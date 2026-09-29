@@ -12,6 +12,7 @@ import type {
   UserProfile,
 } from '@/domain/profile/types';
 import type { BodyMetric, ProgramBundle, ResolvedSuggestion } from '@/domain/repositories';
+import type { ActivityLog } from '@/domain/today/activity';
 import type { CheckIn, SetLog, WorkoutSession } from '@/domain/workout/types';
 import { TEST_EXERCISES } from '@/domain/testing/exercises';
 import type { AppDeps } from '../deps';
@@ -27,6 +28,7 @@ export interface InMemoryState {
   checkIns: CheckIn[];
   sessions: WorkoutSession[];
   setLogs: SetLog[];
+  activities: ActivityLog[];
 }
 
 export function createInMemoryDeps(
@@ -44,6 +46,7 @@ export function createInMemoryDeps(
     checkIns: [],
     sessions: [],
     setLogs: [],
+    activities: [],
   };
   const active = () => state.programs.find((p) => p.program.active) ?? null;
 
@@ -134,6 +137,8 @@ export function createInMemoryDeps(
         state.sessions = state.sessions.filter((s) => s.id !== id);
         state.setLogs = state.setLogs.filter((s) => s.sessionId !== id);
       },
+      listFinishedSince: async (from) =>
+        state.sessions.filter((s) => s.status === 'finished' && s.logDate >= from),
       listSets: async (id) => structuredClone(state.setLogs.filter((s) => s.sessionId === id)),
       saveSets: async (sets) => {
         const ids = new Set(sets.map((s) => s.id));
@@ -170,6 +175,13 @@ export function createInMemoryDeps(
           }))
           .filter((h) => h.sets.length > 0)
           .slice(0, limit),
+    },
+    activities: {
+      listSince: async (from) => state.activities.filter((a) => a.logDate >= from),
+      add: async (a) => void state.activities.push(a),
+      remove: async (id) => {
+        state.activities = state.activities.filter((a) => a.id !== id);
+      },
     },
     tx: { run: (work) => work() },
     platform: { requestPersistentStorage: async () => true },

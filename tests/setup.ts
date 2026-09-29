@@ -3,8 +3,8 @@ import '@testing-library/jest-dom/vitest';
 import { cleanup, configure } from '@testing-library/react';
 import { afterEach } from 'vitest';
 
-// Layar dimuat belakangan (lazy); impor pertama di jsdom bisa > 1 detik.
-configure({ asyncUtilTimeout: 5000 });
+// Layar dimuat belakangan (lazy) dan ratusan test UI berjalan paralel: beri waktu tunggu longgar.
+configure({ asyncUtilTimeout: 10_000 });
 
 afterEach(() => {
   cleanup();

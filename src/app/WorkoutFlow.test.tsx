@@ -89,9 +89,9 @@ describe('Mode latihan', () => {
     expect(deps.state.sessions).toHaveLength(0);
   });
 
-  it('Hari Ini menautkan ke mode latihan', async () => {
+  it('Hari Ini menautkan ke mode latihan (check-in dulu)', async () => {
     const { user, router } = await renderAt('/');
-    await user.click(await screen.findByRole('link', { name: 'Mulai latihan' }));
+    await user.click(await screen.findByRole('link', { name: 'Check-in sekarang' }));
     expect(router.state.location.pathname).toBe('/latihan');
   });
 });

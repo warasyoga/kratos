@@ -30,6 +30,15 @@ Layar pertama yang dibuka setiap hari: menjawab "apa yang harus saya lakukan har
 - **Streak** = jumlah minggu berturut-turut dengan semua sesi terjadwal selesai (sesi yang dipindah hari tetap dihitung jika selesai di minggu yang sama).
 - Sesi yang terlewat bisa "Pindahkan ke hari ini" jika hari ini hari pemulihan dan otot targetnya sudah pulih.
 
+## Implementasi (Tahap 6)
+- Use case `today.plan()` merangkum: hari gym/pemulihan, check-in, sesi aktif/selesai, minggu blok (1–6, deload),
+  kalender 7 hari, streak, latihan terlewat, latihan berikutnya, aktivitas pemulihan, dan target harian.
+- Kalender & streak: `domain/today/week.ts`. Hari latihan selesai jika sesinya selesai kapan pun di minggu yang sama.
+  Streak = minggu berturut-turut dengan jumlah sesi ≥ jumlah hari latihan; minggu berjalan dihitung jika sudah lengkap.
+- Aktivitas pemulihan disimpan di tabel `activityLogs` (skema v2): jalan kaki 35 mnt, mobilitas 10 mnt.
+  Menit jalan kaki minggu lalu dipakai aturan saran `aerobic_below_who` (hanya setelah program berjalan satu minggu penuh).
+- "Latih hari ini" untuk latihan terlewat langsung memulai sesi hari itu (pengecekan pemulihan otot menyusul di Tahap 8).
+
 ## Data
 Query `getTodayPlan(date)` → `{ kind: 'gym' | 'recovery', day?, checkIn?, activeSession?, nutrition, week, topSuggestion? }`
 

@@ -1,6 +1,7 @@
 import type { Clock } from '@/domain/common/clock';
 import type { IdGenerator } from '@/domain/common/id';
 import type {
+  ActivityRepository,
   BodyMetricRepository,
   CheckInRepository,
   ExerciseRepository,
@@ -26,6 +27,7 @@ export interface AppDeps {
   suggestions: SuggestionRepository;
   checkIns: CheckInRepository;
   sessions: SessionRepository;
+  activities: ActivityRepository;
   tx: TransactionRunner;
   platform: {
     requestPersistentStorage(): Promise<boolean>;

@@ -324,6 +324,13 @@ Baris `settings` (`id: 'settings'`) menyimpan `catalogVersion`, `inventory` (pel
 
 ## Migrasi
 
+| Versi | Tahap | Perubahan |
+|---|---|---|
+| 1 | 3 | Skema awal (`SCHEMA_V1`) |
+| 2 | 6 | Tabel `activityLogs: 'id, logDate'` (aktivitas hari pemulihan) |
+
+Test migrasi: `src/infrastructure/db/migrations.test.ts` membuka database v1 berisi data lalu memastikan data utuh di versi terbaru.
+
 - Setiap perubahan skema = versi baru (`db.version(2)...upgrade(tx => ...)`), **tidak pernah** mengubah versi lama.
 - Satu file per migrasi di `infrastructure/db/migrations/` dengan test yang memakai `fake-indexeddb`.
 - Seed perpustakaan gerakan memakai kolom `seedVersion` di settings; gerakan bawaan diperbarui tanpa menyentuh gerakan buatan pengguna (`isCustom: true`).

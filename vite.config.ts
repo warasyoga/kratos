@@ -60,7 +60,9 @@ export default defineConfig({
     environment: 'jsdom',
     setupFiles: ['./tests/setup.ts'],
     // Test alur UI (mengetik di banyak langkah) bisa lambat saat semua test berjalan paralel.
-    testTimeout: 15_000,
+    testTimeout: 30_000,
+    // Test UI (jsdom) berat; separuh inti CPU menjaga stabilitas tanpa memperlambat banyak.
+    maxWorkers: '50%',
     include: ['src/**/*.test.{ts,tsx}'],
     coverage: {
       provider: 'v8',

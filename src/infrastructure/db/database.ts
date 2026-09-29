@@ -8,6 +8,7 @@ import type {
 } from '@/domain/profile/types';
 import type { Program, ProgramDay, ProgramExercise } from '@/domain/program/types';
 import type { BodyMetric, ResolvedSuggestion } from '@/domain/repositories';
+import type { ActivityLog } from '@/domain/today/activity';
 import type { CheckIn, SetLog, WorkoutSession } from '@/domain/workout/types';
 
 /** Satu baris per jenis alat. */
@@ -54,6 +55,11 @@ export const SCHEMA_V1 = {
   settings: 'id',
 } as const;
 
+/** v2 (Tahap 6): catatan aktivitas hari pemulihan. Hanya tabel yang berubah yang ditulis. */
+export const SCHEMA_V2 = {
+  activityLogs: 'id, logDate',
+} as const;
+
 export class KratosDatabase extends Dexie {
   profile!: EntityTable<UserProfile, 'id'>;
   healthConditions!: EntityTable<HealthCondition, 'id'>;
@@ -67,10 +73,12 @@ export class KratosDatabase extends Dexie {
   checkIns!: EntityTable<CheckIn, 'id'>;
   sessions!: EntityTable<WorkoutSession, 'id'>;
   setLogs!: EntityTable<SetLog, 'id'>;
+  activityLogs!: EntityTable<ActivityLog, 'id'>;
   settings!: EntityTable<SettingsRow, 'id'>;
 
   constructor(name = 'kratos') {
     super(name);
     this.version(1).stores(SCHEMA_V1);
+    this.version(2).stores(SCHEMA_V2);
   }
 }

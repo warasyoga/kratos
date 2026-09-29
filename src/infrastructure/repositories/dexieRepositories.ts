@@ -9,6 +9,7 @@ import type {
 import type { ProgramExercise } from '@/domain/program/types';
 import type {
   BodyMetric,
+  ActivityRepository,
   BodyMetricRepository,
   CheckInRepository,
   ExerciseHistoryEntry,
@@ -23,6 +24,7 @@ import type {
   SuggestionRepository,
   TransactionRunner,
 } from '@/domain/repositories';
+import type { ActivityLog } from '@/domain/today/activity';
 import type { CheckIn, SetLog, WorkoutSession } from '@/domain/workout/types';
 import type { ExerciseRow, KratosDatabase } from '../db/database';
 
@@ -226,6 +228,12 @@ export class DexieSessionRepository implements SessionRepository {
     await this.db.setLogs.bulkDelete([...ids]);
   }
 
+  async listFinishedSince(fromDate: string): Promise<WorkoutSession[]> {
+    return (await this.db.sessions.where('logDate').aboveOrEqual(fromDate).toArray()).filter(
+      (s) => s.status === 'finished',
+    );
+  }
+
   async exerciseHistory(exerciseId: string, limit: number): Promise<ExerciseHistoryEntry[]> {
     const logs = (await this.db.setLogs.where('exerciseId').equals(exerciseId).toArray()).filter(
       (s) => s.kind === 'working' && s.completedAt !== undefined,
@@ -250,6 +258,22 @@ export class DexieSessionRepository implements SessionRepository {
             ...(rir !== undefined && { rir }),
           })),
       }));
+  }
+}
+
+export class DexieActivityRepository implements ActivityRepository {
+  constructor(private readonly db: KratosDatabase) {}
+
+  listSince(fromDate: string): Promise<ActivityLog[]> {
+    return this.db.activityLogs.where('logDate').aboveOrEqual(fromDate).toArray();
+  }
+
+  async add(log: ActivityLog): Promise<void> {
+    await this.db.activityLogs.put(log);
+  }
+
+  async remove(id: string): Promise<void> {
+    await this.db.activityLogs.delete(id);
   }
 }
 

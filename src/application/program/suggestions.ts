@@ -1,4 +1,6 @@
 import { toLocalDate } from '@/domain/common/clock';
+import { addDays, startOfWeek } from '@/domain/common/weekday';
+import { aerobicMinutes } from '@/domain/today/activity';
 import { err, ok, type Result } from '@/domain/common/result';
 import { isScheduledDeloadWeek } from '@/domain/trainer/deload';
 import {
@@ -27,6 +29,15 @@ export function makeSuggestionUseCases(deps: AppDeps, editor: ProgramEditor) {
     if (!bundle || !profile) return null;
     const byId = new Map(library.map((e) => [e.id, e]));
     const now = deps.clock.now();
+    // Aktivitas aerobik minggu lalu, hanya jika program sudah berjalan sepanjang minggu itu (WHO 2020).
+    const lastMonday = addDays(startOfWeek(toLocalDate(now)), -7);
+    const lastSunday = addDays(lastMonday, 6);
+    const aerobic =
+      bundle && bundle.program.startDate <= lastMonday
+        ? aerobicMinutes(
+            (await deps.activities.listSince(lastMonday)).filter((a) => a.logDate <= lastSunday),
+          )
+        : undefined;
 
     const ctx: SuggestionContext = {
       now,
@@ -44,6 +55,7 @@ export function makeSuggestionUseCases(deps: AppDeps, editor: ProgramEditor) {
       trainingDays: profile.trainingDays,
       isDeloadWeek: isScheduledDeloadWeek(bundle.program.startDate, toLocalDate(now)),
       parqCompletedAt: profile.parqCompletedAt ?? null,
+      ...(aerobic !== undefined && { aerobicMinutesLastWeek: aerobic }),
     };
     return { ctx, programId: bundle.program.id };
   }

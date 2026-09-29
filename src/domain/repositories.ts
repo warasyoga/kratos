@@ -6,6 +6,7 @@
 import type { Exercise, ExerciseGuide } from './exercise/types';
 import type { Equipment, HealthCondition, PlateInventory, UserProfile } from './profile/types';
 import type { ProgramBundle, ProgramExercise } from './program/types';
+import type { ActivityLog } from './today/activity';
 import type { CheckIn, Readiness, SetLog, SetResult, WorkoutSession } from './workout/types';
 
 export type { ProgramBundle };
@@ -100,8 +101,16 @@ export interface SessionRepository {
   listSets(sessionId: string): Promise<SetLog[]>;
   saveSets(sets: readonly SetLog[]): Promise<void>;
   deleteSets(ids: readonly string[]): Promise<void>;
+  /** Sesi selesai sejak tanggal tertentu (untuk kalender minggu dan streak). */
+  listFinishedSince(fromDate: string): Promise<WorkoutSession[]>;
   /** Riwayat gerakan dari sesi yang selesai, terbaru lebih dulu. */
   exerciseHistory(exerciseId: string, limit: number): Promise<ExerciseHistoryEntry[]>;
+}
+
+export interface ActivityRepository {
+  listSince(fromDate: string): Promise<ActivityLog[]>;
+  add(log: ActivityLog): Promise<void>;
+  remove(id: string): Promise<void>;
 }
 
 /** Jalankan beberapa operasi repository sebagai satu transaksi (semua berhasil atau semua batal). */

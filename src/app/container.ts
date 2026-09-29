@@ -5,6 +5,7 @@ import { KratosDatabase } from '@/infrastructure/db/database';
 import { ensureCatalog } from '@/infrastructure/db/seed';
 import { requestPersistentStorage } from '@/infrastructure/platform';
 import {
+  DexieActivityRepository,
   DexieBodyMetricRepository,
   DexieCheckInRepository,
   DexieExerciseRepository,
@@ -37,6 +38,7 @@ export async function createAppServices(): Promise<Services> {
     suggestions: new DexieSuggestionRepository(db),
     checkIns: new DexieCheckInRepository(db),
     sessions: new DexieSessionRepository(db),
+    activities: new DexieActivityRepository(db),
     tx: new DexieTransactionRunner(db),
     platform: { requestPersistentStorage },
   };

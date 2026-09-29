@@ -66,7 +66,7 @@ Label huruf kapital memakai `letter-spacing: .11em`.
 
 | Ukuran | Batas |
 |---|---|
-| JavaScript awal (gzip) | ≤ 200 KB; layar selain Hari Ini dimuat terpisah (lazy route) |
+| JavaScript awal (gzip) | ≤ 200 KB, dihitung dari **semua** skrip yang dimuat `index.html` (file utama + chunk preload); layar selain Hari Ini dimuat terpisah. Tahap 6: 195 KB |
 | Tampil pertama di HP menengah | ≤ 1,5 dtk (dari cache offline ≤ 0,5 dtk) |
 | Respons sentuhan (INP) | ≤ 200 ms |
 | Gambar gerakan | WebP, ≤ 60 KB per gambar |
