@@ -43,7 +43,12 @@ export async function showNotification(title: string, body: string, tag: string)
 
 /** Simpan teks sebagai file unduhan (mis. .ics: HP menawarkan "Tambahkan ke kalender"). */
 export function downloadTextFile(fileName: string, mimeType: string, content: string): void {
-  const url = URL.createObjectURL(new Blob([content], { type: mimeType }));
+  downloadBlob(fileName, new Blob([content], { type: mimeType }));
+}
+
+/** Simpan data biner (mis. backup .zip) sebagai file unduhan. */
+export function downloadBlob(fileName: string, blob: Blob): void {
+  const url = URL.createObjectURL(blob);
   const link = document.createElement('a');
   link.href = url;
   link.download = fileName;

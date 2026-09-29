@@ -86,10 +86,12 @@ Centang item saat selesai. Urutan disusun agar fondasi dan rumus selesai sebelum
 - [x] Aturan saran yang butuh riwayat kini aktif: stagnasi, kehadiran, protein, tidur, kalibrasi kalori
 
 ## Tahap 9 · Backup & Rilis
-- [ ] Ekspor/impor `.zip` (JSON + foto) dengan validasi Zod
+- [x] Ekspor/impor `.zip` (JSON + foto) dengan validasi Zod, pratinjau, pulihkan dari layar pembuka, CSV riwayat set
+- [x] Saran terakhir aktif: deload lebih awal & pengingat backup
 - [x] PWA: manifest, ikon, offline, prompt update, tombol pasang Android (dikerjakan lebih awal, setelah Tahap 3)
-- [ ] Audit Lighthouse (PWA, performa ≥ 90, aksesibilitas ≥ 95)
-- [ ] Deploy ke Vercel/Netlify, pasang di HP
+- [~] Audit Lighthouse (HP simulasi, kunjungan pertama): aksesibilitas **100**, best practices **100**, SEO **100**,
+  performa **±80** (target 90 belum tercapai: eksekusi JS framework, lihat [06-design-system.md](06-design-system.md))
+- [x] Deploy ke Netlify (https://kratos-aris.netlify.app), dipasang di HP
 - **Selesai jika:** semua alur E2E di [08-pengujian.md](08-pengujian.md) lulus di HP sungguhan
 
 ## Setelah rilis (opsional)

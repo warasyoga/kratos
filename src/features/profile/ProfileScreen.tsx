@@ -16,6 +16,7 @@ import { describeChanges } from './changeMessages';
 import { EditBodySheet } from './components/EditBodySheet';
 import { EquipmentPicker } from './components/EquipmentPicker';
 import { HealthCard } from './components/HealthCard';
+import { BackupCard } from './components/BackupCard';
 import { InstallCard } from './components/InstallCard';
 import { ReminderCard } from './components/ReminderCard';
 import { InventoryCard } from './components/InventoryCard';
@@ -157,6 +158,7 @@ export function ProfileScreen() {
       <HealthCard conditions={overview.conditions} />
       <ParqCard status={overview.parq} />
       <ReminderCard />
+      <BackupCard />
 
       <Card>
         <h2 className="font-sans label-caps">{tProfile.appearance}</h2>

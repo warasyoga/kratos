@@ -1,5 +1,6 @@
 import { toLocalDate } from '@/domain/common/clock';
 import { addDays, startOfWeek } from '@/domain/common/weekday';
+import { MESOCYCLE_WEEKS } from '@/domain/standards';
 import { aerobicMinutes } from '@/domain/today/activity';
 import { err, ok, type Result } from '@/domain/common/result';
 import { isScheduledDeloadWeek } from '@/domain/trainer/deload';
@@ -132,6 +133,18 @@ export function makeSuggestionUseCases(deps: AppDeps, editor: ProgramEditor) {
         case 'regenerate_program':
           result = await makeChangeTrainingDays(deps)(action.trainingDays);
           break;
+        case 'start_deload': {
+          // Minggu ini menjadi minggu ke-6 blok (deload); blok berikutnya mulai minggu depan.
+          const bundle = await deps.programs.getActive();
+          if (!bundle) return err({ code: 'not_found', message: 'Program tidak ditemukan' });
+          const startDate = addDays(
+            startOfWeek(toLocalDate(deps.clock.now())),
+            -7 * (MESOCYCLE_WEEKS - 1),
+          );
+          await deps.programs.update({ ...bundle, program: { ...bundle.program, startDate } });
+          result = ok(undefined);
+          break;
+        }
         case 'set_calorie_offset': {
           const profile = await deps.profiles.get();
           if (!profile) return err({ code: 'profile_missing', message: 'Profil tidak ada' });

@@ -48,7 +48,9 @@ Program bawaan tidak memicu saran apa pun (dijamin test); saran muncul setelah e
 gerakan program (`stagnation`), kehadiran 14 hari penuh (`low_attendance`, hanya jika program sudah berjalan 14 hari),
 protein 7 hari yang dicatat (`low_protein`), tidur dari check-in 14 hari (`low_sleep`), dan kalibrasi kalori
 (`calorie_recalibration`, paling cepat 14 hari setelah profil dibuat/koreksi terakhir). Menerapkan kalibrasi mengubah
-`UserProfile.calorieAdjustmentKcal` (batas ±500 kkal). `deload_due` dan `backup_reminder` menyusul (Tahap 9).
+`UserProfile.calorieAdjustmentKcal` (batas ±500 kkal). Tahap 9: `deload_due` (sinyal dari
+[06-deload.md](06-deload.md) dalam blok berjalan) dan `backup_reminder` (dari `Settings.lastBackupAt`, atau waktu
+profil dibuat jika belum pernah backup). Semua aturan kini aktif.
 Setiap aturan wajib punya kalimat & dasar ilmiah di `src/shared/i18n/suggestionText.ts` (dikunci test).
 
 ## Aturan tampilan

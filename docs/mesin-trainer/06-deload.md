@@ -18,6 +18,7 @@ Minimal minggu ke-4 blok, dan **salah satu** terpenuhi:
 | Keputusan `decrease` | ≥ 3 gerakan berbeda dalam 1 minggu |
 
 Jika diterima: minggu ini menjadi deload, blok berikutnya dimulai minggu depan.
+Implementasi: `Program.startDate` digeser sehingga minggu ini = minggu ke-6 blok (`start_deload`).
 Jika diabaikan: tidak ditawarkan lagi sampai minggu depan.
 
 ## Isi minggu deload

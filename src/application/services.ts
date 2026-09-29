@@ -1,6 +1,7 @@
 import type { Clock } from '@/domain/common/clock';
 import { makeAchievementUseCases } from './achievements/achievementUseCases';
 import { makeEvaluation } from './achievements/evaluation';
+import { makeBackupUseCases } from './backup/backupUseCases';
 import type { AppDeps } from './deps';
 import {
   makeInventoryUseCases,
@@ -65,6 +66,7 @@ export function createServices(deps: AppDeps) {
     nutrition: makeNutritionUseCases(deps),
     achievements: makeAchievementUseCases(deps),
     reminders: makeReminderUseCases(deps),
+    backup: makeBackupUseCases(deps),
     evaluation: makeEvaluation(deps, suggestions.list),
     progress: {
       ...makeStrengthProgress(deps),

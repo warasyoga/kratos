@@ -68,6 +68,7 @@ Label huruf kapital memakai `letter-spacing: .11em`.
 |---|---|
 | JavaScript awal (gzip) | ≤ 200 KB, dihitung dari **semua** skrip yang dimuat `index.html` (file utama + chunk preload); layar selain Hari Ini dimuat terpisah. Tahap 6: 195 KB; Tahap 7 (setelah pindah ke `zod/mini`, grafik SVG sendiri): 188 KB, layar Progres 8 KB terpisah; Tahap 8: 198 KB setelah teks layar lazy dipisah dari `id.ts` ke `src/shared/i18n/{progress,library,workout,profile,onboarding}.ts` |
 | Tampil pertama di HP menengah | ≤ 1,5 dtk (dari cache offline ≤ 0,5 dtk) |
+| Lighthouse (HP simulasi, kunjungan pertama) | Tahap 9: aksesibilitas 100, best practices 100, SEO 100, performa ±80 (FCP ±2,2 dtk, LCP ±3,3 dtk). Target performa 90 **belum** tercapai: hambatan utama adalah eksekusi JS awal (±1,6 dtk pada CPU simulasi 4× lebih lambat), terutama React DOM, React Router, dan Dexie. Sudah dilakukan: layar pembuka di `index.html`, katalog gerakan dipasang tanpa menahan tampilan. Opsi berikutnya (butuh keputusan): Preact, router lebih ringan |
 | Respons sentuhan (INP) | ≤ 200 ms |
 | Gambar gerakan | WebP, ≤ 60 KB per gambar |
 

@@ -4,6 +4,8 @@ import { useServices } from '@/application/ServicesContext';
 import { toLocalDate } from '@/domain/common/clock';
 import { errorText, t } from '@/shared/i18n/id';
 import { tOnboarding, tParq } from '@/shared/i18n/onboarding';
+import { tBackup } from '@/shared/i18n/profile';
+import { RestoreBackup } from '../components/RestoreBackup';
 import { Button } from '@/shared/ui/Button';
 import { OptionGroup } from '@/shared/ui/OptionGroup';
 import { DayPicker } from '../components/DayPicker';
@@ -91,7 +93,12 @@ export function OnboardingScreen() {
           body={text.welcome.body}
           primaryLabel={text.welcome.start}
           onPrimary={next}
-        />
+        >
+          <div className="flex flex-col gap-2">
+            <p className="text-[13px] text-muted">{tBackup.restoreHint}</p>
+            <RestoreBackup />
+          </div>
+        </StepLayout>
       );
     case 'body':
       return (

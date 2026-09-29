@@ -26,7 +26,17 @@ kratos-backup-YYYY-MM-DD.zip
 ## Data
 Use case `exportData`, `importData`, `exportSetsCsv`. Adapter `infrastructure/backup/zipArchive.ts`.
 
+## Implementasi (Tahap 9)
+- `domain/backup/backup.ts`: bentuk `BackupData` (semua tabel; gerakan bawaan tidak ikut karena berasal dari katalog),
+  `BACKUP_SCHEMA_VERSION` = versi skema database (2), nama file, ringkasan pratinjau, CSV (pemisah `;`, BOM UTF-8).
+- `application/backup`: `exportData` (zip: manifest.json, data.json, photos/<id>.jpg + <id>-thumb.jpg),
+  `inspect` (buka & validasi Zod tanpa mengubah data; v1 dimigrasikan, versi lebih baru ditolak, foto yang hilang
+  ditolak), `restore` (satu transaksi Dexie), `exportSetsCsv`.
+- Zip: `fflate`, dimuat hanya saat backup dipakai; JPEG disimpan tanpa kompresi ulang.
+- UI: Profil → Data & backup; **Impor backup juga ada di layar pembuka onboarding** (HP baru belum punya profil).
+- Pengingat backup (saran `backup_reminder`) setelah 14 hari tanpa backup.
+
 ## Kriteria selesai
-- [ ] Ekspor → hapus semua data → impor → semua layar identik (test E2E)
-- [ ] File rusak/asing ditolak dengan pesan yang jelas tanpa mengubah data
-- [ ] CSV terbuka benar di Excel dengan format angka Indonesia
+- [x] Ekspor → hapus semua data → impor → semua layar identik (test E2E `tests/e2e/backup.spec.ts`, termasuk foto)
+- [x] File rusak/asing ditolak dengan pesan yang jelas tanpa mengubah data
+- [x] CSV terbuka benar di Excel dengan format angka Indonesia (`;` + koma desimal + BOM)

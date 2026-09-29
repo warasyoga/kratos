@@ -24,3 +24,28 @@ export const tChanges = {
   unavailable: (name: string) => `${name} tidak punya pengganti`,
   newProgram: (name: string) => `Program baru dibuat: ${name}`,
 } as const;
+
+export const tBackup = {
+  title: 'Data & backup',
+  hint: 'Semua data hanya ada di HP ini. Simpan backup di Google Drive/iCloud agar aman saat ganti HP.',
+  lastBackup: (date: string) => `Backup terakhir: ${date}`,
+  never: 'Belum pernah backup.',
+  export: 'Ekspor backup (.zip)',
+  exported: 'Backup diunduh. Simpan file ini di tempat aman.',
+  import: 'Impor backup',
+  restoreHint: 'Sudah pernah memakai Kratos di HP lain? Pulihkan dari file backup.',
+  csv: 'Ekspor riwayat set (CSV)',
+  csvExported: 'CSV diunduh. Buka di Excel atau Google Sheets.',
+  csvHeader: ['Tanggal', 'Hari', 'Gerakan', 'Jenis', 'Set', 'Beban (kg)', 'Repetisi', 'RIR'],
+  previewTitle: 'Pulihkan backup?',
+  previewExported: (date: string) => `Dibuat ${date}`,
+  previewProfile: (name: string) => `Profil: ${name}`,
+  previewSessions: (n: number) => `${n} sesi latihan`,
+  previewRange: (from: string, to: string) => `Data ${from} – ${to}`,
+  previewPhotos: (n: number) => `${n} foto progres`,
+  previewWarning:
+    'Semua data di HP ini akan diganti dengan isi backup. Tindakan ini tidak bisa dibatalkan.',
+  replaceAll: 'Ganti semua',
+  restored: 'Backup dipulihkan.',
+  working: 'Memproses…',
+} as const;

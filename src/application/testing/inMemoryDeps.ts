@@ -12,6 +12,7 @@ import type {
   UserProfile,
 } from '@/domain/profile/types';
 import type { UnlockedAchievement } from '@/domain/achievements/rules';
+import type { BackupData } from '@/domain/backup/backup';
 import type { NutritionLog, SavedMeal, WaterLog } from '@/domain/nutrition/intake';
 import type { ProgressPhoto } from '@/domain/progress/photo';
 import { DEFAULT_REMINDERS, type ReminderSettings } from '@/domain/reminders/reminders';
@@ -39,13 +40,14 @@ export interface InMemoryState {
   meals: SavedMeal[];
   achievements: UnlockedAchievement[];
   reminders: ReminderSettings;
+  lastBackupAt: number | null;
+  custom: Map<string, { exercise: Exercise; note?: string }>;
 }
 
 export function createInMemoryDeps(
   options: { clock?: Clock; library?: readonly Exercise[] } = {},
 ): AppDeps & { state: InMemoryState } {
   const builtIn = options.library ?? TEST_EXERCISES;
-  const custom = new Map<string, { exercise: Exercise; note?: string }>();
   const library = () => [...builtIn, ...[...custom.values()].map((c) => c.exercise)];
   const state: InMemoryState = {
     profile: null,
@@ -65,7 +67,10 @@ export function createInMemoryDeps(
     meals: [],
     achievements: [],
     reminders: DEFAULT_REMINDERS,
+    lastBackupAt: null,
+    custom: new Map(),
   };
+  const custom = state.custom;
   const active = () => state.programs.find((p) => p.program.active) ?? null;
 
   return {
@@ -285,6 +290,88 @@ export function createInMemoryDeps(
     reminders: {
       get: async () => ({ ...state.reminders }),
       save: async (r) => void (state.reminders = { ...r }),
+    },
+    backup: {
+      dump: async () => {
+        const data: BackupData = {
+          profile: state.profile ? [state.profile] : [],
+          healthConditions: [...state.conditions.values()],
+          equipment: state.equipment.map((equipment) => ({ equipment, available: true })),
+          exercises: [...custom.values()].map(({ exercise, note }) => ({
+            ...exercise,
+            ...(note && { guide: { instructions: [note], commonMistakes: [] } }),
+          })),
+          programs: state.programs.map((p) => p.program),
+          programDays: state.programs.flatMap((p) => p.days),
+          programExercises: state.programs.flatMap((p) => p.exercises),
+          bodyMetrics: [...state.bodyMetrics],
+          photos: state.photos.map(({ blob: _b, thumb: _t, ...meta }) => meta),
+          nutritionLogs: [...state.foods],
+          waterLogs: [...state.water],
+          savedMeals: [...state.meals],
+          suggestions: [...state.suggestions],
+          achievements: [...state.achievements],
+          checkIns: [...state.checkIns],
+          sessions: [...state.sessions],
+          setLogs: [...state.setLogs],
+          activityLogs: [...state.activities],
+          settings: {
+            inventory: state.inventory,
+            reminders: state.reminders,
+            ...(state.lastBackupAt !== null && { lastBackupAt: state.lastBackupAt }),
+          },
+        };
+        return { data: structuredClone(data), photos: [...state.photos] };
+      },
+      restore: async (data, photos) => {
+        state.profile = data.profile[0] ?? null;
+        state.conditions = new Map(data.healthConditions.map((c) => [c.id, c]));
+        state.equipment = data.equipment.filter((e) => e.available).map((e) => e.equipment);
+        custom.clear();
+        for (const { guide, ...exercise } of data.exercises)
+          custom.set(exercise.id, {
+            exercise,
+            ...(guide?.instructions[0] && { note: guide.instructions[0] }),
+          });
+        state.programs = data.programs.map((program) => {
+          const days = data.programDays.filter((d) => d.programId === program.id);
+          const dayIds = new Set(days.map((d) => d.id));
+          return {
+            program,
+            days,
+            exercises: data.programExercises.filter((e) => dayIds.has(e.programDayId)),
+          };
+        });
+        state.bodyMetrics = [...data.bodyMetrics];
+        state.photos = [...photos];
+        state.foods = [...data.nutritionLogs];
+        state.water = [...data.waterLogs];
+        state.meals = [...data.savedMeals];
+        state.suggestions = [...data.suggestions];
+        state.achievements = [...data.achievements];
+        state.checkIns = [...data.checkIns];
+        state.sessions = [...data.sessions];
+        state.setLogs = [...data.setLogs];
+        state.activities = [...data.activityLogs];
+        state.inventory = data.settings.inventory ?? DEFAULT_INVENTORY;
+        state.reminders = data.settings.reminders ?? DEFAULT_REMINDERS;
+        state.lastBackupAt = data.settings.lastBackupAt ?? null;
+      },
+      lastBackupAt: async () => state.lastBackupAt,
+      markBackedUp: async (at) => void (state.lastBackupAt = at),
+    },
+    // Zip tiruan: file → JSON (cukup untuk menguji alur backup tanpa pustaka zip).
+    archive: {
+      pack: async (files) =>
+        new TextEncoder().encode(
+          JSON.stringify(Object.fromEntries(Object.entries(files).map(([k, v]) => [k, [...v]]))),
+        ),
+      unpack: async (bytes) =>
+        Object.fromEntries(
+          Object.entries(
+            JSON.parse(new TextDecoder().decode(bytes)) as Record<string, number[]>,
+          ).map(([k, v]) => [k, Uint8Array.from(v)]),
+        ),
     },
     tx: { run: (work) => work() },
     platform: {

@@ -4,6 +4,7 @@
  * Lihat docs/03-arsitektur.md dan ADR-002.
  */
 import type { UnlockedAchievement } from './achievements/rules';
+import type { BackupData } from './backup/backup';
 import type { BodyMetric } from './body/types';
 import type { Exercise, ExerciseGuide } from './exercise/types';
 import type { NutritionLog, SavedMeal, WaterLog } from './nutrition/intake';
@@ -133,6 +134,14 @@ export interface NutritionRepository {
   listMeals(): Promise<SavedMeal[]>;
   saveMeal(meal: SavedMeal): Promise<void>;
   removeMeal(id: string): Promise<void>;
+}
+
+/** Seluruh data untuk backup & pemulihan. Pemulihan mengganti semua data dalam satu transaksi. */
+export interface BackupRepository {
+  dump(): Promise<{ data: BackupData; photos: ProgressPhoto[] }>;
+  restore(data: BackupData, photos: readonly ProgressPhoto[]): Promise<void>;
+  lastBackupAt(): Promise<number | null>;
+  markBackedUp(at: number): Promise<void>;
 }
 
 export interface ReminderRepository {

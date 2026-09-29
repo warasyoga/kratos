@@ -14,6 +14,31 @@
     <meta name="apple-mobile-web-app-title" content="Kratos" />
     <meta name="apple-mobile-web-app-status-bar-style" content="default" />
     <title>Kratos</title>
+    <style>
+      /* Layar pembuka sebelum JavaScript jalan (tampilan pertama lebih cepat). Warna = token
+         --ground/--ink di src/shared/styles/tokens.css; CSS utama belum termuat di titik ini. */
+      .boot {
+        min-height: 100dvh;
+        display: grid;
+        place-items: center;
+        background: #edf0f4;
+        color: #121821;
+        font:
+          700 30px/1 system-ui,
+          sans-serif;
+        letter-spacing: 0.24em;
+      }
+      @media (prefers-color-scheme: dark) {
+        html:not([data-theme='light']) .boot {
+          background: #0a0e14;
+          color: #e8edf4;
+        }
+      }
+      html[data-theme='dark'] .boot {
+        background: #0a0e14;
+        color: #e8edf4;
+      }
+    </style>
     <script>
       // Pasang tema sebelum halaman digambar agar tidak berkedip (lihat src/shared/lib/theme.ts).
       try {
@@ -25,7 +50,7 @@
     </script>
   </head>
   <body>
-    <div id="root"></div>
+    <div id="root"><div class="boot">KRATOS</div></div>
     <script type="module" src="/src/app/main.tsx"></script>
   </body>
 </html>

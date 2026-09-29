@@ -3,6 +3,7 @@ import type { IdGenerator } from '@/domain/common/id';
 import type {
   AchievementRepository,
   ActivityRepository,
+  BackupRepository,
   BodyMetricRepository,
   CheckInRepository,
   ExerciseRepository,
@@ -36,6 +37,12 @@ export interface AppDeps {
   nutrition: NutritionRepository;
   achievements: AchievementRepository;
   reminders: ReminderRepository;
+  backup: BackupRepository;
+  /** Pembungkus zip (file → isi). Implementasi dimuat saat dipakai. */
+  archive: {
+    pack(files: Record<string, Uint8Array>): Promise<Uint8Array>;
+    unpack(bytes: Uint8Array): Promise<Record<string, Uint8Array>>;
+  };
   tx: TransactionRunner;
   platform: {
     requestPersistentStorage(): Promise<boolean>;

@@ -27,6 +27,7 @@ export const queryKeys = {
   muscles: ['progress', 'muscles'] as const,
   nutritionDay: ['nutrition', 'day'] as const,
   reminders: ['reminders'] as const,
+  lastBackup: ['backup', 'last'] as const,
   /** Awalan lencana: dicek ulang setelah latihan, nutrisi, ukuran, dan foto. */
   achievements: ['achievements'] as const,
   achievementList: ['achievements', 'list'] as const,

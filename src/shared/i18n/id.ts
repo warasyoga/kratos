@@ -136,6 +136,8 @@ export const t = {
     primary_muscle_required: 'Pilih minimal satu otot utama.',
     exercise_in_use: 'Gerakan masih dipakai di program. Ganti dulu di Program.',
     not_custom: 'Gerakan bawaan tidak bisa diubah atau dihapus.',
+    backup_invalid: 'File ini bukan backup Kratos atau rusak. Data tidak diubah.',
+    backup_newer: 'Backup dibuat oleh versi Kratos yang lebih baru. Perbarui aplikasi dulu.',
   } as Record<string, string>,
 
   // ── Nilai domain ──────────────────────────────────────────────────────────
